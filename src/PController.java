@@ -5,7 +5,7 @@ public class PController implements UltrasonicController {
 	
 	private final int bandCenter, bandwith;
 	private final int motorStraight = 200, FILTER_OUT = 20;
-	private final NXTRegulatedMotor leftMotor = Motor.A, rightMotor = Motor.C;	
+	private final NXTRegulatedMotor leftMotor = Motor.A, rightMotor = Motor.B;	
 	private int distance;
 	private int currentLeftSpeed;
 	private int filterControl;
