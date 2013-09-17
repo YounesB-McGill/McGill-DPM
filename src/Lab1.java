@@ -1,3 +1,9 @@
+/*
+Wall Follower Lab
+Group 51
+Alex Bhandari-Young and Neil O
+
+*/
 import lejos.nxt.*;
 
 
