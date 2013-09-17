@@ -20,7 +20,7 @@ public class Printer extends Thread {
 			else if (this.option == Button.ID_RIGHT)
 				LCD.drawString("P type", 0, 1);
 			LCD.drawString("US Distance: " + cont.readUSDistance(), 0, 2 );
-         LCD.drawString("LeftMotor: " + cont.leftMotorSpeed(), 0, 3 );
+         LCD.drawString("LeftMotor: " + cont.leftMotorSpeed(), 0, 3 ); //added for debugging
 	      LCD.drawString("RightMotor: " + cont.rightMotorSpeed(), 0, 4 );					
 			try {
 				Thread.sleep(200);

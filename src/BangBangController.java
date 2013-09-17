@@ -12,7 +12,7 @@ public class BangBangController implements UltrasonicController{
    private final int tolerance; 
    private final int motorLow, motorHigh; //not used
 	private final int motorStraight = 200;
-   private final int DELTA = 175;  //multiplies error to determine speed change
+   private final int DELTA = 175;  //determines motor speed change
 	private final NXTRegulatedMotor leftMotor = Motor.A, rightMotor = Motor.B;
 	private int distance;
 	private int currentLeftSpeed; //not used
@@ -44,12 +44,14 @@ public class BangBangController implements UltrasonicController{
 		// TODO: process a movement based on the us distance passed in (BANG-BANG style)
 
       //255 distance Filter implemented for the bangbang controller as well as p to improve smoothness
+      //filters out 255 values until 6 consecutive 255 readings
       if(distance==255)
       {
          if(nrCount<6)
             error=0;
          nrCount++;
       }
+      //resets 255 count if not consecutive
       else
       {
          nrCount=0;

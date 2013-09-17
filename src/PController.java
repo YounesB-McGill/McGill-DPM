@@ -9,12 +9,13 @@ public class PController implements UltrasonicController {
 
    //attribute variables
 	private final int walldist, tolerance;
-	private final int motorStraight = 200, FILTER_OUT = 100;
-   private final int DELTA = 25;
+	private final int motorStraight = 200;
+//   private final int FILTER_OUT = 100; //FILTER_OUT is replaced with nrCount
+   private final int DELTA = 20; //multiplies error to determine speed change
    private final NXTRegulatedMotor leftMotor = Motor.A, rightMotor = Motor.B;	
 	private int distance;
-	private int currentLeftSpeed;
-	private int filtercontrol = 0;
+	private int currentLeftSpeed; //not used
+//	private int filtercontrol = 0; //not used
    private int nrCount = 0;
 
 	
@@ -43,6 +44,7 @@ public class PController implements UltrasonicController {
 
 // TODO: process a movement based on the us distance passed in (P style)
 
+      //filter out 255 values until 60 consecutive 255 readings
       if(distance==255)
       {
          if(nrCount<60)
@@ -51,22 +53,29 @@ public class PController implements UltrasonicController {
             error=error/10;
          nrCount++;
       }
+      //resets 255 count if not consecutive
       else
       {
          nrCount=0;
       }
+
+      //logic to determine motor speed and orientation
       if(Math.abs(error)<=tolerance) //within tolerance
       {
          leftMotor.setSpeed(motorStraight);
          rightMotor.setSpeed(motorStraight);
       }
-
-         leftMotor.setSpeed(motorStraight-20*error);
-         rightMotor.setSpeed(motorStraight+20*error);
-         if(motorStraight-DELTA*error<0)
-            leftMotor.setSpeed(50);
-         if(motorStraight+DELTA*error<0)
-            rightMotor.setSpeed(50);
+      //in this method we allowed error to be negative, eliminating the need
+      //for an else-if else statment checking the turn direction
+      leftMotor.setSpeed(motorStraight-DELTA*error);
+      rightMotor.setSpeed(motorStraight+DELTA*error);
+      //in this method we also added a special case because a large error
+      //will result in a negative number, which requires the reverse method
+      //to be implemented correctly. We decieded not to implement this method.
+      if(motorStraight-DELTA*error<0)
+         leftMotor.setSpeed(0);
+      if(motorStraight+DELTA*error<0)
+         rightMotor.setSpeed(0);
 
 	}
 	
@@ -74,6 +83,8 @@ public class PController implements UltrasonicController {
 	public int readUSDistance() {
 		return this.distance;
 	}
+
+   //print motor speed added for debugging
 	@Override
    public int leftMotorSpeed() {
       return leftMotor.getSpeed();

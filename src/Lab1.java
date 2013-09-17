@@ -12,8 +12,10 @@ public class Lab1 {
 	private static final SensorPort usPort = SensorPort.S1;
 	//private static final SensorPort lightPort = SensorPort.S2;
 	
+   //attributes passed to bang bang and p classes
 	private static final int walldist = 35, tolerance = 3;
-	private static final int motorLow = 100, motorHigh = 400;
+
+	private static final int motorLow = 100, motorHigh = 400; //not used
 	
 	
 	public static void main(String [] args) {
