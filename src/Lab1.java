@@ -1,9 +1,9 @@
 /*
 Wall Follower Lab
 Group 51
-Alex Bhandari-Young and Neil O
-
+Alex Bhandari-Young and Neil Edelman
 */
+
 import lejos.nxt.*;
 
 

@@ -1,14 +1,22 @@
+/*
+Wall Follower Lab
+Group 51
+Alex Bhandari-Young and Neil Edelman
+*/
 import lejos.nxt.*;
 
 public class BangBangController implements UltrasonicController{
-	private final int walldist, tolerance; //wall dist, tolerance
-	private final int motorLow, motorHigh;
+
+	//attribute variables
+   private final int walldist;
+   private final int tolerance; 
+   private final int motorLow, motorHigh; //not used
 	private final int motorStraight = 200;
-   private final int DELTA = 175;
+   private final int DELTA = 175;  //multiplies error to determine speed change
 	private final NXTRegulatedMotor leftMotor = Motor.A, rightMotor = Motor.B;
 	private int distance;
-	private int currentLeftSpeed;
-   private int nrCount = 0; 
+	private int currentLeftSpeed; //not used
+   private int nrCount = 0; //no read (255) count for filter control
 
 	public BangBangController(int walldist, int tolerance, int motorLow, int motorHigh) {
 		//Default Constructor
@@ -25,12 +33,17 @@ public class BangBangController implements UltrasonicController{
 	
 	@Override
 	public void processUSData(int distance) {
+      //added to restart motors if stopped or in reverse
+      //not currently needed as motors never go below speed=50
 		leftMotor.forward();
       rightMotor.forward();
+      //update distance and error variables
       this.distance = distance;
 		int error = distance-walldist;
+
 		// TODO: process a movement based on the us distance passed in (BANG-BANG style)
-      //255 count(no read)
+
+      //255 distance Filter implemented for the bangbang controller as well as p to improve smoothness
       if(distance==255)
       {
          if(nrCount<6)
@@ -41,6 +54,8 @@ public class BangBangController implements UltrasonicController{
       {
          nrCount=0;
       }
+
+      //logic to determine motor speed and orientation
       if(Math.abs(error)<=tolerance) //within tolerance
       {
          leftMotor.setSpeed(motorStraight);
@@ -66,6 +81,8 @@ public class BangBangController implements UltrasonicController{
 	public int readUSDistance() {
 		return this.distance;
 	}
+
+   //print motor speed methods added for debugging
 	@Override
    public int leftMotorSpeed() {
       return leftMotor.getSpeed();

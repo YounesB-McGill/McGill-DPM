@@ -1,8 +1,13 @@
-import lejos.nxt.NXTRegulatedMotor;
+/*
+Wall Follower Lab
+Group 51
+Alex Bhandari-Young and Neil Edelman
+*/
 import lejos.nxt.*;
 
 public class PController implements UltrasonicController {
-	
+
+   //attribute variables
 	private final int walldist, tolerance;
 	private final int motorStraight = 200, FILTER_OUT = 100;
    private final int DELTA = 25;
@@ -15,8 +20,8 @@ public class PController implements UltrasonicController {
 	
 	public PController(int walldist, int tolerance) {
 		//Default Constructor
-      walldist = 30;
-      tolerance = 5;
+//      walldist = 30;
+//      tolerance = 5;
 		this.walldist = walldist;
 		this.tolerance = tolerance;
 		leftMotor.setSpeed(motorStraight);
@@ -28,14 +33,16 @@ public class PController implements UltrasonicController {
 	
 	@Override
 	public void processUSData(int distance) {
-	   
+      //added to restart motors if stopped or in reverse
+      //needed for this code
+      leftMotor.forward();
+      rightMotor.forward();
+	   //update distance and error variables
       this.distance = distance;
 		int error = distance-walldist;
 
 // TODO: process a movement based on the us distance passed in (P style)
 
-      leftMotor.forward();
-      rightMotor.forward();
       if(distance==255)
       {
          if(nrCount<60)
