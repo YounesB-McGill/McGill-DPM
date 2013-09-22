@@ -1,3 +1,6 @@
+import lejos.nxt.NXTRegulatedMotor;
+import lejos.nxt.Motor;
+
 /*
  * Odometer.java
  */
@@ -5,6 +8,8 @@
 public class Odometer extends Thread {
 	// robot position
 	private double x, y, theta;
+	/* hard coded motor pos'n */
+	private final NXTRegulatedMotor leftMotor = Motor.A, rightMotor = Motor.B;
 
 	// odometer update period, in ms
 	private static final long ODOMETER_PERIOD = 25;
@@ -22,7 +27,9 @@ public class Odometer extends Thread {
 
 	// run method (required for Thread)
 	public void run() {
+		// FIXME: no \/
 		long updateStart, updateEnd;
+		int tachoLeft, tachoRight;
 
 		while (true) {
 			updateStart = System.currentTimeMillis();
