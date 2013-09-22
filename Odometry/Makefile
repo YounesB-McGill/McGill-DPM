@@ -11,13 +11,9 @@ CF   := -g:none -O -verbose -d $(BDIR) $(SDIR)/*.java
 
 default: $(OBJS)
 
-#$(BDIR)/$(): $(OBJS)
-#	$(CC) $(CF) $^ -o $@
-
 $(BDIR)/%.class: $(SDIR)/%.java
 	@mkdir -p $(BDIR)
 	$(CC) $(CF) $?
-#	$(CC) $(CF) -c $? -o $@
 
 .PHONY: clean
 
