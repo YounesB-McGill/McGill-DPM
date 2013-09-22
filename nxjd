@@ -1,4 +1,0 @@
-cd src
-/opt/leJOS_NXJ/bin/nxjc Lab1.java
-/opt/leJOS_NXJ/bin/nxj Lab1
-cd ..
