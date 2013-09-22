@@ -1,2 +1,0 @@
-/opt/leJOS_NXJ/bin/nxjc src/Lab2.java -d bin -sourcepath src $1
-/opt/leJOS_NXJ/bin/nxj Lab2 -classpath bin
