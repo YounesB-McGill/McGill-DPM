@@ -7,7 +7,7 @@ OBJS  := $(patsubst %,$(BDIR)/%.class,$(FILES))
 SRCS  := $(patsubst %,$(SDIR)/%.java,$(FILES))
 
 CC   := nxjc
-CF   := -g:none -O -verbose -d $(BDIR)
+CF   := -g:none -O -verbose -d $(BDIR) $(SDIR)/*.java
 
 default: $(OBJS)
 
