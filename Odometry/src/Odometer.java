@@ -3,6 +3,7 @@
  */
 
 public class Odometer extends Thread {
+   private final 
 	// robot position
 	private double x, y, theta;
 
@@ -26,13 +27,23 @@ public class Odometer extends Thread {
 
 		while (true) {
 			updateStart = System.currentTimeMillis();
-         tachoLeft = leftMotor.getTachoCount();
-         tachoRight = rightMotor.getTachoCount();
+         L = leftMotor.getTachoCount();
+         R = rightMotor.getTachoCount();
+         int dL = L-pL;
+         int dR = R-pR;
+         int dC = (dL*rL+dR*rR)/2; //calculated change in arc length
+         int dT = (dR*rR-dL*rL)/robotWidth; //calculated change in theta
+         angleComponent = T+dT/2;
+         magnitudeComponent = dC * ( (2/dT) * Math.sin(dT/2) );
 			// put (some of) your odometer code here
 
 			synchronized (lock) {
 				// don't use the variables x, y, or theta anywhere but here!
 				theta = -0.7376;
+
+            x=x+dC*math.cos(theta+dT/2);
+            y=y+dC*math.sin(theta+dT/2);
+            theta=theta+dT;
 			}
 
 			// this ensures that the odometer only runs once every period
