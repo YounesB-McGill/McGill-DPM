@@ -8,7 +8,7 @@ public class Odometer extends Thread {
 	/* constants */
 	private final NXTRegulatedMotor leftMotor = Motor.A , rightMotor = Motor.B;
 	private final float robotWidth     = 16f;
-	private final float normaliseWidth = 2f / robotWidth;
+	private final float normaliseWidth = 1f / robotWidth;
 	/* wheel * rad / deg */
 	private final float wheelRadiusL   = /* 5.6 cm / 2 */ 2.8f * (float)(Math.PI / 180f);
 	private final float wheelRadiusR   = /* 5.6 cm / 2 */ 2.8f * (float)(Math.PI / 180f);
