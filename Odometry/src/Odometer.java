@@ -69,8 +69,8 @@ public class Odometer extends Thread {
 				x     += deltaArc * Math.cos(thetaIntemediate * Math.PI / 180.0);
 				y     += deltaArc * Math.sin(thetaIntemediate * Math.PI / 180.0);
 				theta += deltaTheta;
-				if(     theta > 180f)  theta -= 180f;
-				else if(theta < -180f) theta += 180f;
+				if(     theta > 180f)  theta -= 360f;
+				else if(theta < -180f) theta += 360f;
 			}
 
 			// this ensures that the odometer only runs once every period
