@@ -58,8 +58,8 @@ public class Odometer extends Thread {
 
 			float distanceL  = (float)deltaL * wheelRadiusL;
 			float distanceR  = (float)deltaR * wheelRadiusR;
-			float deltaArc   = (distanceL + distanceR) * 0.5f;
-			float deltaTheta = (distanceL - distanceR) * normaliseWidth * (float)(180.0 / Math.PI);
+			float deltaArc   = (distanceR + distanceL) * 0.5f;
+			float deltaTheta = (distanceR - distanceL) * normaliseWidth * (float)(180.0 / Math.PI);
 
 			synchronized (lock) {
 				// don't use the variables x, y, or theta anywhere but here!
