@@ -3,7 +3,9 @@
  */
 
 public class OdometryCorrection extends Thread {
-	private static final long CORRECTION_PERIOD = 10;
+
+	private static final int CORRECTION_PERIOD = 10;
+
 	private Odometer odometer;
 
 	// constructor
@@ -13,15 +15,15 @@ public class OdometryCorrection extends Thread {
 
 	// run method (required for Thread)
 	public void run() {
-		long correctionStart, correctionEnd;
+		int correctionStart, correctionEnd;
 
 		while (true) {
-			correctionStart = System.currentTimeMillis();
+			correctionStart = (int)System.currentTimeMillis();
 
 			// put your correction code here
 
 			// this ensure the odometry correction occurs only once every period
-			correctionEnd = System.currentTimeMillis();
+			correctionEnd = (int)System.currentTimeMillis();
 			if (correctionEnd - correctionStart < CORRECTION_PERIOD) {
 				try {
 					Thread.sleep(CORRECTION_PERIOD
