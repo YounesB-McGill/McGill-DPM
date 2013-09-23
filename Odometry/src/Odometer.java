@@ -6,14 +6,12 @@ import lejos.nxt.*;
 public class Odometer extends Thread {
    
 	/* constants */
-	private final float deg2rad = (float)Math.PI / 180f;
-	private final float rad2deg = 180f / (float)Math.PI;
 	private final NXTRegulatedMotor leftMotor = Motor.A , rightMotor = Motor.B;
 	private final float robotWidth     = 16f;
 	private final float normaliseWidth = 2f / robotWidth;
 	/* wheel * rad / deg */
-	private final float wheelRadiusL   = /* 5.6 cm / 2 */ 2.8f * deg2rad;
-	private final float wheelRadiusR   = /* 5.6 cm / 2 */ 2.8f * deg2rad;
+	private final float wheelRadiusL   = /* 5.6 cm / 2 */ 2.8f * (float)(Math.PI / 180f);
+	private final float wheelRadiusR   = /* 5.6 cm / 2 */ 2.8f * (float)(Math.PI / 180f);
 	
 	/* independent tachometer values; fixme: numerically unstable */
 	private int previousLTacho, previousRTacho;
@@ -60,15 +58,15 @@ public class Odometer extends Thread {
 			float distanceL  = (float)deltaL * wheelRadiusL;
 			float distanceR  = (float)deltaR * wheelRadiusR;
 			float deltaArc   = (distanceL + distanceR) * 0.5f;
-			float deltaTheta = (distanceL - distanceR) * normaliseWidth * rad2deg;
+			float deltaTheta = (distanceL - distanceR) * normaliseWidth * (float)(180.0 / Math.PI);
 
 			synchronized (lock) {
 				// don't use the variables x, y, or theta anywhere but here!
 				//update x,y,theta values using displacment vector
 				double thetaIntemediate = theta + deltaTheta * 0.5f;
 				/* fixme: sin, cos approx, Java doesn't have fmath? */
-				x     += deltaArc * Math.cos(thetaIntemediate * Math.PI / 180.0);
-				y     += deltaArc * Math.sin(thetaIntemediate * Math.PI / 180.0);
+				x     += deltaArc * Math.sin(thetaIntemediate * Math.PI / 180.0);
+				y     += deltaArc * Math.cos(thetaIntemediate * Math.PI / 180.0);
 				theta += deltaTheta;
 				if(     theta > 180f)  theta -= 180f;
 				else if(theta < -180f) theta += 180f;
