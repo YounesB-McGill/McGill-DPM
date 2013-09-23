@@ -1,10 +1,17 @@
 /*
  * Odometer.java
  */
+import lejos.nxt.*;
 
 public class Odometer extends Thread {
-   private final 
-	// robot position
+   
+	private final NXTRegulatedMotor leftMotor = Motor.A , rightMotor = Motor.B;
+   private final double robotWidth = 100; //robot width in idk yet
+   private final double rL = 10; //left wheel radius
+   private final double rR = 10; //right wheel radius
+   private double previousLTacho, previousRTacho;
+	
+   // robot position
 	private double x, y, theta;
 
 	// odometer update period, in ms
@@ -19,6 +26,9 @@ public class Odometer extends Thread {
 		y = 0.0;
 		theta = 0.0;
 		lock = new Object();
+
+      previousLTacho = leftMotor.getTachoCount();
+      previousRTacho = rightMotor.getTachoCount();
 	}
 
 	// run method (required for Thread)
@@ -27,22 +37,28 @@ public class Odometer extends Thread {
 
 		while (true) {
 			updateStart = System.currentTimeMillis();
-         L = leftMotor.getTachoCount();
-         R = rightMotor.getTachoCount();
-         int dL = L-pL;
-         int dR = R-pR;
-         int dC = (dL*rL+dR*rR)/2; //calculated change in arc length
-         int dT = (dR*rR-dL*rL)/robotWidth; //calculated change in theta
-         angleComponent = T+dT/2;
-         magnitudeComponent = dC * ( (2/dT) * Math.sin(dT/2) );
-			// put (some of) your odometer code here
+         //compute displacment
+         double lTacho = leftMotor.getTachoCount(); //get tacho count
+         double rTacho = rightMotor.getTachoCount();//get tacho count
+         double dL = lTacho - previousLTacho; //tacho change
+         double dR = rTacho - previousRTacho; //tacho change
+         previousLTacho = lTacho; //update previous for next update
+         previousRTacho = rTacho; //update previous for next update
+         double dC = (dL*rL+dR*rR)/2; //calculated change in arc length
+         double dT = (dR*rR-dL*rL)/robotWidth; //calculated change in theta
+         //displacment vector
+         //angleComponent = T+dT/2;
+         //magnitudeComponent = dC * ( (2/dT) * Math.sin(dT/2) );
+
+         // put (some of) your odometer code here
 
 			synchronized (lock) {
 				// don't use the variables x, y, or theta anywhere but here!
-				theta = -0.7376;
+//				theta = -0.7376;
 
-            x=x+dC*math.cos(theta+dT/2);
-            y=y+dC*math.sin(theta+dT/2);
+            //update x,y,theta values using displacment vector
+            x=x+dC*Math.cos(theta+dT/2);
+            y=y+dC*Math.sin(theta+dT/2);
             theta=theta+dT;
 			}
 
