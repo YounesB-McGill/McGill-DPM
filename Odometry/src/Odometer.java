@@ -5,14 +5,19 @@ import lejos.nxt.*;
 
 public class Odometer extends Thread {
    
+	/* constants */
 	private final NXTRegulatedMotor leftMotor = Motor.A , rightMotor = Motor.B;
-   private final double robotWidth = 100; //robot width in idk yet
-   private final double rL = 10; //left wheel radius
-   private final double rR = 10; //right wheel radius
-   private double previousLTacho, previousRTacho;
+	private final float robotWidth     = 16f;
+	private final float normaliseWidth = 2f / robotWidth;
+	private final float wheelRadiusL   = /* 5.6 cm / 2 */ 2.8f;
+	private final float wheelRadiusR   = /* 5.6 cm / 2 */ 2.8f;
 	
+	/* independent tachometer values; fixme: numerically unstable */
+	private int previousLTacho, previousRTacho;
+
    // robot position
-	private double x, y, theta;
+	/* fixme: int */
+	private float x, y, theta;
 
 	// odometer update period, in ms
 	private static final long ODOMETER_PERIOD = 25;
@@ -22,9 +27,9 @@ public class Odometer extends Thread {
 
 	// default constructor
 	public Odometer() {
-		x = 0.0;
-		y = 0.0;
-		theta = 0.0;
+		x = 0f;
+		y = 0f;
+		theta = 0f;
 		lock = new Object();
 
       previousLTacho = leftMotor.getTachoCount();
@@ -33,20 +38,26 @@ public class Odometer extends Thread {
 
 	// run method (required for Thread)
 	public void run() {
-		long updateStart, updateEnd;
+		int updateStart, updateEnd;
 
 		while (true) {
-			updateStart = System.currentTimeMillis();
-         //compute displacment
-         double lTacho = leftMotor.getTachoCount(); //get tacho count
-         double rTacho = rightMotor.getTachoCount();//get tacho count
-         double dL = lTacho - previousLTacho; //tacho change
-         double dR = rTacho - previousRTacho; //tacho change
-         previousLTacho = lTacho; //update previous for next update
-         previousRTacho = rTacho; //update previous for next update
-         double dC = (dL*rL+dR*rR)/2; //calculated change in arc length
-         double dT = (dR*rR-dL*rL)/robotWidth; //calculated change in theta
-         //displacment vector
+			updateStart = (int)System.currentTimeMillis();
+			
+			/* compute displacment in degrees */
+			int lTacho = leftMotor.getTachoCount();
+			int rTacho = rightMotor.getTachoCount();
+			int deltaL = lTacho - previousLTacho;
+			int deltaR = rTacho - previousRTacho;
+			/* update previous class variable for next update */
+			previousLTacho = lTacho;
+			previousRTacho = rTacho;
+
+			/* calculate */
+
+			float deltaArc   = ((float)deltaL * wheelRadiusL + (float)deltaR * wheelRadiusR) * 0.5f;
+			float deltaTheta = ((float)deltaL * wheelRadiusL - (float)deltaR * wheelRadiusR) * normaliseWidth;
+
+			//displacment vector
          //angleComponent = T+dT/2;
          //magnitudeComponent = dC * ( (2/dT) * Math.sin(dT/2) );
 
@@ -54,16 +65,19 @@ public class Odometer extends Thread {
 
 			synchronized (lock) {
 				// don't use the variables x, y, or theta anywhere but here!
-//				theta = -0.7376;
-
-            //update x,y,theta values using displacment vector
-            x=x+dC*Math.cos(theta+dT/2);
-            y=y+dC*Math.sin(theta+dT/2);
-            theta=theta+dT;
+				//update x,y,theta values using displacment vector
+				float thetaIntemediate = theta + deltaTheta * 0.5f;
+				/* fixme: sin, cos approx, Java doesn't have fmath? */
+				x     += deltaArc * Math.cos((double)thetaIntemediate * Math.PI / 180.0);
+				y     += deltaArc * Math.sin((double)thetaIntemediate * Math.PI / 180.0);
+				theta += deltaTheta;
+				/* fixme */
+				if(theta > 180f) theta -= 180f;
+				else if(theta < -180f) theta += 180f;
 			}
 
 			// this ensures that the odometer only runs once every period
-			updateEnd = System.currentTimeMillis();
+			updateEnd = (int)System.currentTimeMillis();
 			if (updateEnd - updateStart < ODOMETER_PERIOD) {
 				try {
 					Thread.sleep(ODOMETER_PERIOD - (updateEnd - updateStart));
@@ -120,7 +134,7 @@ public class Odometer extends Thread {
 	}
 
 	// mutators
-	public void setPosition(double[] position, boolean[] update) {
+	public void setPosition(float[] position, boolean[] update) {
 		// ensure that the values don't change while the odometer is running
 		synchronized (lock) {
 			if (update[0])
@@ -132,19 +146,19 @@ public class Odometer extends Thread {
 		}
 	}
 
-	public void setX(double x) {
+	public void setX(float x) {
 		synchronized (lock) {
 			this.x = x;
 		}
 	}
 
-	public void setY(double y) {
+	public void setY(float y) {
 		synchronized (lock) {
 			this.y = y;
 		}
 	}
 
-	public void setTheta(double theta) {
+	public void setTheta(float theta) {
 		synchronized (lock) {
 			this.theta = theta;
 		}
