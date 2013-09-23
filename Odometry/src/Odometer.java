@@ -12,8 +12,8 @@ public class Odometer extends Thread {
 	private final float robotWidth     = 16f;
 	private final float normaliseWidth = 2f / robotWidth;
 	/* wheel * rad / deg */
-	private final float wheelRadiusL   = /* 5.6 cm / 2 */ 2.8f * Math.PI / 180f;
-	private final float wheelRadiusR   = /* 5.6 cm / 2 */ 2.8f * Math.PI / 180f;
+	private final float wheelRadiusL   = /* 5.6 cm / 2 */ 2.8f * deg2rad;
+	private final float wheelRadiusR   = /* 5.6 cm / 2 */ 2.8f * deg2rad;
 	
 	/* independent tachometer values; fixme: numerically unstable */
 	private int previousLTacho, previousRTacho;
@@ -60,7 +60,7 @@ public class Odometer extends Thread {
 			float distanceL  = (float)deltaL * wheelRadiusL;
 			float distanceR  = (float)deltaR * wheelRadiusR;
 			float deltaArc   = (distanceL + distanceR) * 0.5f;
-			float deltaTheta = (distanceL - distanceR) * normaliseWidth * 180.0 / Math.PI;
+			float deltaTheta = (distanceL - distanceR) * normaliseWidth * rad2deg;
 
 			synchronized (lock) {
 				// don't use the variables x, y, or theta anywhere but here!
