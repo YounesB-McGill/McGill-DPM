@@ -54,8 +54,10 @@ public class Odometer extends Thread {
 
 			/* calculate */
 
-			float deltaArc   = ((float)deltaL * wheelRadiusL + (float)deltaR * wheelRadiusR) * 0.5f;
-			float deltaTheta = ((float)deltaL * wheelRadiusL - (float)deltaR * wheelRadiusR) * normaliseWidth;
+			float distanceL  = (float)deltaL * wheelRadiusL;
+			float distanceR  = (float)deltaR * wheelRadiusR;
+			float deltaArc   = (distanceL + distanceR) * 0.5f;
+			float deltaTheta = (distanceL - distanceR) * normaliseWidth * 60f; /* fixme: so scetch */
 
 			//displacment vector
          //angleComponent = T+dT/2;
@@ -71,8 +73,7 @@ public class Odometer extends Thread {
 				x     += deltaArc * Math.cos((double)thetaIntemediate * Math.PI / 180.0);
 				y     += deltaArc * Math.sin((double)thetaIntemediate * Math.PI / 180.0);
 				theta += deltaTheta;
-				/* fixme */
-				if(theta > 180f) theta -= 180f;
+				if(     theta > 180f)  theta -= 180f;
 				else if(theta < -180f) theta += 180f;
 			}
 
