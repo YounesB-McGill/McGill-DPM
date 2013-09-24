@@ -29,17 +29,28 @@ public class OdometryDisplay extends Thread {
 			LCD.drawString("X:              ", 0, 0);
 			LCD.drawString("Y:              ", 0, 1);
 			LCD.drawString("T:              ", 0, 2);
-         LCD.drawString("CountX:         ", 0, 3);
-         LCD.drawString("CountY:         ", 0, 4);
+         LCD.drawString("lineX:          ", 0, 3);
+         LCD.drawString("lineY:          ", 0, 4);
 			// get the odometry information
 			odometer.getPosition(position, new boolean[] { true, true, true });
 
 			// display odometry information
 			for (int i = 0; i < 3; i++) {
 				LCD.drawString(formattedDoubleToString(position[i], 2), 3, i);
+            if(i==2)
+            {
+                if(position[i] > 0)
+                {
+                   LCD.drawString(formattedDoubleToString(360-position[i], 2), 3, i);
+                } 
+                else
+                {
+                   LCD.drawString(formattedDoubleToString(-position[i], 2), 3, i);
+                }
+            }
 			}
-         LCD.drawString(formattedDoubleToString(odometryCorrection.getCountX(), 2), 3, 3);
-         LCD.drawString(formattedDoubleToString(odometryCorrection.getCountY(), 2), 3, 4);
+         LCD.drawString(formattedDoubleToString(odometryCorrection.getLineX(), 2), 3, 3);
+         LCD.drawString(formattedDoubleToString(odometryCorrection.getLineY(), 2), 3, 4);
 
 			// throttle the OdometryDisplay
 			displayEnd = System.currentTimeMillis();

@@ -31,8 +31,8 @@ public class Odometer extends Thread {
 
 	// default constructor
 	public Odometer() {
-		x = 15.24f;
-		y = -15.24f;
+		x = 0f;
+		y = 0f;
 		theta = 0f;
 		lock = new Object();
 
