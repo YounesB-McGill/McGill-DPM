@@ -66,7 +66,7 @@ public class Odometer extends Thread {
 			synchronized (lock) {
 				// don't use the variables x, y, or theta anywhere but here!
 				//update x,y,theta values using displacment vector
-				double thetaIntemediate = (theta + deltaTheta * 0.5f); /* [deg] */
+				float thetaIntemediate = (theta + deltaTheta * 0.5f); /* [deg] */
 				theta += deltaTheta; /* [deg] */
 				/* numerical stability (assert -180 < deltaTheta < 180) */
 				if(     theta > 180f)  theta -= 360f;
@@ -104,8 +104,8 @@ public class Odometer extends Thread {
 		}
 	}
 
-	public double getX() {
-		double result;
+	public float getX() {
+		float result;
 
 		synchronized (lock) {
 			result = x;
@@ -114,8 +114,8 @@ public class Odometer extends Thread {
 		return result;
 	}
 
-	public double getY() {
-		double result;
+	public float getY() {
+		float result;
 
 		synchronized (lock) {
 			result = y;
@@ -124,8 +124,8 @@ public class Odometer extends Thread {
 		return result;
 	}
 
-	public double getTheta() {
-		double result;
+	public float getTheta() {
+		float result;
 
 		synchronized (lock) {
 			result = theta;
