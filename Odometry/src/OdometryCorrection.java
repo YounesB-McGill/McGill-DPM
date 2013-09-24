@@ -1,5 +1,7 @@
 /* 
  * OdometryCorrection.java
+   Group 51
+   Alex Bhandari-Young and Neil Edelman
 */
 import lejos.nxt.*;
 
@@ -32,6 +34,8 @@ public class OdometryCorrection extends Thread {
 			// put your correction code here
          if(lightsensor.readValue() < 45)
          {
+             //This code is a little longer than it needs to be. The up and down and the right and left directions do the same thing and could
+             //be combined, but it is left like this to make debugging easier.
              //GOING UP
              if(Math.abs(Ot)<10) //theta at 0 within threshold (points north)
              {
@@ -61,7 +65,7 @@ public class OdometryCorrection extends Thread {
                Sound.buzz();
              }
          }
-         lineX = snapX;
+         lineX = snapX; //for debugging, written to screen
          lineY = snapY;
          // this ensure the odometry correction occurs only once every period
 			correctionEnd = (int)System.currentTimeMillis();

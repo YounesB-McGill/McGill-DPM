@@ -1,6 +1,8 @@
 /*
  * Odometer.java
- */
+   Group 51
+i  Alex Bhandari-Young and Neil Edelman
+*/
 import lejos.nxt.*;
 
 public class Odometer extends Thread {
