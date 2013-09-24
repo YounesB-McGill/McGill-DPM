@@ -9,8 +9,8 @@ public class Lab2 {
 
 		// some objects that need to be instantiated
 		Odometer odometer = new Odometer();
-		OdometryDisplay odometryDisplay = new OdometryDisplay(odometer);
 		OdometryCorrection odometryCorrection = new OdometryCorrection(odometer);
+		OdometryDisplay odometryDisplay = new OdometryDisplay(odometer,odometryCorrection);
 
 		do {
 			// clear the display
