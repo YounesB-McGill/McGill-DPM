@@ -2,7 +2,12 @@
  * Odometer.java
    Group 51
 i  Alex Bhandari-Young and Neil Edelman
-*/
+
+ The internal representation is the robot points along the x-axis, with
+ standard coordinates. The units are in cm, except the int tachometer values
+ which are in cm deg/rad.
+ */
+
 import lejos.nxt.*;
 
 public class Odometer extends Thread {
