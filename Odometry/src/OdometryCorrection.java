@@ -36,7 +36,7 @@ public class OdometryCorrection extends Thread {
          {
              //This code is a little longer than it needs to be. The up and down and the right and left directions do the same thing and could
              //be combined, but it is left like this to make debugging easier.
-             //GOING UP
+             //GOING UP -- make sure there is a positive number
              if(Math.abs(Ot)<10) //theta at 0 within threshold (points north)
              {
                 Sound.beep();
