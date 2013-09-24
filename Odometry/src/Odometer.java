@@ -6,23 +6,25 @@ import lejos.nxt.*;
 public class Odometer extends Thread {
    
 	/* constants */
-	private final float toDegrees = 180f / (float)Math.PI;
+
 	private final NXTRegulatedMotor leftMotor = Motor.A , rightMotor = Motor.B;
-	private final float robotWidth     = 16f;
-	private final float normaliseWidth = 1f / robotWidth;
-	/* wheel * rad / deg */
-	private final float wheelRadiusL   = /* 5.6 cm / 2 */ 2.8f * (float)(Math.PI / 180f);
-	private final float wheelRadiusR   = /* 5.6 cm / 2 */ 2.8f * (float)(Math.PI / 180f);
+
+	private final float toDegrees   = 180f / (float)Math.PI; /* [deg]/[rad] */
+	private final float fromDegrees = (float)Math.PI / 180f; /* [rad]/[deg] */
+	private final float robotWidth     = 16f; /* [cm] */
+	private final float normaliseWidth = 1f / robotWidth; /* [cm^{-1}] */
+	/* 5.6 cm / 2; fixme: get more accurate */
+	private final float wheelRadiusL   = 2.8f * fromDegrees; /* [cm][rad]/[deg] */
+	private final float wheelRadiusR   = 2.8f * fromDegrees; /* [cm][rad]/[deg] */
 	
 	/* independent tachometer values; fixme: numerically unstable */
 	private int previousLTacho, previousRTacho;
 
-   // robot position
-	/* fixme: int */
+	// robot position
 	private float x, y, theta;
 
 	// odometer update period, in ms
-	private static final long ODOMETER_PERIOD = 25;
+	private static final int ODOMETER_PERIOD = 25;
 
 	// lock object for mutual exclusion
 	private Object lock;
@@ -45,7 +47,7 @@ public class Odometer extends Thread {
 		while (true) {
 			updateStart = (int)System.currentTimeMillis();
 			
-			/* compute displacment in degrees */
+			/* compute displacment in [cm][deg]/[rad] */
 			int lTacho = leftMotor.getTachoCount();
 			int rTacho = rightMotor.getTachoCount();
 			int deltaL = lTacho - previousLTacho;
@@ -56,19 +58,21 @@ public class Odometer extends Thread {
 
 			/* calculate */
 
-			float distanceL  = (float)deltaL * wheelRadiusL;
-			float distanceR  = (float)deltaR * wheelRadiusR;
-			float deltaArc   = (distanceR + distanceL) * 0.5f;
-			float deltaTheta = (distanceR - distanceL) * normaliseWidth * (float)(180.0 / Math.PI);
+			/* [cm][deg]/[rad] * [cm][rad]/[deg] = [cm] (are orthoganal) */
+			float distanceL  = (float)deltaL * wheelRadiusL; /* [cm] */
+			float distanceR  = (float)deltaR * wheelRadiusR; /* [cm] */
+			float deltaArc   = (distanceR + distanceL) * 0.5f; /* [cm] */
+			/* [cm] / [cm] [deg][rad] = [deg] (unitless) */
+			float deltaTheta = (distanceR - distanceL) * normaliseWidth * toDegrees;
 
 			synchronized (lock) {
 				// don't use the variables x, y, or theta anywhere but here!
 				//update x,y,theta values using displacment vector
-				double thetaIntemediate = theta + deltaTheta * 0.5f;
-				/* fixme: sin, cos approx, Java doesn't have fmath? */
-				x     += deltaArc * Math.cos(thetaIntemediate * Math.PI / 180.0);
-				y     += deltaArc * Math.sin(thetaIntemediate * Math.PI / 180.0);
-				theta += deltaTheta;
+				double thetaIntemediate = (theta + deltaTheta * 0.5f); /* [deg] */
+				theta += deltaTheta; /* [deg] */
+				thetaIntemediate *= fromDegrees; /* [rad] */
+				x     += deltaArc * Math.cos(thetaIntemediate); /* [cm] */
+				y     += deltaArc * Math.sin(thetaIntemediate); /* [cm] */
 				if(     theta > 180f)  theta -= 360f;
 				else if(theta < -180f) theta += 360f;
 			}
