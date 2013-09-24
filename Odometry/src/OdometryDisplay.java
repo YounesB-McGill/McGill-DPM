@@ -37,17 +37,20 @@ public class OdometryDisplay extends Thread {
 			// display odometry information
 			for (int i = 0; i < 3; i++) {
 				LCD.drawString(formattedDoubleToString(position[i], 2), 3, i);
-            if(i==2)
-            {
-                if(position[i] > 0)
-                {
-                   LCD.drawString(formattedDoubleToString(360-position[i], 2), 3, i);
-                } 
-                else
-                {
-                   LCD.drawString(formattedDoubleToString(-position[i], 2), 3, i);
-                }
-            }
+   //commented out below is code to make theta range from 0 to 360 instead of -180 to 180.
+   //We were told by one TA that it had to be like this. But another said it was okay as long
+   //as the value for theta covers one full rotation
+//            if(i==2)
+//            {
+//                if(position[i] > 0)
+//                {
+//                   LCD.drawString(formattedDoubleToString(360-position[i], 2), 3, i);
+//                } 
+//                else
+//                {
+//                   LCD.drawString(formattedDoubleToString(-position[i], 2), 3, i);
+//                }
+//            }
 			}
          LCD.drawString(formattedDoubleToString(odometryCorrection.getLineX(), 2), 3, 3);
          LCD.drawString(formattedDoubleToString(odometryCorrection.getLineY(), 2), 3, 4);
