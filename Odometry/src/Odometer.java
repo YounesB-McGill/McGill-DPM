@@ -52,17 +52,15 @@ public class Odometer extends Thread {
 			int rTacho = rightMotor.getTachoCount();
 			int deltaL = lTacho - previousLTacho;
 			int deltaR = rTacho - previousRTacho;
-			/* update previous class variable for next update */
 			previousLTacho = lTacho;
 			previousRTacho = rTacho;
-
-			/* calculate */
 
 			/* [cm][deg]/[rad] * [cm][rad]/[deg] = [cm] (are orthoganal) */
 			float distanceL  = (float)deltaL * wheelRadiusL; /* [cm] */
 			float distanceR  = (float)deltaR * wheelRadiusR; /* [cm] */
 			float deltaArc   = (distanceR + distanceL) * 0.5f; /* [cm] */
-			/* [cm] / [cm] [deg][rad] = [deg] (unitless) */
+
+			/* [cm] / [cm] [deg]/[rad] = [deg] (unitless) */
 			float deltaTheta = (distanceR - distanceL) * normaliseWidth * toDegrees;
 
 			synchronized (lock) {
@@ -70,11 +68,13 @@ public class Odometer extends Thread {
 				//update x,y,theta values using displacment vector
 				double thetaIntemediate = (theta + deltaTheta * 0.5f); /* [deg] */
 				theta += deltaTheta; /* [deg] */
+				/* numerical stability (assert -180 < deltaTheta < 180) */
+				if(     theta > 180f)  theta -= 360f;
+				else if(theta < -180f) theta += 360f;
+				/* convert to normal radians for sin/cos */
 				thetaIntemediate *= fromDegrees; /* [rad] */
 				x     += deltaArc * Math.cos(thetaIntemediate); /* [cm] */
 				y     += deltaArc * Math.sin(thetaIntemediate); /* [cm] */
-				if(     theta > 180f)  theta -= 360f;
-				else if(theta < -180f) theta += 360f;
 			}
 
 			// this ensures that the odometer only runs once every period
