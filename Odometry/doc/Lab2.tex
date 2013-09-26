@@ -37,6 +37,7 @@
 % create new commands
 \def\^#1{\textsuperscript{#1}}
 \def\!{\overline}
+\def\degree{\ensuremath{^\circ}}
 
 % lists
 \renewcommand{\labelenumi}{\arabic{enumi})}
@@ -65,9 +66,64 @@
 
 \maketitle
 
-\abstract{An autonomous automated vehicle is programmed with a dead-reckoning system, and then enhanced with colour sensors aimed at the floor to detect grid lines.}
+\abstract{An autonomous automated vehicle is programmed with a dead-reckoning system, and then enhanced with colour sensors aimed at the floor to detect grid lines. The odometer is calibrated and measured.}
 
-\section{Introduction}
+%Data Collection (2 sentences + data)
+%Observations and Conclusion
+%Error Analysis (When possible, specify sub, super, or linear error growth)%Further Improvements
+
+\section{Data Collection}
+
+Repeated robot runs on the 3-by-3 are seen in Table~\ref{a}.
+
+\begin{table}[htb]
+\begin{center}\begin{tabular}{r r@{}l r@{}l r@{}l}
+& &x (cm\degree)& &y (cm\degree)& &$\theta (\degree)$ \\
+\hline
+reported&-107&.13&	92&.29&	0&.20 \\
+&-105&.65&	97&.52&	0&.20 \\
+&-110&.92&	104&.14&	0&.20 \\
+&-150&.94&	108&.81&	0&.20 \\
+&27&.33&	224&.08&	0&.20 \\
+&24&.80&	92&.78&	0&.20 \\
+&16&.90&	-4&.97&	0&.19 \\
+&3&.66&	-98&.66&	0&.19 \\
+&39&.46&	-48&.36&	0&.19 \\
+&52&.39&	4&.79&	0&.19 \\
+\hline
+total&	-310&.10&	572&.42&	1&.96 \\
+(cm)&	-5&.41& 9&.99\\
+real (cm)&	31&.2&	18&.3&	24
+\end{tabular}\end{center}
+\caption{Reported error as read by the robot, and real error as read by a ruler.}
+\label{a}
+\end{table}
+
+\begin{table}[htb]
+\begin{center}\begin{tabular}{r r@{}l r@{}l r@{}l}
+& &x (cm\degree)& &y (cm\degree)& &$\theta (\degree)$ \\
+\hline
+reported&-107&.13&	92&.29&	0&.20 \\
+&-105&.65&	97&.52&	0&.20 \\
+&-110&.92&	104&.14&	0&.20 \\
+&-150&.94&	108&.81&	0&.20 \\
+&27&.33&	224&.08&	0&.20 \\
+&24&.80&	92&.78&	0&.20 \\
+&16&.90&	-4&.97&	0&.19 \\
+&3&.66&	-98&.66&	0&.19 \\
+&39&.46&	-48&.36&	0&.19 \\
+&52&.39&	4&.79&	0&.19 \\
+\hline
+total&	-310&.10&	572&.42&	1&.96 \\
+(cm)&	-5&.41& 9&.99\\
+real (cm)&	31&.2&	18&.3&	24
+\end{tabular}\end{center}
+\caption{With odometry correction. (todo!)}
+\label{b}
+\end{table}
+
+\section{Observations and Conclusion}
+\section{Error Analysis}\section{Further Improvements}
 
 Intro.\cite{lab2}
 
