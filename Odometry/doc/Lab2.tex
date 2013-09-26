@@ -40,8 +40,8 @@
 \def\degree{\ensuremath{^\circ}}
 
 % lists
-\renewcommand{\labelenumi}{\arabic{enumi})}
-\renewcommand{\labelenumii}{\alph{enumii})}
+\renewcommand{\labelenumi}{\alph{enumi})}
+\renewcommand{\labelenumii}{\roman{enumii})}
 
 % for hyperref
 \hypersetup{
@@ -74,7 +74,7 @@
 
 \section{Data Collection}
 
-Repeated robot runs on the 3-by-3 are seen in Table~\ref{a}.
+Repeated robot runs on the 3-by-3 are seen in without odometer correction in Table~\ref{a} and with odometer correction in Table~\ref{b}.
 
 \begin{table}[htb]
 \begin{center}\begin{tabular}{r r@{}l r@{}l r@{}l}
@@ -122,70 +122,34 @@ real (cm)&	31&.2&	18&.3&	24
 \label{b}
 \end{table}
 
-\section{Observations and Conclusion}
-\section{Error Analysis}\section{Further Improvements}
-
-Intro.\cite{lab2}
-
-\section{Calculations}
+\section{Data Analysis}
 
 \begin{enumerate}
-
-\item This is an item.
-
-\begin{algorithm*}[h]
-\DontPrintSemicolon
-\KwIn{$A$}
-\KwOut{$B$}
-\BlankLine
-\ForEach{$a \in A$}{
-	\If{$a$}{$B$}
-}
-\KwRet{$B$}\;
-\label{test}
-\caption{test}
-\end{algorithm*}
-
-\item Another.
-
-\begin{align} % simmons tunneling
-I(V)&=\frac{q^{2}}{4\pi^{2} \hbar d^{2}}\left(
-\left( \phi -\alpha qV \right)
-e^{-K\sqrt{\phi -\alpha qV}}\right.\nonumber\\
-&\quad\left.-\left( \phi +\left( 1-\alpha \right)qV \right)
-e^{-K\sqrt{\phi +\left( 1-\alpha  \right)qV}}
-\right)\nonumber\\
-&\text{where, }\nonumber\\
-K&=\frac{2d}{\hbar}\sqrt{2m_{e}q}\nonumber\\
-&\text{provided, }\nonumber\\
-V &< \frac{\phi}{q}\label{sim}
-\end{align}
-
-\item Another.
-
-%\fig{A}{\cite{a}}
-
-Figure~\ref{A}.
-
-\item Another.
-
-\begin{table}[htb]\footnotesize
-\begin{center}\begin{tabular}{lr@{}l}
-GFP-Dronpa&		136&\,\textmu M	\\
-Cyt-{\it c}&			43&\,\textmu M	\\
-Fusion Protein&	4&.82\,\textmu M	\\
-Cyt-{\it c}&			30&(2)\,\textmu M	\\
-AcGFP&			24&\,\textmu M	\\
-Phosphate pH7.03&	100&\,mM	\\
-Phosphate pH7.01&	100&\,mM
-\end{tabular}\end{center}
-\caption{Stock concentrations.}
-\label{stock}
-\end{table}
-
+\item ``What was the standard deviation of the results without correction (compute it for x and y separately, and provide the four (4) values in a table)? Did it decrease when correction was introduced? Explain why/why not.\cite{lab2}'' 4 values? what table?
+\item ``With correction, do you expect the error in the x position or the y position to be smaller? Explain.'' The error is reset in the direction orthogonal to travel, so this would have a smaller error.
 \end{enumerate}
 
-\clearpage
+\section{Observations and Conclusion}
+
+``Is the error you observed in the odometer (without correction) tolerable for larger distances (i.e. circumnavigating the field requires a travel distance five (5) times larger than that used for this lab)? Do you expect the error to grow linearly with respect to travel distance? Explain briefly.\cite{lab2}''
+
+The error grows linearly with dead-reckoning. Without correction, the robot eventually goes astray. With the sensor on the ground, it allows us to get the absolute position every tile. This corrects the odometer and limits the error. It's analogous to the heading gyroscope, which is quick-acting but neutrally-stable, being corrected by the compass, which is slow, but accurate.
+
+\section{Error Analysis}
+
+See Figure~\ref{a} and Figure~\ref{b} for values.
+
+\section{Further Improvements}
+
+\begin{enumerate}
+\item ``Propose a means of, in software, reducing the slip of the robot's wheels (do not provide code).\cite{lab2}'' Putting a limit on the speed.
+\item ``Propose a means of, in software, correcting the angle reported by the odometer, when (do not provide code):\cite{lab2}''
+\begin{enumerate}
+\item ``The robot has two light sensors.\cite{lab2}''
+\item ``The robot has only one light sensor.\cite{lab2}''
+No angle is reported by the odometer; it's just a number representing the forward motion\cite{simpson1989oxford}.
+\end{enumerate}
+\end{enumerate}
 
 \bibliography{lab2}
 
