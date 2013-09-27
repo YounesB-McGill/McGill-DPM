@@ -8,10 +8,11 @@
 
 /** private (entry point) */
 int main(int argc, char **argv) {
-	int i;
 	double xa[N], ya[N], xr[N], yr[N], xd[N], yd[N];
 	double sum, ssq;
 	double mean, var, stdd;
+	int i;
+	char buffer[120], buffer2[120], *a, *b;
 
 	for(i = 0; i < N; i++) {
 		scanf("%lf\t%lf\t%lf\t%lf\t\n", &xa[i], &ya[i], &xr[i], &yr[i]);
@@ -31,7 +32,25 @@ int main(int argc, char **argv) {
 
 	printf("actual (x, y), reported (x, y), delta (x, y)\n", xa[i], ya[i], xr[i], yr[i]);
 	for(i = 0; i < N; i++) {
-		printf("%f, %f, %f, %f, %f, %f\n", xa[i], ya[i], xr[i], yr[i], xd[i], yd[i]);
+		snprintf(buffer, sizeof(buffer), "%.1f& %.1f& %.2f& %.2f& %.1f& %.1f \\\\", xa[i], ya[i], xr[i], yr[i], xd[i], yd[i]);
+		/* replace '.' by '&.' */
+		for(a = buffer, b = buffer2; a; a++) {
+			if(b == buffer2 + sizeof(buffer2) - 2) {
+				*b = '\0';
+				break;
+			}
+			if(a[0] == '.') {
+				b[0] = '&';
+				b[1] = '.';
+				b += 2;
+			} else {
+				b[0] = a[0];
+				if(a[0] == '\0') break;
+				b++;
+			}
+		}
+		printf("%s\n", buffer);
+		printf("%s\n", buffer2);
 	}
 	printf("mean %f, varience %f, corrected sample stadard deviation %f\n", mean, var, stdd);
 
