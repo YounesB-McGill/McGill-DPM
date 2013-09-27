@@ -70,30 +70,19 @@
 
 %Data Collection (2 sentences + data)
 %Observations and Conclusion
-%Error Analysis (When possible, specify sub, super, or linear error growth)%Further Improvements
+%Error Analysis (When possible, specify sub, super, or linear error growth)
+%Further Improvements
 
 \section{Data Collection}
 
 Repeated robot runs on the 3-by-3 are seen in without odometer correction in Table~\ref{a} and with odometer correction in Table~\ref{b}.
 
 \begin{table}[htb]
-\begin{center}\begin{tabular}{r r@{}l r@{}l r@{}l}
-& &x (cm\degree)& &y (cm\degree)& &$\theta (\degree)$ \\
+\begin{center}\begin{tabular}{r r@{}l r@{}l r@{}l r@{}l}
+&actual&&& &reported&&& \\
+&x (cm)& &y (cm)& &x (cm)& &y (cm)& \\
 \hline
-reported&-107&.13&	92&.29&	0&.20 \\
-&-105&.65&	97&.52&	0&.20 \\
-&-110&.92&	104&.14&	0&.20 \\
-&-150&.94&	108&.81&	0&.20 \\
-&27&.33&	224&.08&	0&.20 \\
-&24&.80&	92&.78&	0&.20 \\
-&16&.90&	-4&.97&	0&.19 \\
-&3&.66&	-98&.66&	0&.19 \\
-&39&.46&	-48&.36&	0&.19 \\
-&52&.39&	4&.79&	0&.19 \\
 \hline
-total&	-310&.10&	572&.42&	1&.96 \\
-(cm)&	-5&.41& 9&.99\\
-real (cm)&	31&.2&	18&.3&	24
 \end{tabular}\end{center}
 \caption{Reported error as read by the robot, and real error as read by a ruler.}
 \label{a}
@@ -126,7 +115,7 @@ real (cm)&	31&.2&	18&.3&	24
 
 \begin{enumerate}
 \item ``What was the standard deviation of the results without correction (compute it for x and y separately, and provide the four (4) values in a table)? Did it decrease when correction was introduced? Explain why/why not.\cite{lab2}'' 4 values? what table?
-\item ``With correction, do you expect the error in the x position or the y position to be smaller? Explain.'' The error is reset in the direction orthogonal to travel, so this would have a smaller error.
+\item ``With correction, do you expect the error in the x position or the y position to be smaller? Explain.'' The error is reset in the direction orthogonal to travel, so this would have a smaller error. We corrected $x$, $y$, $x$, then $y$, the y error will be smaller.
 \end{enumerate}
 
 \section{Observations and Conclusion}
@@ -138,6 +127,10 @@ The error grows linearly with dead-reckoning. Without correction, the robot even
 \section{Error Analysis}
 
 See Figure~\ref{a} and Figure~\ref{b} for values.
+
+-slippage
+-imprecision
+-sin0
 
 \section{Further Improvements}
 

@@ -1,83 +1,37 @@
-/* Copyright 20xx Neil Edelman, distributed under the terms of the
- GNU General Public License, see copying.txt */
+/* DPM lab 2 */
 
 #include <stdlib.h> /* malloc free */
 #include <stdio.h>  /* fprintf */
-#include "Oo.h"
+#include <math.h>
 
-/* constants */
-static const char *programme   = "x";
-static const char *year        = "20xx";
-static const int versionMajor  = 0;
-static const int versionMinor  = 0;
-
-struct Oo {
-	int var;
-};
-
-/* private */
-static int fn(const struct Oo *oo);
-static void usage(const char *argvz);
+#define N 10
 
 /** private (entry point) */
 int main(int argc, char **argv) {
+	int i;
+	double xa[N], ya[N], xr[N], yr[N], xd[N], yd[N];
+	double sum, ssq;
+	double mean, stderr;
+
+	for(i = 0; i < N; i++) {
+		scanf("%lf\t%lf\t%lf\t%lf\t\n", &xa[i], &ya[i], &xr[i], &yr[i]);
+	}
+
+	for(i = 0, sum = 0, ssq = 0; i < N; i++) {
+		xd[i] = xa[i] - xr[i];
+		yd[i] = ya[i] - yr[i];
+		/* compute std dev */
+		sum += xd[i];
+		ssq += xd[i] * xd[i];
+	}
+	mean   = sum / N;
+	stderr = sqrt((ssq/N - mean*mean) / (double)N);
+
+	printf("actual (x, y), reported (x, y), delta (x, y)\n", xa[i], ya[i], xr[i], yr[i]);
+	for(i = 0; i < N; i++) {
+		printf("%f, %f, %f, %f, %f, %f\n", xa[i], ya[i], xr[i], yr[i], xd[i], yd[i]);
+	}
+	printf("mean %f, stderr %f\n", mean, stderr);
+
 	return EXIT_SUCCESS;
-}
-
-/* public */
-
-/** constructor */
-struct Oo *Oo() {
-	struct Oo *oo;
-
-	if(0) {
-		fprintf(stderr, "Oo: 0 was true.\n");
-		return 0;
-	}
-	if(!(oo = malloc(sizeof(struct Oo)))) {
-		perror("Oo constructor");
-		Oo_(&oo);
-		return 0;
-	}
-	oo->var  = 0;
-	fprintf(stderr, "Oo: new, #%p.\n", (void *)oo);
-	if(0) {
-		fprintf(stderr, "Oo: did something with #%p.\n", (void *)oo);
-		Oo_(&oo);
-		return 0;
-	}
-
-	return oo;
-}
-
-/** destructor */
-void Oo_(struct Oo **oo_ptr) {
-	struct Oo *oo;
-
-	if(!oo_ptr || !(oo = *oo_ptr)) return;
-	fprintf(stderr, "~Oo: erase, #%p.\n", (void *)oo);
-	free(oo);
-	*oo_ptr = oo = 0;
-}
-
-/** accessor: var */
-char *OoGetVar(const struct Oo *oo) {
-	if(!oo) return 0;
-	return oo->var;
-}
-
-/* private */
-
-/** fn */
-static int fn(const struct Oo *oo) {
-	return 0;
-}
-
-static void usage(const char *argvz) {
-	fprintf(stderr, "Usage: %s\n", argvz);
-	fprintf(stderr, "Version %d.%d.\n\n", versionMajor, versionMinor);
-	fprintf(stderr, "%s Copyright %s Neil Edelman\n", programme, year);
-	fprintf(stderr, "This program comes with ABSOLUTELY NO WARRANTY.\n");
-	fprintf(stderr, "This is free software, and you are welcome to redistribute it\n");
-	fprintf(stderr, "under certain conditions; see copying.txt.\n\n");
 }
