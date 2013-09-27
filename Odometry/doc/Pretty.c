@@ -6,6 +6,10 @@
 
 #define N 10
 
+struct vec2_t {
+	double x, y;
+};
+
 /** private (entry point) */
 int main(int argc, char **argv) {
 	double xa[N], ya[N], xr[N], yr[N], xd[N], yd[N];
@@ -30,7 +34,11 @@ int main(int argc, char **argv) {
 	stdd   = sqrt(var);
 	/*stderr = sqrt((ssq/N - mean*mean) / (double)N);*/
 
-	printf("actual (x, y), reported (x, y), delta (x, y)\n", xa[i], ya[i], xr[i], yr[i]);
+	printf("\\begin{table}[htb]\n");
+	printf("\\begin{center}\\begin{tabular}{r r@{}l r@{}l r@{}l}\n");
+	printf("&actual&&& &reported&&& &delta&&& \\\\\n");
+	printf("&x (cm)& &y (cm)& &x (cm)& &y (cm)& &x (cm)& &y (cm)& \\\\\n");
+	printf("\\hline\n");
 	for(i = 0; i < N; i++) {
 		snprintf(buffer, sizeof(buffer), "%.1f& %.1f& %.2f& %.2f& %.1f& %.1f \\\\", xa[i], ya[i], xr[i], yr[i], xd[i], yd[i]);
 		/* replace '.' by '&.' */
@@ -49,9 +57,14 @@ int main(int argc, char **argv) {
 				b++;
 			}
 		}
-		printf("%s\n", buffer);
 		printf("%s\n", buffer2);
 	}
+	printf("\\end{tabular}\\end{center}\n");
+	printf("\\caption{Reported error as read by the robot, and real error as read by a ruler and the difference between them for the [un]corrected code.\n");
+	printf("\\caption{The corrected sample standard deviation of the difference of $x$ is %.2f and $y$ is %.2f.}\n", stdd, 0.0);
+	printf("\\label{[a|b]}\n");
+	printf("\\end{table}\n");
+
 	printf("mean %f, varience %f, corrected sample stadard deviation %f\n", mean, var, stdd);
 
 	return EXIT_SUCCESS;
