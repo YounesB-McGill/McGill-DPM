@@ -18,24 +18,21 @@ class Navigator extends Thread /*implements Runnable*/ {
 	private final float angularCorrection = wheelBase * 0.5f / wheelRadius;
 	private final NXTRegulatedMotor leftMotor = Motor.A , rightMotor = Motor.B;
 
-//   //create odometer for navigation
-//   Odometer odometer = new Odometer();
-//   //initialize just in case
-//   odometer.setX(0);
-//   odometer.setY(0);
-//   //start odometer
-//   odometer.run();
-
-   //running when true
+	//running when true
 	boolean isNavigating;
 	String navMessage = "stopped";
 	/* the actual x, y, \theta at which the robot thinks */
 	float x, y, t;
+	Odometer odometer;
 
 	/** constructor */
 	public Navigator() {
 		x = 0f;
 		y = 0f;
+		//create odometer for navigation
+		odometer = new Odometer();
+		//start odometer
+		odometer.run();
 	}
 
 	/** to string, may be useful */
@@ -61,14 +58,19 @@ class Navigator extends Thread /*implements Runnable*/ {
 	 that your heading is updated until you reach your exact goal.
 	 (This method will poll the odometer for information)" */
 	void travelTo(float x, float y) {
+		isNavigating = true;
 		navMessage = "to " + x + ", " + y;
-		/* fixme: hahahahahahahaha more complcated system */
-      //.....fixing -alex
+		while() {
+			
+		}
+		//.....fixing -alex
 	   this.turnTo((float)Math.atan2(y, x) * toDegrees);
       leftMotor.setSpeed(200);
       rightMotor.setSpeed(200);
       leftMotor.forward();
       rightMotor.forward();
+	}
+		isNavigating = false;
 	}
 
 	/** "This method causes the robot to turn (on point) to the absolute
@@ -78,7 +80,7 @@ class Navigator extends Thread /*implements Runnable*/ {
 		navMessage = "to " + theta;
 		int rotate = (int)(theta * angularCorrection);
 		leftMotor.rotate((int)-rotate, true);
-		rightMotor.rotate((int)rotate, false);
+		rightMotor.rotate((int)rotate, true);
 	}
 	
 	/** "This method returns true if another thread has called travelTo() or
