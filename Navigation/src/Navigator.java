@@ -8,7 +8,7 @@ import lejos.nxt.*; /* must be linked with lejos */
 class Navigator {
 	int var;
 
-	public Java(final String ex) {
+	public Navigator(final String ex) {
 		this.var = 7;
 	}
 

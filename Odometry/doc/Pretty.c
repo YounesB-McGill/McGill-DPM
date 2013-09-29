@@ -39,10 +39,10 @@ int main(int argc, char **argv) {
 	stdd.y = sqrt(var.y);
 	/*stderr = sqrt((ssq/N - mean*mean) / (double)N);*/
 
-	printf("\\begin{table}[htb]\n");
-	printf("\\begin{center}\\begin{tabular}{r r@{}l r@{}l r@{}l}\n");
-	printf("&actual&&& &reported&&& &delta&&& \\\\\n");
-	printf("&x (cm)& &y (cm)& &x (cm)& &y (cm)& &x (cm)& &y (cm)& \\\\\n");
+	printf("\\begin{table*}[htb]\n");
+	printf("\\begin{center}\\begin{tabular}{r@{}l r@{}l r@{}l r@{}l r@{}l r@{}l}\n");
+	printf("&actual&&& &reported&&& &delta&& \\\\\n");
+	printf("&x (cm)& &y (cm)& &x (cm)& &y (cm)& &x (cm)& &y (cm) \\\\\n");
 	printf("\\hline\n");
 	for(i = 0; i < N; i++) {
 		snprintf(buffer, sizeof(buffer), "%.1f& %.1f& %.2f& %.2f& %.1f& %.1f \\\\", a[i].x, a[i].y, r[i].x, r[i].y, d[i].x, d[i].y);
@@ -68,7 +68,7 @@ int main(int argc, char **argv) {
 	printf("\\caption{Reported error as read by the robot, and real error as read by a ruler and the difference between them for the [un]corrected code.\n");
 	printf("The difference, as $(x, y)$, mean is $(%.2f, %.2f)$, varience is $(%.2f, %.2f)$, and the corrected sample standard deviation is $(%.2f, %.2f)$.}\n", mean.x, mean.y, var.x, var.y, stdd.x, stdd.y);
 	printf("\\label{[a|b]}\n");
-	printf("\\end{table}\n");
+	printf("\\end{table*}\n");
 
 	//printf("mean %f, varience %f, corrected sample stadard deviation %f\n", mean, var, stdd);
 
