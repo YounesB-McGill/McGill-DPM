@@ -9,11 +9,18 @@ import java.lang.String;
  by use of the odometer and an ultrasonic sensor */
 
 class Navigator extends Thread /*implements Runnable*/ {
+	private final float toDegrees   = 180f / (float)Math.PI; /* [deg]/[rad] */
+	private final float fromDegrees = (float)Math.PI / 180f; /* [rad]/[deg] */
+
 	boolean isNavigating;
 	String navMessage = "stopped";
+	/* the actual x, y, \theta at which the robot thinks */
+	float x, y, t;
 
 	/** constructor */
 	public Navigator() {
+		x = 0f;
+		y = 0f;
 	}
 
 	/** to string, may be useful */
@@ -38,18 +45,22 @@ class Navigator extends Thread /*implements Runnable*/ {
 	 and then set the motor speed to forward(straight). This will make sure
 	 that your heading is updated until you reach your exact goal.
 	 (This method will poll the odometer for information)" */
-	void travelTo(double x, double y) {
+	void travelTo(float x, float y) {
 		navMessage = "to " + x + ", " + y;
+		/* fixme: hahahahahahahaha more complcated system */
+		this.turnTo((float)Math.atan2(y, x) * toDegrees);
 	}
-	
+
 	/** "This method causes the robot to turn (on point) to the absolute
-	 heading theta. This method should turn a MINIMAL angle to it's target." */
-	void turnTo(double theta) {
-		
+	 heading theta. This method should turn a MINIMAL angle to it's target."
+	 in "degrees" */
+	void turnTo(float theta) {
+		navMessage = "to " + theta;
 	}
 	
 	/** "This method returns true if another thread has called travelTo() or
-	 turnTo() and the method has yet to return; false otherwise." */
+	 turnTo() and the method has yet to return; false otherwise."
+	 fixme: not implemented */
 	boolean isNavigating() {
 		return isNavigating;
 	}
