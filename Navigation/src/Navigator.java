@@ -64,11 +64,11 @@ class Navigator extends Thread /*implements Runnable*/ {
 		navMessage = "to " + x + ", " + y;
 		/* fixme: hahahahahahahaha more complcated system */
       //.....fixing -alex
-      while(isNavigating)
-      {
-		   this.turnTo((float)Math.atan2(y, x) * toDegrees);
-      }
-
+	   this.turnTo((float)Math.atan2(y, x) * toDegrees);
+      leftMotor.setSpeed(200);
+      rightMotor.setSpeed(200);
+      leftMotor.forward();
+      rightMotor.forward();
 	}
 
 	/** "This method causes the robot to turn (on point) to the absolute
