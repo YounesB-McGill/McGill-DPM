@@ -18,13 +18,13 @@ class Navigator extends Thread /*implements Runnable*/ {
 	private final float angularCorrection = wheelBase * 0.5f / wheelRadius;
 	private final NXTRegulatedMotor leftMotor = Motor.A , rightMotor = Motor.B;
 
-   //create odometer for navigation
-   Odometer odometer = new Odometer()
-   //initialize just in case
-   odometer.setX(0);
-   odometer.setY(0);
-   //start odometer
-   odometer.run();
+//   //create odometer for navigation
+//   Odometer odometer = new Odometer();
+//   //initialize just in case
+//   odometer.setX(0);
+//   odometer.setY(0);
+//   //start odometer
+//   odometer.run();
 
    //running when true
 	boolean isNavigating;
