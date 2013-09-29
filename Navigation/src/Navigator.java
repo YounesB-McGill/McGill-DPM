@@ -11,6 +11,7 @@ import java.lang.String;
 class Navigator extends Thread /*implements Runnable*/ {
 	private final float toDegrees   = 180f / (float)Math.PI; /* [deg]/[rad] */
 	private final float fromDegrees = (float)Math.PI / 180f; /* [rad]/[deg] */
+	private final float width       = 16.0;
 
 	boolean isNavigating;
 	String navMessage = "stopped";
@@ -56,6 +57,8 @@ class Navigator extends Thread /*implements Runnable*/ {
 	 in "degrees" */
 	void turnTo(float theta) {
 		navMessage = "to " + theta;
+		leftMotor.rotate(  theta * width * fromDegrees);
+		rightMotor.rotate(-theta * width * fromDegrees);
 	}
 	
 	/** "This method returns true if another thread has called travelTo() or
