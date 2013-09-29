@@ -3,6 +3,8 @@
 
 /* must be linked with lejos */
 import lejos.nxt.LCD;
+import lejos.nxt.NXTRegulatedMotor;
+import lejos.nxt.Motor;
 import java.lang.String;
 
 /* " . . . robot to an absolute position on the field while avoiding obstacles,
@@ -11,7 +13,10 @@ import java.lang.String;
 class Navigator extends Thread /*implements Runnable*/ {
 	private final float toDegrees   = 180f / (float)Math.PI; /* [deg]/[rad] */
 	private final float fromDegrees = (float)Math.PI / 180f; /* [rad]/[deg] */
-	private final float width       = 16.0;
+	private final float wheelRadius = 2.78f/*2.95f*/;
+	private final float wheelBase   = 16.2f;
+	private final float angularCorrection = wheelBase * 0.5f / wheelRadius;
+	private final NXTRegulatedMotor leftMotor = Motor.A , rightMotor = Motor.B;
 
 	boolean isNavigating;
 	String navMessage = "stopped";
@@ -57,8 +62,9 @@ class Navigator extends Thread /*implements Runnable*/ {
 	 in "degrees" */
 	void turnTo(float theta) {
 		navMessage = "to " + theta;
-		leftMotor.rotate(  theta * width * fromDegrees);
-		rightMotor.rotate(-theta * width * fromDegrees);
+		int rotate = (int)(theta * angularCorrection);
+		leftMotor.rotate((int)-rotate, true);
+		rightMotor.rotate((int)rotate, false);
 	}
 	
 	/** "This method returns true if another thread has called travelTo() or
