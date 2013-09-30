@@ -9,7 +9,7 @@ import lejos.nxt.Motor;
  by use of the odometer and an ultrasonic sensor */
 
 class Navigator extends Thread /*implements Runnable*/ {
-	private final int period = 40;
+	private final int period = 200;
 
 	private final float wheelRadius = 2.78f; /* cm */
 	private final float wheelBase   = 16.2f; /* cm */
@@ -31,6 +31,8 @@ class Navigator extends Thread /*implements Runnable*/ {
       this.yTarget = 0;
 	}
 
+   public void run() {
+   }
 	/** "This method causes the robot to travel to the absolute field
 	 location (x, y). This method should continuously call turnTo(double theta)
 	 and then set the motor speed to forward(straight). This will make sure
@@ -43,19 +45,19 @@ class Navigator extends Thread /*implements Runnable*/ {
       //compute delta x,y
       dx = xTarget - odometer.getX();
       dy = yTarget - odometer.getY();
-      float theta = normTheta((float)Math.atan2(dy,dx) - odometer.getTheta());
+      float radTheta = normTheta((float)Math.atan2(dy,dx) - odometer.getTheta()*(float)Math.PI/180f);
       
 		/* react */
 		float dist = (float)Math.sqrt(dx*dx + dy*dy);
 		if(dist < distError) {
-			isNavigating = false;
 			leftMotor.stop();
 			rightMotor.stop();
+			this.isNavigating = false;
 //			LCD.drawString("(stopped)", 0, 0);
 		} else {
-			isNavigating = true;
          //adjust angle to object
-			this.turnTo(theta*wheelBase/2);
+			this.turnTo(radTheta*wheelBase/2);
+			//this.turnTo((float)Math.PI);
          //move forward
 			leftMotor.rotate(motorDegrees(dist), true);
 			rightMotor.rotate(motorDegrees(dist), false);
@@ -65,8 +67,8 @@ class Navigator extends Thread /*implements Runnable*/ {
 	/** "This method causes the robot to turn (on point) to the absolute
 	 heading theta. This method should turn a MINIMAL angle to it's target."
 	 in "degrees" */
-	void turnTo(float theta) {
-      turnLeft(theta);
+	void turnTo(float radTheta) {
+      turnLeft(radTheta);
 	}
   
   
@@ -104,6 +106,6 @@ class Navigator extends Thread /*implements Runnable*/ {
 	/** "This method returns true if another thread has called travelTo() or
 	 turnTo() and the method has yet to return; false otherwise."*/
 	boolean isNavigating() {
-		return isNavigating;
+		return this.isNavigating;
 	}
 }

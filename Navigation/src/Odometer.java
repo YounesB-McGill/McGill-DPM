@@ -1,7 +1,7 @@
 /*
  * Odometer.java
    Group 51
-i  Alex Bhandari-Young and Neil Edelman
+   Alex Bhandari-Young and Neil Edelman
 
  The internal representation is the robot points along the x-axis, with
  standard coordinates. The units are in cm, except the int tachometer values
