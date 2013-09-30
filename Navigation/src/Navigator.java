@@ -16,14 +16,16 @@ class Navigator extends Thread /*implements Runnable*/ {
 	private final float wheelRadius = 2.78f/*2.95f*/;
 	private final float wheelBase   = 16.2f;
 	private final float angularCorrection = wheelBase * 0.5f / wheelRadius;
+   private final float distanceThreshold = 3;
+   private final float angleTheshold = 2;
 	private final NXTRegulatedMotor leftMotor = Motor.A , rightMotor = Motor.B;
+	private Odometer odometer;
 
 	//running when true
 	boolean isNavigating;
 	String navMessage = "stopped";
 	/* the actual x, y, \theta at which the robot thinks */
 	float x, y, t;
-	Odometer odometer;
 
 	/** constructor */
 	public Navigator() {
@@ -60,17 +62,15 @@ class Navigator extends Thread /*implements Runnable*/ {
 	void travelTo(float x, float y) {
 		isNavigating = true;
 		navMessage = "to " + x + ", " + y;
-		while() {
-			
+		while(Math.sqrt(Math.pow(odometer.getX(),2)+Math.pow(odometer.getX(),2)) > distanceThreshold){
+	      if(odometer.getTheta() > angleTheshold)
+            this.turnTo((float)Math.atan2(y, x) * toDegrees);
+         leftMotor.setSpeed(200);
+         rightMotor.setSpeed(200);
+         leftMotor.forward();
+         rightMotor.forward();
+		   isNavigating = false;
 		}
-		//.....fixing -alex
-	   this.turnTo((float)Math.atan2(y, x) * toDegrees);
-      leftMotor.setSpeed(200);
-      rightMotor.setSpeed(200);
-      leftMotor.forward();
-      rightMotor.forward();
-	}
-		isNavigating = false;
 	}
 
 	/** "This method causes the robot to turn (on point) to the absolute
