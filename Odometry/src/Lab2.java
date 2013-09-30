@@ -1,7 +1,7 @@
 /*
   Lab2.java
   Group 51
-i Alex Bhandari-Young and Neil Edelman
+  Alex Bhandari-Young and Neil Edelman
 */
 import lejos.nxt.*;
 

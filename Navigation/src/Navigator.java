@@ -2,16 +2,14 @@
  Group 51 -- Alex Bhandari-Young and Neil Edelman */
 
 /* must be linked with lejos */
-import lejos.nxt.LCD;
 import lejos.nxt.NXTRegulatedMotor;
 import lejos.nxt.Motor;
-import java.lang.String;
 
 /* " . . . robot to an absolute position on the field while avoiding obstacles,
  by use of the odometer and an ultrasonic sensor */
 
 class Navigator extends Thread /*implements Runnable*/ {
-	private final int period = 400;
+	private final int period = 40;
 
 	private final float wheelRadius = 2.78f; /* cm */
 	private final float wheelBase   = 16.2f; /* cm */
@@ -19,60 +17,46 @@ class Navigator extends Thread /*implements Runnable*/ {
 	private final NXTRegulatedMotor leftMotor = Motor.A , rightMotor = Motor.B;
 
 	private Odometer odometer;
-	private float xTarget, yTarget;
-
 	//running when true
-	boolean isNavigating;
-	String navMessage = "running";
+	private boolean isNavigating;
+   private float dx,dy,xTarget,yTarget;
 
 	/** constructor */
 	public Navigator(Odometer odometer) {
 		this.odometer = odometer;
+      this.isNavigating = false;
+      this.dx = 0;
+      this.dy = 0;
+      this.xTarget = 0;
+      this.yTarget = 0;
 	}
 
-	/** to string, may be useful */
-	public String toString() {
-		return navMessage;
-	}
-	
 	/** "This method causes the robot to travel to the absolute field
 	 location (x, y). This method should continuously call turnTo(double theta)
 	 and then set the motor speed to forward(straight). This will make sure
 	 that your heading is updated until you reach your exact goal.
 	 (This method will poll the odometer for information)" */
-	void travelTo(float x, float y) {
-		float xCurrent, yCurrent, tCurrent;
+	void travelTo(float tx, float ty) {
       this.isNavigating = true;
-		/* fixme!!! bounds checking, please */
-		xTarget = x;
-		yTarget = y;
-		/* get values */
-      xCurrent = odometer.getX();
-      yCurrent = odometer.getY();
-      tCurrent = odometer.getTheta();
-      x = xTarget - xCurrent;
-      y = yTarget - yCurrent;
-      theta = normTheta((float)Math.atan2(y, x) - tCurrent);
+      xTarget = tx;
+      yTarget = ty;
+      //compute delta x,y
+      dx = xTarget - odometer.getX();
+      dy = yTarget - odometer.getY();
+      float theta = normTheta((float)Math.atan2(dy,dx) - odometer.getTheta());
       
-		/* print */
-		LCD.drawString("Cur: x "+xCurrent+"\n     y "+yCurrent+"\n     t "+tCurrent, 0, 0);
-		LCD.drawString("Tar: x "+xTarget+"\n     y "+yTarget, 0, 3);
-		LCD.drawString("Del: x "+x+"\n     y "+y, 0, 5);
-		LCD.drawString("     t "+theta, 0, 7);
 		/* react */
-		float dist2 = x*x + y*y;
-		if(dist2 < distError) {
+		float dist = (float)Math.sqrt(dx*dx + dy*dy);
+		if(dist < distError) {
 			isNavigating = false;
 			leftMotor.stop();
 			rightMotor.stop();
-			navMessage = "stopped";
-			LCD.drawString("(stopped)", 0, 0);
+//			LCD.drawString("(stopped)", 0, 0);
 		} else {
 			isNavigating = true;
          //adjust angle to object
 			this.turnTo(theta*wheelBase/2);
          //move forward
-			float dist = Math.sqrt(dist2);
 			leftMotor.rotate(motorDegrees(dist), true);
 			rightMotor.rotate(motorDegrees(dist), false);
 		}
@@ -86,7 +70,7 @@ class Navigator extends Thread /*implements Runnable*/ {
 	}
   
   
-   float toDegrees(radians) {
+   float toDegrees(float radians) {
       return radians * (180f/(float)Math.PI); /* [rad] times [deg]/[rad] */
    }
    /** "Use with motor.rotate() Converts radian distance to degree rotations.*/
@@ -101,15 +85,24 @@ class Navigator extends Thread /*implements Runnable*/ {
       leftMotor.rotate(motorDegrees(rad),true);
       rightMotor.rotate(motorDegrees(-rad),false);
    }
-   private float normTheta(theta) {
+   private float normTheta(float theta) {
       if(     theta >  Math.PI) theta -= Math.PI;
-      else if(theta < -Math.PI) theta += Math.PIi;
+      else if(theta < -Math.PI) theta += Math.PI;
       return theta;
    }
+   int getPeriod() {
+      return this.period;
+   }
+   float xTarget() {
+      return this.xTarget;
+   }
+   float yTarget() {
+      return this.yTarget;
+   }
+  
 	
 	/** "This method returns true if another thread has called travelTo() or
-	 turnTo() and the method has yet to return; false otherwise."
-	 fixme: not implemented */
+	 turnTo() and the method has yet to return; false otherwise."*/
 	boolean isNavigating() {
 		return isNavigating;
 	}
