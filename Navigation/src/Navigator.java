@@ -59,7 +59,8 @@ class Navigator extends Thread /*implements Runnable*/ {
 			LCD.drawString("Del: x "+x+"\n     y "+y, 0, 5);
 			LCD.drawString("     t "+theta, 0, 7);
 			/* react */
-			if(/*x*x + y*y < distError*/theta > -2f && theta < 2f) {
+			float dist2 = x*x + y*y;
+			if(dist2 < distError) {
 				isNavigating = false;
 				leftMotor.stop();
 				rightMotor.stop();
@@ -69,12 +70,12 @@ class Navigator extends Thread /*implements Runnable*/ {
 				isNavigating = true;
 				//LCD.drawString("     t "+theta, 0, 7);
 				//LCD.drawString("Dif:(\n"+x+"\n,"+y+":\n"+theta+")    ", 0, 1);
-				//this.turnTo(theta);
-				float rotate = theta * angle;
+				this.turnTo(theta);
+				/*float rotate = theta * angle;
 				if(theta > 0) rotate = 10;
 				else          rotate = -10;
-				leftMotor.setSpeed(-rotate); /* fixme: I cannot get it to revese; stupid robot it's fucking midnight I give up */
-				rightMotor.setSpeed(rotate);
+				leftMotor.setSpeed(-rotate);
+				rightMotor.setSpeed(rotate);*/
 
 /*				if(theta > 20f) {
 					navMessage = "turning";
@@ -86,8 +87,13 @@ class Navigator extends Thread /*implements Runnable*/ {
 					leftMotor.forward();
 					rightMotor.forward();
 				}*/
-				leftMotor.forward();
-				rightMotor.forward();
+				
+				/*leftMotor.forward();
+				rightMotor.forward();*/
+
+				float dist = Math.sqrt(dist2);
+				leftMotor.rotate((int) ((180.0 * dist) / (Math.PI * wheelRadius), true);
+				rightMotor.rotate((int) ((180.0 * dist) / (Math.PI * wheelRadius), false);
 			}
 			try {
 				Thread.sleep(period);
@@ -116,8 +122,8 @@ class Navigator extends Thread /*implements Runnable*/ {
 
 		/*leftMotor.setSpeed((int)-rotate);
 		rightMotor.setSpeed((int)rotate);*/
-		/*leftMotor.rotate((int)-rotate, true);
-		rightMotor.rotate((int)rotate, true);*/
+		leftMotor.rotate((int)-rotate, true);
+		rightMotor.rotate((int)rotate, false);
 	}
 	
 	/** "This method returns true if another thread has called travelTo() or
