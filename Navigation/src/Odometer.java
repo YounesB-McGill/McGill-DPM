@@ -1,50 +1,48 @@
-/*
- * Odometer.java
-   Group 51
-i  Alex Bhandari-Young and Neil Edelman
+/* Group 51 Alex Bhandari-Young and Neil Edelman
 
  The internal representation is the robot points along the x-axis, with
  standard coordinates. The units are in cm, except the int tachometer values
- which are in cm deg/rad.
- */
+ which are in cm deg/rad. */
 
-import lejos.nxt.*;
+/* must be linked with lejos */
+import lejos.nxt.LCD;
+import lejos.nxt.NXTRegulatedMotor;
+import lejos.nxt.Motor;
+import java.lang.String;
 
 public class Odometer extends Thread {
-   
-	/* constants */
 
-	private final NXTRegulatedMotor leftMotor = Motor.A , rightMotor = Motor.B;
+	/* constants */
 
 	private final float toDegrees   = 180f / (float)Math.PI; /* [deg]/[rad] */
 	private final float fromDegrees = (float)Math.PI / 180f; /* [rad]/[deg] */
-	private final float robotWidth     = 16f; /* [cm] */
-	private final float normaliseWidth = 1f / robotWidth; /* [cm^{-1}] */
-	/* 5.6 cm / 2; fixme: get more accurate */
-	private final float wheelRadiusL   = 2.8f * fromDegrees; /* [cm][rad]/[deg] */
-	private final float wheelRadiusR   = 2.8f * fromDegrees; /* [cm][rad]/[deg] */
-	
+
+	private static final int period = 25; /* ms */
+
+	private final float wheelRadius = 2.78f/*2.95f*/; /* cm */
+	private final float wheelBase   = 16.2f; /* cm */
+	private final float normBase    = 1 / wheelBase; /* cm^{-1} */
+	private final float angularCorrection = wheelBase * 0.5f / wheelRadius;
+
+	private final NXTRegulatedMotor lMotor = Motor.A, rMotor= Motor.B;
+
 	/* independent tachometer values; fixme: numerically unstable */
-	private int previousLTacho, previousRTacho;
+	private int lLastTach, rLastTach;
 
-	// robot position
+	/* robot position */
 	private float x, y, theta;
-
-	// odometer update period, in ms
-	private static final int ODOMETER_PERIOD = 25;
 
 	// lock object for mutual exclusion
 	private Object lock;
 
 	// default constructor
 	public Odometer() {
-		x = 0f;
-		y = 0f;
+		x     = 0f;
+		y     = 0f;
 		theta = 0f;
 		lock = new Object();
-
-      previousLTacho = leftMotor.getTachoCount();
-      previousRTacho = rightMotor.getTachoCount();
+		lLastTach = lMotor.getTachoCount();
+		rLastTach = rMotor.getTachoCount();
 	}
 
 	// run method (required for Thread)
@@ -53,28 +51,28 @@ public class Odometer extends Thread {
 
 		while (true) {
 			updateStart = (int)System.currentTimeMillis();
-			
+
 			/* compute displacment in [cm][deg]/[rad] */
-			int lTacho = leftMotor.getTachoCount();
-			int rTacho = rightMotor.getTachoCount();
-			int deltaL = lTacho - previousLTacho;
-			int deltaR = rTacho - previousRTacho;
-			previousLTacho = lTacho;
-			previousRTacho = rTacho;
+			int lTach    = lMotor.getTachoCount();
+			int rTach    = rMotor.getTachoCount();
+			int lDelta   = lTach - lLastTach;
+			int rDelta   = rTach - rLastTach;
+			lLastTach = lTach;
+			rLastTach = rTach;
 
 			/* [cm][deg]/[rad] * [cm][rad]/[deg] = [cm] (are orthoganal) */
-			float distanceL  = (float)deltaL * wheelRadiusL; /* [cm] */
-			float distanceR  = (float)deltaR * wheelRadiusR; /* [cm] */
-			float deltaArc   = (distanceR + distanceL) * 0.5f; /* [cm] */
+			float lDistance = (float)lDelta * wheelRadius; /* [cm] */
+			float rDistance = (float)rDelta * wheelRadius; /* [cm] */
+			float deltaArc  = (rDistance + lDistance) * 0.5f; /* [cm] */
 
 			/* [cm] / [cm] [deg]/[rad] = [deg] (unitless) */
-			float deltaTheta = (distanceR - distanceL) * normaliseWidth * toDegrees;
+			float thetaDelta = (rDistance - lDistance) * normBase * toDegrees;
 
 			synchronized (lock) {
 				// don't use the variables x, y, or theta anywhere but here!
 				//update x,y,theta values using displacment vector
-				float thetaIntemediate = (theta + deltaTheta * 0.5f); /* [deg] */
-				theta += deltaTheta; /* [deg] */
+				float thetaIntemediate = (theta + thetaDelta * 0.5f); /* [deg] */
+				theta += thetaDelta; /* [deg] */
 				/* numerical stability (assert -180 < deltaTheta < 180) */
 				if(     theta > 180f)  theta -= 360f;
 				else if(theta < -180f) theta += 360f;
@@ -86,9 +84,9 @@ public class Odometer extends Thread {
 
 			// this ensures that the odometer only runs once every period
 			updateEnd = (int)System.currentTimeMillis();
-			if (updateEnd - updateStart < ODOMETER_PERIOD) {
+			if (updateEnd - updateStart < period) {
 				try {
-					Thread.sleep(ODOMETER_PERIOD - (updateEnd - updateStart));
+					Thread.sleep(period - (updateEnd - updateStart));
 				} catch (InterruptedException e) {
 					// there is nothing to be done here because it is not
 					// expected that the odometer will be interrupted by
