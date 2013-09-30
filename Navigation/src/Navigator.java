@@ -11,12 +11,10 @@ import java.lang.String;
  by use of the odometer and an ultrasonic sensor */
 
 class Navigator extends Thread /*implements Runnable*/ {
-	private final float toDegrees   = 180f / (float)Math.PI; /* [deg]/[rad] */
 	private final int period = 400;
 
 	private final float wheelRadius = 2.78f; /* cm */
 	private final float wheelBase   = 16.2f; /* cm */
-	private final float angle       = wheelBase * 0.5f / wheelRadius;
 	private final float distError = 3; /* cm^{-1/2} */
 	private final NXTRegulatedMotor leftMotor = Motor.A , rightMotor = Motor.B;
 
@@ -37,94 +35,77 @@ class Navigator extends Thread /*implements Runnable*/ {
 		return navMessage;
 	}
 	
-	/** implements all the navigation */
-	public void run() {
-		float xCurrent, yCurrent, x, y;
-		float tCurrent, theta;
-
-		for( ; ; ) {
-			/* get values */
-			//LCD.drawString("Nav: " + navMessage, 0, 0);
-			xCurrent = odometer.getX();
-			yCurrent = odometer.getY();
-			tCurrent = odometer.getTheta();
-			x = xTarget - xCurrent;
-			y = yTarget - yCurrent;
-			theta = (float)Math.atan2(y, x)*toDegrees - tCurrent;
-			if(     theta >  180f) theta -= 180f;
-			else if(theta < -180f) theta += 180f;
-			/* print */
-			LCD.drawString("Cur: x "+xCurrent+"\n     y "+yCurrent+"\n     t "+tCurrent, 0, 0);
-			LCD.drawString("Tar: x "+xTarget+"\n     y "+yTarget, 0, 3);
-			LCD.drawString("Del: x "+x+"\n     y "+y, 0, 5);
-			LCD.drawString("     t "+theta, 0, 7);
-			/* react */
-			float dist2 = x*x + y*y;
-			if(dist2 < distError) {
-				isNavigating = false;
-				leftMotor.stop();
-				rightMotor.stop();
-				navMessage = "stopped";
-				LCD.drawString("(stopped)", 0, 0);
-			} else {
-				isNavigating = true;
-				//LCD.drawString("     t "+theta, 0, 7);
-				//LCD.drawString("Dif:(\n"+x+"\n,"+y+":\n"+theta+")    ", 0, 1);
-				this.turnTo(theta);
-				/*float rotate = theta * angle;
-				if(theta > 0) rotate = 10;
-				else          rotate = -10;
-				leftMotor.setSpeed(-rotate);
-				rightMotor.setSpeed(rotate);*/
-
-/*				if(theta > 20f) {
-					navMessage = "turning";
-					this.turnTo(theta);
-				} else {
-					navMessage = "forward";
-					leftMotor.setSpeed(50);
-					rightMotor.setSpeed(50);
-					leftMotor.forward();
-					rightMotor.forward();
-				}*/
-				
-				/*leftMotor.forward();
-				rightMotor.forward();*/
-
-				float dist = Math.sqrt(dist2);
-				leftMotor.rotate((int) ((180.0 * dist) / (Math.PI * wheelRadius), true);
-				rightMotor.rotate((int) ((180.0 * dist) / (Math.PI * wheelRadius), false);
-			}
-			try {
-				Thread.sleep(period);
-			} catch (Exception e) {
-				System.out.println("Error: " + e.getMessage());
-			}
-		}
-	}
-	
 	/** "This method causes the robot to travel to the absolute field
 	 location (x, y). This method should continuously call turnTo(double theta)
 	 and then set the motor speed to forward(straight). This will make sure
 	 that your heading is updated until you reach your exact goal.
 	 (This method will poll the odometer for information)" */
 	void travelTo(float x, float y) {
+		float xCurrent, yCurrent, tCurrent;
+      this.isNavigating = true;
 		/* fixme!!! bounds checking, please */
 		xTarget = x;
 		yTarget = y;
+		/* get values */
+      xCurrent = odometer.getX();
+      yCurrent = odometer.getY();
+      tCurrent = odometer.getTheta();
+      x = xTarget - xCurrent;
+      y = yTarget - yCurrent;
+      theta = normTheta((float)Math.atan2(y, x) - tCurrent);
+      
+		/* print */
+		LCD.drawString("Cur: x "+xCurrent+"\n     y "+yCurrent+"\n     t "+tCurrent, 0, 0);
+		LCD.drawString("Tar: x "+xTarget+"\n     y "+yTarget, 0, 3);
+		LCD.drawString("Del: x "+x+"\n     y "+y, 0, 5);
+		LCD.drawString("     t "+theta, 0, 7);
+		/* react */
+		float dist2 = x*x + y*y;
+		if(dist2 < distError) {
+			isNavigating = false;
+			leftMotor.stop();
+			rightMotor.stop();
+			navMessage = "stopped";
+			LCD.drawString("(stopped)", 0, 0);
+		} else {
+			isNavigating = true;
+         //adjust angle to object
+			this.turnTo(theta*wheelBase/2);
+         //move forward
+			float dist = Math.sqrt(dist2);
+			leftMotor.rotate(motorDegrees(dist), true);
+			rightMotor.rotate(motorDegrees(dist), false);
+		}
 	}
 
 	/** "This method causes the robot to turn (on point) to the absolute
 	 heading theta. This method should turn a MINIMAL angle to it's target."
 	 in "degrees" */
 	void turnTo(float theta) {
-		int rotate = (int)(theta * angle);
-
-		/*leftMotor.setSpeed((int)-rotate);
-		rightMotor.setSpeed((int)rotate);*/
-		leftMotor.rotate((int)-rotate, true);
-		rightMotor.rotate((int)rotate, false);
+      turnLeft(theta);
 	}
+  
+  
+   float toDegrees(radians) {
+      return radians * (180f/(float)Math.PI); /* [rad] times [deg]/[rad] */
+   }
+   /** "Use with motor.rotate() Converts radian distance to degree rotations.*/
+   private int motorDegrees(float radianDist) {
+      return (int) ((180.0 * radianDist) / (Math.PI * wheelRadius));
+   }
+   private void turnLeft(float rad) {
+      leftMotor.rotate(motorDegrees(-rad),true);
+      rightMotor.rotate(motorDegrees(rad),false);
+   }
+   private void turnRight(float rad) {
+      leftMotor.rotate(motorDegrees(rad),true);
+      rightMotor.rotate(motorDegrees(-rad),false);
+   }
+   private float normTheta(theta) {
+      if(     theta >  Math.PI) theta -= Math.PI;
+      else if(theta < -Math.PI) theta += Math.PIi;
+      return theta;
+   }
 	
 	/** "This method returns true if another thread has called travelTo() or
 	 turnTo() and the method has yet to return; false otherwise."

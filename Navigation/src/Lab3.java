@@ -22,6 +22,7 @@ public class Lab3 {
 		//part a
 		/* random coordinates as specified in the assignment */
 		nav.travelTo(60, -30);
+      wait(nav);
 //		nav.travelTo(30, -30);
 //		nav.travelTo(30, -60);
 //		nav.travelTo(60,   0);
@@ -31,4 +32,14 @@ public class Lab3 {
 		Button.waitForAnyPress();
 		System.exit(0);
 	}
+   private void wait(Navigator nav) {
+      while(nav.isNavigating()) {
+ 			try {
+				Thread.sleep(nav.getPeriod());
+			} catch (Exception e) {
+				System.out.println("Error: " + e.getMessage());
+			}
+     
+      }
+   }
 }
