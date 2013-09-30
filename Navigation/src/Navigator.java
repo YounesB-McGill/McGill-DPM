@@ -43,23 +43,26 @@ class Navigator extends Thread /*implements Runnable*/ {
 		float tCurrent, theta;
 
 		for( ; ; ) {
-			LCD.drawString("Nav: " + navMessage, 0, 0);
+			//LCD.drawString("Nav: " + navMessage, 0, 0);
 			xCurrent = odometer.getX();
 			yCurrent = odometer.getY();
 			tCurrent = odometer.getTheta();
 			x = xTarget - xCurrent;
 			y = yTarget - yCurrent;
-			LCD.drawString("Cur:("+xCurrent+","+yCurrent+":"+tCurrent+")    ", 0, 1);
-			LCD.drawString("Tar:("+xTarget+","+yTarget+")    ", 0, 1);
+			LCD.drawString("Cur: x "+xCurrent+"\n     y "+yCurrent+"\n     t "+tCurrent, 0, 0);
+			LCD.drawString("Tar: x "+xTarget+"\n     y "+yTarget, 0, 3);
+			LCD.drawString("Del: x "+x+"\n     y "+y, 0, 5);
 			if(x*x + y*y < distError) {
 				isNavigating = false;
 				navMessage = "stopped";
+				LCD.drawString("      (stopped)", 0, 7);
 			} else {
 				isNavigating = true;
 				theta = (float)Math.atan2(y, x)*toDegrees - tCurrent;
 				if(     theta >  180f) theta -= 180f;
 				else if(theta < -180f) theta += 180f;
-				LCD.drawString("Dif:("+x+","+y+":"+theta+")    ", 0, 1);
+				LCD.drawString("     t "+theta, 0, 7);
+				//LCD.drawString("Dif:(\n"+x+"\n,"+y+":\n"+theta+")    ", 0, 1);
 				if(theta > 20f) {
 					navMessage = "turning";
 					this.turnTo(theta);
