@@ -79,6 +79,7 @@ class Navigator extends Thread /*implements Runnable*/ {
 			try {
 				Thread.sleep(period);
 			} catch(InterruptedException e) {
+				/* threads like "whatever" */
 			}
 		}
 		isNavigating = false;
