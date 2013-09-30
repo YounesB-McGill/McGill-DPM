@@ -91,7 +91,6 @@ class Navigator extends Thread /*implements Runnable*/ {
 	 heading theta. This method should turn a MINIMAL angle to it's target."
 	 in "degrees" */
 	void turnTo(float theta) {
-		navMessage = "to " + theta;
 		int rotate = (int)(theta * angle);
 		leftMotor.rotate((int)-rotate, true);
 		rightMotor.rotate((int)rotate, true);
