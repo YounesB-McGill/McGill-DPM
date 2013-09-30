@@ -9,15 +9,17 @@ import lejos.nxt.LCD;
 public class Lab3 {
 	/** press any key to stop */
 	public static void main(String args[]) {
-		Navigator nav = new Navigator();
+		Odometer odo = new Odometer();
+		Navigator nav = new Navigator(odo);
 
 		/* clear screen */
 		LCD.clear();
 
 		/* nav start */
+		odo.start();
 		nav.start();
 
-      //part a
+		//part a
 		/* random coordinates as specified in the assignment */
 		nav.travelTo(60, -30);
 //		nav.travelTo(30, -30);

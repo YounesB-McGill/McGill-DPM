@@ -19,15 +19,15 @@ class Navigator extends Thread /*implements Runnable*/ {
 	private final float angle       = wheelBase * 0.5f / wheelRadius;
 	private final float distError = 3; /* cm^{-1/2} */
 	private final NXTRegulatedMotor leftMotor = Motor.A , rightMotor = Motor.B;
-	private Odometer odometer = new Odometer();
+	private Odometer odometer;
 
 	//running when true
 	boolean isNavigating;
 	String navMessage = "stopped";
 
 	/** constructor */
-	public Navigator() {
-		odometer.run();
+	public Navigator(Odometer odometer) {
+		this.odometer = odometer;
 	}
 
 	/** to string, may be useful */
@@ -40,7 +40,7 @@ class Navigator extends Thread /*implements Runnable*/ {
 		for( ; ; ) {
 			LCD.drawString("Nav: " + navMessage, 0, 0);
 			try {
-				Thread.sleep(1000);
+				Thread.sleep(period);
 			} catch (Exception e) {
 				System.out.println("Error: " + e.getMessage());
 			}
@@ -79,7 +79,7 @@ class Navigator extends Thread /*implements Runnable*/ {
 			try {
 				Thread.sleep(period);
 			} catch(InterruptedException e) {
-				/* threads like "whatever" */
+				/* thread like "whatever" */
 			}
 		}
 		isNavigating = false;
@@ -89,6 +89,7 @@ class Navigator extends Thread /*implements Runnable*/ {
 	 heading theta. This method should turn a MINIMAL angle to it's target."
 	 in "degrees" */
 	void turnTo(float theta) {
+		navMessage = "to " + theta;
 		int rotate = (int)(theta * angle);
 		leftMotor.rotate((int)-rotate, true);
 		rightMotor.rotate((int)rotate, true);

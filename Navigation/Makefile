@@ -1,6 +1,6 @@
 # MacOSX gcc 4.2.1
 
-FILES := Lab3 Navigator
+FILES := Lab3 Navigator Odometer
 BDIR  := bin
 SDIR  := src
 OBJS  := $(patsubst %,$(BDIR)/%.class,$(FILES))
