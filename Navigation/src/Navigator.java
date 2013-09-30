@@ -42,26 +42,28 @@ class Navigator extends Thread /*implements Runnable*/ {
       this.isNavigating = true;
       xTarget = tx;
       yTarget = ty;
-      //compute delta x,y
-      dx = xTarget - odometer.getX();
-      dy = yTarget - odometer.getY();
-      float radTheta = normTheta((float)Math.atan2(dy,dx) - odometer.getTheta()*(float)Math.PI/180f);
-      
-		/* react */
-		float dist = (float)Math.sqrt(dx*dx + dy*dy);
-		if(dist < distError) {
-			leftMotor.stop();
-			rightMotor.stop();
-			this.isNavigating = false;
-//			LCD.drawString("(stopped)", 0, 0);
-		} else {
-         //adjust angle to object
-			this.turnTo(radTheta*wheelBase/2);
-			//this.turnTo((float)Math.PI);
-         //move forward
-			leftMotor.rotate(motorDegrees(dist), true);
-			rightMotor.rotate(motorDegrees(dist), false);
-		}
+      while(isNavigating) {
+         //compute delta x,y
+         dx = xTarget - odometer.getX();
+         dy = yTarget - odometer.getY();
+         float radTheta = normTheta((float)Math.atan2(dy,dx) - odometer.getTheta()*(float)Math.PI/180f);
+         
+	   	/* react */
+	   	float dist = (float)Math.sqrt(dx*dx + dy*dy);
+	   	if(dist < distError) {
+	   		leftMotor.stop();
+	   		rightMotor.stop();
+	   		this.isNavigating = false;
+//	   		LCD.drawString("(stopped)", 0, 0);
+	   	} else {
+            //adjust angle to object
+	   		this.turnTo(radTheta*wheelBase/2);
+	   		//this.turnTo((float)Math.PI);
+            //move forward
+	   	   leftMotor.rotate(motorDegrees(dist), true);
+	   	   rightMotor.rotate(motorDegrees(dist), false);
+	   	}
+      }
 	}
 
 	/** "This method causes the robot to turn (on point) to the absolute
@@ -100,6 +102,11 @@ class Navigator extends Thread /*implements Runnable*/ {
    }
    float yTarget() {
       return this.yTarget;
+   }
+   void sleep(int period) {
+      try {
+         Thread.sleep(period);
+      } catch(Exception e) {}
    }
   
 	
