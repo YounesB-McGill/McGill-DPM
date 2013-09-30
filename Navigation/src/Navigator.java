@@ -49,6 +49,8 @@ class Navigator extends Thread /*implements Runnable*/ {
 			tCurrent = odometer.getTheta();
 			x = xTarget - xCurrent;
 			y = yTarget - yCurrent;
+			LCD.drawString("Cur:("+xCurrent+","+yCurrent+":"+tCurrent+")    ", 0, 1);
+			LCD.drawString("Tar:("+xTarget+","+yTarget+")    ", 0, 1);
 			if(x*x + y*y < distError) {
 				isNavigating = false;
 				navMessage = "stopped";
@@ -57,13 +59,14 @@ class Navigator extends Thread /*implements Runnable*/ {
 				theta = (float)Math.atan2(y, x)*toDegrees - tCurrent;
 				if(     theta >  180f) theta -= 180f;
 				else if(theta < -180f) theta += 180f;
+				LCD.drawString("Dif:("+x+","+y+":"+theta+")    ", 0, 1);
 				if(theta > 20f) {
-					LCD.drawString("Theta "+theta, 0, 3);
+					navMessage = "turning";
 					this.turnTo(theta);
 				} else {
-					LCD.drawString("Forward "+"200", 0, 3);
-					leftMotor.setSpeed(200);
-					rightMotor.setSpeed(200);
+					navMessage = "forward";
+					leftMotor.setSpeed(50);
+					rightMotor.setSpeed(50);
 					leftMotor.forward();
 					rightMotor.forward();
 				}
