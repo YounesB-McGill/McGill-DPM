@@ -12,28 +12,21 @@ import java.lang.String;
 
 class Navigator extends Thread /*implements Runnable*/ {
 	private final float toDegrees   = 180f / (float)Math.PI; /* [deg]/[rad] */
-	private final float fromDegrees = (float)Math.PI / 180f; /* [rad]/[deg] */
-	private final float wheelRadius = 2.78f/*2.95f*/;
-	private final float wheelBase   = 16.2f;
-	private final float angularCorrection = wheelBase * 0.5f / wheelRadius;
-   private final float distanceThreshold = 3;
-   private final float angleTheshold = 2;
+	private final int period = 400;
+
+	private final float wheelRadius = 2.78f; /* cm */
+	private final float wheelBase   = 16.2f; /* cm */
+	private final float angle       = wheelBase * 0.5f / wheelRadius;
+	private final float distError = 3; /* cm^{-1/2} */
 	private final NXTRegulatedMotor leftMotor = Motor.A , rightMotor = Motor.B;
-	private Odometer odometer;
+	private Odometer odometer = new Odometer();
 
 	//running when true
 	boolean isNavigating;
 	String navMessage = "stopped";
-	/* the actual x, y, \theta at which the robot thinks */
-	float x, y, t;
 
 	/** constructor */
 	public Navigator() {
-		x = 0f;
-		y = 0f;
-		//create odometer for navigation
-		odometer = new Odometer();
-		//start odometer
 		odometer.run();
 	}
 
@@ -59,26 +52,43 @@ class Navigator extends Thread /*implements Runnable*/ {
 	 and then set the motor speed to forward(straight). This will make sure
 	 that your heading is updated until you reach your exact goal.
 	 (This method will poll the odometer for information)" */
-	void travelTo(float x, float y) {
+	void travelTo(float xTarget, float yTarget) {
+		float xCurrent, yCurrent, x, y;
+		float tCurrent, theta;
+
 		isNavigating = true;
-		navMessage = "to " + x + ", " + y;
-		while(Math.sqrt(Math.pow(odometer.getX(),2)+Math.pow(odometer.getX(),2)) > distanceThreshold){
-	      if(odometer.getTheta() > angleTheshold)
-            this.turnTo((float)Math.atan2(y, x) * toDegrees);
-         leftMotor.setSpeed(200);
-         rightMotor.setSpeed(200);
-         leftMotor.forward();
-         rightMotor.forward();
-		   isNavigating = false;
+		navMessage = "to " + xTarget + ", " + yTarget;
+		for( ; ; ) {
+			xCurrent = odometer.getX();
+			yCurrent = odometer.getY();
+			tCurrent = odometer.getTheta();
+			x = xTarget - xCurrent;
+			y = yTarget - yCurrent;
+			if(x*x + y*y > distError) break;
+			theta = (float)Math.atan2(y, x)*toDegrees - tCurrent;
+			if(     theta >  180f) theta -= 180f;
+			else if(theta < -180f) theta += 180f;
+			if(theta > 20f) {
+				this.turnTo(theta);
+			} else {
+				leftMotor.setSpeed(200);
+				rightMotor.setSpeed(200);
+				leftMotor.forward();
+				rightMotor.forward();
+			}
+			try {
+				Thread.sleep(period);
+			} catch(InterruptedException e) {
+			}
 		}
+		isNavigating = false;
 	}
 
 	/** "This method causes the robot to turn (on point) to the absolute
 	 heading theta. This method should turn a MINIMAL angle to it's target."
 	 in "degrees" */
 	void turnTo(float theta) {
-		navMessage = "to " + theta;
-		int rotate = (int)(theta * angularCorrection);
+		int rotate = (int)(theta * angle);
 		leftMotor.rotate((int)-rotate, true);
 		rightMotor.rotate((int)rotate, true);
 	}
