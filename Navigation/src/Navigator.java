@@ -19,11 +19,13 @@ class Navigator extends Thread /*implements Runnable*/ {
 	private final float angle       = wheelBase * 0.5f / wheelRadius;
 	private final float distError = 3; /* cm^{-1/2} */
 	private final NXTRegulatedMotor leftMotor = Motor.A , rightMotor = Motor.B;
+
 	private Odometer odometer;
+	private float xTarget, yTarget;
 
 	//running when true
 	boolean isNavigating;
-	String navMessage = "stopped";
+	String navMessage = "running";
 
 	/** constructor */
 	public Navigator(Odometer odometer) {
@@ -37,8 +39,35 @@ class Navigator extends Thread /*implements Runnable*/ {
 	
 	/** implements all the navigation */
 	public void run() {
+		float xCurrent, yCurrent, x, y;
+		float tCurrent, theta;
+
 		for( ; ; ) {
 			LCD.drawString("Nav: " + navMessage, 0, 0);
+			xCurrent = odometer.getX();
+			yCurrent = odometer.getY();
+			tCurrent = odometer.getTheta();
+			x = xTarget - xCurrent;
+			y = yTarget - yCurrent;
+			if(x*x + y*y < distError) {
+				isNavigating = false;
+				navMessage = "stopped";
+			} else {
+				isNavigating = true;
+				theta = (float)Math.atan2(y, x)*toDegrees - tCurrent;
+				if(     theta >  180f) theta -= 180f;
+				else if(theta < -180f) theta += 180f;
+				if(theta > 20f) {
+					LCD.drawString("Theta "+theta, 0, 3);
+					this.turnTo(theta);
+				} else {
+					LCD.drawString("Forward "+"200", 0, 3);
+					leftMotor.setSpeed(200);
+					rightMotor.setSpeed(200);
+					leftMotor.forward();
+					rightMotor.forward();
+				}
+			}
 			try {
 				Thread.sleep(period);
 			} catch (Exception e) {
@@ -52,39 +81,10 @@ class Navigator extends Thread /*implements Runnable*/ {
 	 and then set the motor speed to forward(straight). This will make sure
 	 that your heading is updated until you reach your exact goal.
 	 (This method will poll the odometer for information)" */
-	void travelTo(float xTarget, float yTarget) {
-		float xCurrent, yCurrent, x, y;
-		float tCurrent, theta;
-
-		isNavigating = true;
-		navMessage = "to " + xTarget + ", " + yTarget;
-		for( ; ; ) {
-			xCurrent = odometer.getX();
-			yCurrent = odometer.getY();
-			tCurrent = odometer.getTheta();
-			x = xTarget - xCurrent;
-			y = yTarget - yCurrent;
-			if(x*x + y*y > distError) break;
-			theta = (float)Math.atan2(y, x)*toDegrees - tCurrent;
-			if(     theta >  180f) theta -= 180f;
-			else if(theta < -180f) theta += 180f;
-			if(theta > 20f) {
-				LCD.drawString("Theta "+theta, 0, 3);
-				this.turnTo(theta);
-			} else {
-				LCD.drawString("Forward "+"200", 0, 3);
-				leftMotor.setSpeed(200);
-				rightMotor.setSpeed(200);
-				leftMotor.forward();
-				rightMotor.forward();
-			}
-			try {
-				Thread.sleep(period);
-			} catch(InterruptedException e) {
-				/* thread like "whatever" */
-			}
-		}
-		isNavigating = false;
+	void travelTo(float x, float y) {
+		/* fixme!!! bounds checking, please */
+		xTarget = x;
+		yTarget = y;
 	}
 
 	/** "This method causes the robot to turn (on point) to the absolute

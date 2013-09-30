@@ -29,6 +29,6 @@ public class Lab3 {
 		/* press any key to exit */
 		LCD.drawString("Press any key.", 0, 1);
 		Button.waitForAnyPress();
-//		System.exit(0);
+		System.exit(0);
 	}
 }
