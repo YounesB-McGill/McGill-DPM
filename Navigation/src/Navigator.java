@@ -69,8 +69,10 @@ class Navigator extends Thread /*implements Runnable*/ {
 			if(     theta >  180f) theta -= 180f;
 			else if(theta < -180f) theta += 180f;
 			if(theta > 20f) {
+				LCD.drawString("Theta "+theta, 0, 3);
 				this.turnTo(theta);
 			} else {
+				LCD.drawString("Forward "+"200", 0, 3);
 				leftMotor.setSpeed(200);
 				rightMotor.setSpeed(200);
 				leftMotor.forward();
