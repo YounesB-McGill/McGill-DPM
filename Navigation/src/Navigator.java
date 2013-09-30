@@ -43,27 +43,40 @@ class Navigator extends Thread /*implements Runnable*/ {
 		float tCurrent, theta;
 
 		for( ; ; ) {
+			/* get values */
 			//LCD.drawString("Nav: " + navMessage, 0, 0);
 			xCurrent = odometer.getX();
 			yCurrent = odometer.getY();
 			tCurrent = odometer.getTheta();
 			x = xTarget - xCurrent;
 			y = yTarget - yCurrent;
+			theta = (float)Math.atan2(y, x)*toDegrees - tCurrent;
+			if(     theta >  180f) theta -= 180f;
+			else if(theta < -180f) theta += 180f;
+			/* print */
 			LCD.drawString("Cur: x "+xCurrent+"\n     y "+yCurrent+"\n     t "+tCurrent, 0, 0);
 			LCD.drawString("Tar: x "+xTarget+"\n     y "+yTarget, 0, 3);
 			LCD.drawString("Del: x "+x+"\n     y "+y, 0, 5);
-			if(x*x + y*y < distError) {
+			LCD.drawString("     t "+theta, 0, 7);
+			/* react */
+			if(/*x*x + y*y < distError*/theta > -2f && theta < 2f) {
 				isNavigating = false;
+				leftMotor.stop();
+				rightMotor.stop();
 				navMessage = "stopped";
-				LCD.drawString("      (stopped)", 0, 7);
+				LCD.drawString("(stopped)", 0, 0);
 			} else {
 				isNavigating = true;
-				theta = (float)Math.atan2(y, x)*toDegrees - tCurrent;
-				if(     theta >  180f) theta -= 180f;
-				else if(theta < -180f) theta += 180f;
-				LCD.drawString("     t "+theta, 0, 7);
+				//LCD.drawString("     t "+theta, 0, 7);
 				//LCD.drawString("Dif:(\n"+x+"\n,"+y+":\n"+theta+")    ", 0, 1);
-				if(theta > 20f) {
+				//this.turnTo(theta);
+				float rotate = theta * angle;
+				if(theta > 0) rotate = 10;
+				else          rotate = -10;
+				leftMotor.setSpeed(-rotate); /* fixme: I cannot get it to revese; stupid robot it's fucking midnight I give up */
+				rightMotor.setSpeed(rotate);
+
+/*				if(theta > 20f) {
 					navMessage = "turning";
 					this.turnTo(theta);
 				} else {
@@ -72,7 +85,9 @@ class Navigator extends Thread /*implements Runnable*/ {
 					rightMotor.setSpeed(50);
 					leftMotor.forward();
 					rightMotor.forward();
-				}
+				}*/
+				leftMotor.forward();
+				rightMotor.forward();
 			}
 			try {
 				Thread.sleep(period);
@@ -98,8 +113,11 @@ class Navigator extends Thread /*implements Runnable*/ {
 	 in "degrees" */
 	void turnTo(float theta) {
 		int rotate = (int)(theta * angle);
-		leftMotor.rotate((int)-rotate, true);
-		rightMotor.rotate((int)rotate, true);
+
+		/*leftMotor.setSpeed((int)-rotate);
+		rightMotor.setSpeed((int)rotate);*/
+		/*leftMotor.rotate((int)-rotate, true);
+		rightMotor.rotate((int)rotate, true);*/
 	}
 	
 	/** "This method returns true if another thread has called travelTo() or
