@@ -43,7 +43,7 @@ class Navigator extends Thread /*implements Runnable*/ {
       //compute delta x,y
       dx = xTarget - odometer.getX();
       dy = yTarget - odometer.getY();
-      float theta = normTheta((float)Math.atan2(dy,dx) - odometer.getTheta());
+      float theta = normTheta((float)Math.atan2(dy,dx) - odometer.getTheta()*(float)Math.PI/180f);
       
 		/* react */
 		float dist = (float)Math.sqrt(dx*dx + dy*dy);

@@ -29,18 +29,14 @@ public class Lab3 {
 
 		//part a
 		/* random coordinates as specified in the assignment */
-		nav.travelTo(60, -30);
-      wait(nav);
-		nav.travelTo(30, -30);
-      wait(nav);
 		nav.travelTo(30, -60);
-      wait(nav);
-		nav.travelTo(60,   0);
-      wait(nav);
+		nav.travelTo(30, -30);
+		nav.travelTo(60, -30);
+		nav.travelTo(0,  -60);
 
 		/* press any key to exit */
-      LCD.clear();
-		LCD.drawString("Press any key.", 0, 1);
+//      LCD.clear();
+//		LCD.drawString("Press any key.", 0, 1);
 		Button.waitForAnyPress();
 		System.exit(0);
 	}
