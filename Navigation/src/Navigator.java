@@ -4,6 +4,8 @@
 /* must be linked with lejos */
 import lejos.nxt.NXTRegulatedMotor;
 import lejos.nxt.Motor;
+import lejos.nxt.UltrasonicSensor;
+import lejos.nxt.SensorPort;
 
 /* " . . . robot to an absolute position on the field while avoiding obstacles,
  by use of the odometer and an ultrasonic sensor */
@@ -15,12 +17,16 @@ class Navigator extends Thread /*implements Runnable*/ {
 	private final float wheelBase   = 16.2f; /* cm */
 	private final float distError = 3; /* cm^{-1/2} */
 	private final NXTRegulatedMotor leftMotor = Motor.A , rightMotor = Motor.B;
+   private final float uDistThreshold = 40;
+   private final int sleepPeriod = 200;
 
+   private static final SensorPort usPort = SensorPort.S1;
+   UltrasonicSensor ultrasonic = new UltrasonicSensor(usPort);
 	private Odometer odometer;
 	//running when true
 	private boolean isNavigating;
    private float dx,dy,xTarget,yTarget;
-
+   private float uDist;
 	/** constructor */
 	public Navigator(Odometer odometer) {
 		this.odometer = odometer;
@@ -40,25 +46,33 @@ class Navigator extends Thread /*implements Runnable*/ {
       this.isNavigating = true;
       xTarget = tx;
       yTarget = ty;
-      //compute delta x,y
-      dx = xTarget - odometer.getX();
-      dy = yTarget - odometer.getY();
-      float theta = normTheta((float)Math.atan2(dy,dx) - odometer.getTheta()*(float)Math.PI/180f);
       
 		/* react */
 		float dist = (float)Math.sqrt(dx*dx + dy*dy);
-		if(dist < distError) {
-			isNavigating = false;
-			leftMotor.stop();
-			rightMotor.stop();
-//			LCD.drawString("(stopped)", 0, 0);
-		} else {
-			isNavigating = true;
+	   while(dist > distError) {
+	      //compute delta x,y
+         dx = xTarget - odometer.getX();
+         dy = yTarget - odometer.getY();
+         float theta = normTheta((float)Math.atan2(dy,dx) - odometer.getTheta()*(float)Math.PI/180f);
+		   float dist = (float)Math.sqrt(dx*dx + dy*dy);
+   		isNavigating = true;
+         uDist=ultrasonic.getDistance();
          //adjust angle to object
 			this.turnTo(theta*wheelBase/2);
+         if(uDist < uDistThreshold) {
+            turnLeft((float)Math.PI);
+         }
          //move forward
-			leftMotor.rotate(motorDegrees(dist), true);
-			rightMotor.rotate(motorDegrees(dist), false);
+			leftMotor.setSpeed(200);
+			rightMotor.setSpeed(200);
+         leftMotor.forward();
+         rightMotor.forward();
+ 			try {
+				Thread.sleep(sleepPeriod);
+			} catch (Exception e) {
+				System.out.println("Error: " + e.getMessage());
+			}
+
 		}
 	}
 
