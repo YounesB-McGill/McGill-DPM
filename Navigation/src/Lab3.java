@@ -3,6 +3,7 @@
 
 import lejos.nxt.Button; /* must be linked with lejos */
 import lejos.nxt.LCD;
+import lejos.nxt.Sound;
 
 /* this is the entry point */
 
@@ -13,7 +14,9 @@ public class Lab3 {
 		Navigator nav = new Navigator(odo);
       Display display = new Display(odo,nav);
 
-		/* start odometer and display*/
+      Sound.setVolume(100);
+		
+      /* start odometer and display*/
 		odo.start();
       nav.start();
       display.start();
@@ -30,9 +33,19 @@ public class Lab3 {
 		//part a
 		/* random coordinates as specified in the assignment */
 		nav.travelTo(30, -60);
+      Sound.beep();
 		nav.travelTo(30, -30);
+      Sound.beep();
 		nav.travelTo(60, -30);
+      Sound.beep();
 		nav.travelTo(0,  -60);
+      Sound.twoBeeps();
+      //part b
+//		nav.travelTo(60, 0);
+//      Sound.beep();
+//		nav.travelTo(0, -60);
+//      Sound.beep();
+        
 
 		/* press any key to exit */
 //      LCD.clear();

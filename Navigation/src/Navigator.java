@@ -17,8 +17,9 @@ class Navigator extends Thread /*implements Runnable*/ {
 	private final float wheelBase   = 16.2f; /* cm */
 	private final float distError = 3; /* cm^{-1/2} */
 	private final NXTRegulatedMotor leftMotor = Motor.A , rightMotor = Motor.B;
-   private final float uDistThreshold = 40;
+   private final float uDistThreshold = 25;
    private final int sleepPeriod = 200;
+   private final float thetaThreshold = (float)Math.PI/60f; //keep theta within 180/60=3 degrees
 
    private static final SensorPort usPort = SensorPort.S1;
    UltrasonicSensor ultrasonic = new UltrasonicSensor(usPort);
@@ -46,22 +47,48 @@ class Navigator extends Thread /*implements Runnable*/ {
       this.isNavigating = true;
       xTarget = tx;
       yTarget = ty;
-      
-		/* react */
+      dx = xTarget - odometer.getX();
+      dy = yTarget - odometer.getY();
+		
+      /* react */
 		float dist = (float)Math.sqrt(dx*dx + dy*dy);
+      boolean turn = true;
+      int turnCount = 0; //adjusts angle every 5 cycles, test ultrasonic every cycle
 	   while(dist > distError) {
-	      //compute delta x,y
+         if(turnCount == 10) {turnCount = 0;}
+	      //update delta x,y,theta
          dx = xTarget - odometer.getX();
          dy = yTarget - odometer.getY();
          float theta = normTheta((float)Math.atan2(dy,dx) - odometer.getTheta()*(float)Math.PI/180f);
-		   float dist = (float)Math.sqrt(dx*dx + dy*dy);
-   		isNavigating = true;
+		   dist = (float)Math.sqrt(dx*dx + dy*dy);
          uDist=ultrasonic.getDistance();
-         //adjust angle to object
-			this.turnTo(theta*wheelBase/2);
+         //adjust angle to object if theta not within threshold
+         if( (/* Math.abs(theta*wheelBase/2) > thetaThreshold &&*/ turnCount == 0 ))
+			   this.turnTo(theta*wheelBase/2);
          if(uDist < uDistThreshold) {
-            turnLeft((float)Math.PI);
-         }
+            turnLeft((float)Math.PI*wheelBase/4);
+            leftMotor.setSpeed(200);
+			   rightMotor.setSpeed(150);
+            leftMotor.forward();
+            rightMotor.forward();
+  			   try {
+			   	Thread.sleep(4000);
+			   } catch (Exception e) {
+			   	System.out.println("Error: " + e.getMessage());
+			   }
+            turnRight((float)Math.PI*wheelBase/6);
+            leftMotor.setSpeed(250);
+			   rightMotor.setSpeed(250);
+            leftMotor.forward();
+            rightMotor.forward();
+  			   try {
+			   	Thread.sleep(2000);
+			   } catch (Exception e) {
+			   	System.out.println("Error: " + e.getMessage());
+			   }
+            turnCount = -1;
+            turn = false; //prevents robot from turning again on the loop back
+         } else {turn = true;}
          //move forward
 			leftMotor.setSpeed(200);
 			rightMotor.setSpeed(200);
@@ -72,8 +99,12 @@ class Navigator extends Thread /*implements Runnable*/ {
 			} catch (Exception e) {
 				System.out.println("Error: " + e.getMessage());
 			}
+         turnCount++;
 
 		}
+      leftMotor.stop();
+      rightMotor.stop();
+      isNavigating = false;
 	}
 
 	/** "This method causes the robot to turn (on point) to the absolute
@@ -92,13 +123,21 @@ class Navigator extends Thread /*implements Runnable*/ {
       return (int) ((180.0 * radianDist) / (Math.PI * wheelRadius));
    }
    private void turnLeft(float rad) {
+      leftMotor.setSpeed(100);
+      rightMotor.setSpeed(100);
       leftMotor.rotate(motorDegrees(-rad),true);
       rightMotor.rotate(motorDegrees(rad),false);
+      leftMotor.setSpeed(200);
+      rightMotor.setSpeed(200);
    }
    private void turnRight(float rad) {
+      leftMotor.setSpeed(100);
+      rightMotor.setSpeed(100);
       leftMotor.rotate(motorDegrees(rad),true);
       rightMotor.rotate(motorDegrees(-rad),false);
-   }
+      leftMotor.setSpeed(200);
+      rightMotor.setSpeed(200);
+  }
    private float normTheta(float theta) {
       if(     theta >  Math.PI) theta -= Math.PI;
       else if(theta < -Math.PI) theta += Math.PI;
