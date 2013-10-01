@@ -1,6 +1,12 @@
 /* Lab3.java
- Group 51 -- Alex Bhandari-Young and Neil Edelman */
-
+   Group 51 -- Alex Bhandari-Young and Neil Edelman
+Navigation Lab:
+This is the class containing the main method for this lab.
+It creates instances of Odometer, Navigator (which is passed 
+the odometer instance, and Display (which is passed both of
+the other instances to display the robot's position and target
+coordinates.
+*/
 import lejos.nxt.Button; /* must be linked with lejos */
 import lejos.nxt.LCD;
 import lejos.nxt.Sound;
@@ -30,21 +36,22 @@ public class Lab3 {
       }).start();
 
 
-		//part a
+		//part a -- uncomment and comment part b below to run part a
 		/* random coordinates as specified in the assignment */
-//		nav.travelTo(30, -60);
-//      Sound.beep();
-//		nav.travelTo(30, -30);
-//      Sound.beep();
-//		nav.travelTo(60, -30);
-//      Sound.beep();
-//		nav.travelTo(0,  -60);
-//      Sound.twoBeeps();
+/*		nav.travelTo(30, -60);
+      Sound.beep();
+		nav.travelTo(30, -30);
+      Sound.beep();
+		nav.travelTo(60, -30);
+      Sound.beep();
+		nav.travelTo(0,  -60);
+      Sound.twoBeeps();
+*/ 
       //part b
 		nav.travelTo(60, 0);
       Sound.beep();
 		nav.travelTo(0, -60);
-      Sound.beep();
+      Sound.twoBeeps();
         
 
 		/* press any key to exit */
