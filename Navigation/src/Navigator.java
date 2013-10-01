@@ -5,6 +5,8 @@
 import lejos.nxt.NXTRegulatedMotor;
 import lejos.nxt.Motor;
 import lejos.nxt.LCD;
+import lejos.nxt.SensorPort;
+import lejos.nxt.UltrasonicSensor;
 
 /* " . . . robot to an absolute position on the field while avoiding obstacles,
  by use of the odometer and an ultrasonic sensor */
@@ -16,6 +18,9 @@ class Navigator extends Thread /*implements Runnable*/ {
 	private final float wheelBase   = 16.2f; /* cm */
 	private final float dist2Error  = 1; /* cm^{-1/2} */
 	private final NXTRegulatedMotor leftMotor = Motor.A , rightMotor = Motor.B;
+
+	private static final SensorPort usPort = SensorPort.S1;
+	UltrasonicSensor ultrasonic = new UltrasonicSensor(usPort);
 
 	private Odometer odometer;
 	//running when true
@@ -41,6 +46,7 @@ class Navigator extends Thread /*implements Runnable*/ {
 		float xDelta, yDelta, tDelta;
 		float xTarget, yTarget;
 		float left, right;
+		int sensorDist;
 
 		this.isNavigating = true;
 
@@ -54,6 +60,18 @@ class Navigator extends Thread /*implements Runnable*/ {
 		/* loop until it gets there;
 		 fixme: blocking (this is what we want for this lab, but in general) */
 		for( ; ; ) {
+			/* if it detects an object, avoid it */
+			sensorDist = ultrasonic.getDistance();
+			LCD.drawString("Dist: "+sensorDist, 0, 1);
+			if(sensorDist != 255) {
+				LCD.drawString("Avoiding!", 0, 2);
+				leftMotor.rotate(-100, false);
+				rightMotor.rotate(100, true);
+				leftMotor.rotate(100, false);
+				rightMotor.rotate(100, true);
+				LCD.drawString("         ", 0, 2);
+			}
+			/* otherwise, go right to it */
 			xOdo = odometer.getX();
 			yOdo = odometer.getY();
 			tOdo = odometer.getTheta();
