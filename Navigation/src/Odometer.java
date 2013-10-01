@@ -18,11 +18,11 @@ public class Odometer extends Thread {
 
 	private final float toDegrees   = 180f / (float)Math.PI; /* [deg]/[rad] */
 	private final float fromDegrees = (float)Math.PI / 180f; /* [rad]/[deg] */
-	private final float robotWidth     = 16f; /* [cm] */
+	private final float robotWidth     = 16.2f/*16f*/; /* [cm] */
 	private final float normaliseWidth = 1f / robotWidth; /* [cm^{-1}] */
 	/* 5.6 cm / 2; fixme: get more accurate */
-	private final float wheelRadiusL   = 2.8f * fromDegrees; /* [cm][rad]/[deg] */
-	private final float wheelRadiusR   = 2.8f * fromDegrees; /* [cm][rad]/[deg] */
+	private final float wheelRadiusL   = 2.78f/*2.8f*/ * fromDegrees; /* [cm][rad]/[deg] */
+	private final float wheelRadiusR   = 2.78f/*2.8f*/ * fromDegrees; /* [cm][rad]/[deg] */
 	
 	/* independent tachometer values; fixme: numerically unstable */
 	private int previousLTacho, previousRTacho;

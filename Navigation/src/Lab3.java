@@ -11,42 +11,33 @@ public class Lab3 {
 	public static void main(String args[]) {
 		Odometer odo = new Odometer();
 		Navigator nav = new Navigator(odo);
-      Display display = new Display(odo,nav);
 
 		/* start odometer and display*/
 		odo.start();
-      nav.start();
-      display.start();
+		nav.start();
 
-      //spawn thread for exit
-		(new Thread() {
-         public void run() {
-            if (Button.waitForAnyPress() == Button.ID_ESCAPE)
-		         System.exit(0);
-         }
-      }).start();
-
-
-		//part a
 		/* random coordinates as specified in the assignment */
-		nav.travelTo(30, -60);
-		nav.travelTo(30, -30);
-		nav.travelTo(60, -30);
-		nav.travelTo(0,  -60);
+		nav.travelTo(30, -60, "A");
+		nav.travelTo(30, -30, "B");
+		nav.travelTo(60, -30, "C");
+		nav.travelTo(0,  -60, "D");
+
+		/*waitForNav(nav);*/
 
 		/* press any key to exit */
-//      LCD.clear();
-//		LCD.drawString("Press any key.", 0, 1);
+		LCD.clear();
+		LCD.drawString("Press any key.", 0, 1);
 		Button.waitForAnyPress();
 		System.exit(0);
 	}
-   private static void wait(Navigator nav) {
-      while(nav.isNavigating()) {
+
+	private static void waitForNav(Navigator nav) {
+		while(nav.isNavigating()) {
  			try {
 				Thread.sleep(nav.getPeriod());
 			} catch (Exception e) {
 				System.out.println("Error: " + e.getMessage());
 			}
-      }
-   }
+		}
+	}
 }
