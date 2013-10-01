@@ -32,19 +32,19 @@ public class Lab3 {
 
 		//part a
 		/* random coordinates as specified in the assignment */
-		nav.travelTo(30, -60);
-      Sound.beep();
-		nav.travelTo(30, -30);
-      Sound.beep();
-		nav.travelTo(60, -30);
-      Sound.beep();
-		nav.travelTo(0,  -60);
-      Sound.twoBeeps();
+//		nav.travelTo(30, -60);
+//      Sound.beep();
+//		nav.travelTo(30, -30);
+//      Sound.beep();
+//		nav.travelTo(60, -30);
+//      Sound.beep();
+//		nav.travelTo(0,  -60);
+//      Sound.twoBeeps();
       //part b
-//		nav.travelTo(60, 0);
-//      Sound.beep();
-//		nav.travelTo(0, -60);
-//      Sound.beep();
+		nav.travelTo(60, 0);
+      Sound.beep();
+		nav.travelTo(0, -60);
+      Sound.beep();
         
 
 		/* press any key to exit */
