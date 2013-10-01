@@ -11,6 +11,8 @@ import lejos.nxt.UltrasonicSensor;
 /* " . . . robot to an absolute position on the field while avoiding obstacles,
  by use of the odometer and an ultrasonic sensor */
 
+/* try */
+
 class Navigator extends Thread /*implements Runnable*/ {
 	private final float toDegrees = 180f / (float)Math.PI;
 	private final int period = 100;
