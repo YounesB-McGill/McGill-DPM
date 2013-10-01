@@ -14,7 +14,7 @@ class Navigator extends Thread /*implements Runnable*/ {
 	private final int period = 100;
 	private final float wheelRadius = 2.78f; /* cm */
 	private final float wheelBase   = 16.2f; /* cm */
-	private final float dist2Error  = 3; /* cm^{-1/2} */
+	private final float dist2Error  = 1; /* cm^{-1/2} */
 	private final NXTRegulatedMotor leftMotor = Motor.A , rightMotor = Motor.B;
 
 	private Odometer odometer;
