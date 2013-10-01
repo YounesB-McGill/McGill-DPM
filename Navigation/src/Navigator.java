@@ -60,16 +60,20 @@ class Navigator extends Thread /*implements Runnable*/ {
 		/* loop until it gets there;
 		 fixme: blocking (this is what we want for this lab, but in general) */
 		for( ; ; ) {
+			LCD.drawString("target " + name, 0, 0);
 			/* if it detects an object, avoid it */
 			sensorDist = ultrasonic.getDistance();
-			LCD.drawString("Dist: "+sensorDist, 0, 1);
-			if(sensorDist != 255) {
+			LCD.drawString("dist: "+sensorDist, 0, 1);
+			if(sensorDist < 30) {
 				LCD.drawString("Avoiding!", 0, 2);
-				leftMotor.rotate(-100, false);
-				rightMotor.rotate(100, true);
-				leftMotor.rotate(100, false);
-				rightMotor.rotate(100, true);
+				/* turn */
+				leftMotor.rotate((int)(90f * wheelBase*0.5/wheelRadius), true);
+				rightMotor.rotate((int)(-90f * wheelBase*0.5/wheelRadius), false);
+				/* go forward */
+				leftMotor.rotate(900, true);
+				rightMotor.rotate(900, false);
 				LCD.drawString("         ", 0, 2);
+				continue;
 			}
 			/* otherwise, go right to it */
 			xOdo = odometer.getX();
@@ -84,14 +88,13 @@ class Navigator extends Thread /*implements Runnable*/ {
 				isNavigating = false;
 				leftMotor.stop();
 				rightMotor.stop();
-				LCD.drawString("target " + name, 0, 0);
 				break;
 			}
 			/* calculate deviation */
 			tDelta = (float)Math.atan2(yDelta, xDelta) * toDegrees - tOdo;
 			/* do some magic */
-			left  = 300f - tDelta * 6f;
-			right = 300f + tDelta * 6f;
+			left  = 1f * (100f - tDelta * 2f);
+			right = 1f * (100f + tDelta * 2f);
 			/* set speed */
 			leftMotor.setSpeed(left);
 			rightMotor.setSpeed(right);
@@ -138,8 +141,8 @@ class Navigator extends Thread /*implements Runnable*/ {
    private void turnLeft(float rad) {
       leftMotor.rotate(motorDegrees(-rad),true);
       rightMotor.rotate(motorDegrees(rad),false);
-   }
-   private void turnRight(float rad) {
+   }*/
+   /*private void turnRight(float rad) {
       leftMotor.rotate(motorDegrees(rad),true);
       rightMotor.rotate(motorDegrees(-rad),false);
    }

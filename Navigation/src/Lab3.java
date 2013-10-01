@@ -18,9 +18,9 @@ public class Lab3 {
 
 		/* random coordinates as specified in the assignment */
 		nav.travelTo(30, -60, "A");
-		nav.travelTo(30, -30, "B");
+		/*nav.travelTo(30, -30, "B");
 		nav.travelTo(60, -30, "C");
-		nav.travelTo(0,  -60, "D");
+		nav.travelTo(0,  -60, "D");*/
 
 		/*waitForNav(nav);*/
 
