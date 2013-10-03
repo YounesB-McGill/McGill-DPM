@@ -267,17 +267,21 @@ Calculate the corrected sample standard deviation from the variance (Equation~\r
 
 \section{Observations and Conclusion}
 
-We noticed experimentally that one actuator is not working, so we placed it on the top of our robot to hold the sensor. As such, the sensor can not move.
+We noticed experimentally that one actuator is not working, so we placed it on the top of our robot to hold the sensor. As such, the sensor can not move. This is an additional design constraint.
 
 We tried {\tt rotate} and {\tt rotateTo} methods as seen in the last lab\cite{alexneil2}, but these inherently blocked output. The {\tt setSpeed} method was more appropriate. {\tt setSpeed} sets it to the absolute value of the speed; you then call {\tt forward} or {\tt backward} depending on the sign. This is not documented in the API.
 
-``In three to four sentences, explain the operation of your controller(s) for navigation. How accurately does it move the robot to its destination? How quickly does it settle (stop oscillating) on its destination? You do not need to provide a quantitative analysis.''
+The errors resulting from the navigator are due to the threshold distance from the target calculated, which was set to 3\,cm during this lab; because theta is corrected every ten cycles of the while loop, the robot consistently stops within 1\,cm of the target point. This can be corrected by decreasing this tolerated distance, but choosing a value too low will waste time because the robot will have to oscillate more to achieve it.
 
-``How would increasing the speed of the robot affect the accuracy of your navigation? What is the main source of error in navigation (and odometry)?''
+The controller works by pointing the robot towards its target coordinate. It moves toward it, running in a while loop that checks the ultrasonic sensor for obstacles every cycle, and incrementing a count which allows it to check theta and run {\tt turnTo} to correct its angular error every ten cycles of the while loop. This loop runs while distance is greater than the threshold distance from the point, which is set to three. This results in no noticeable robot oscillation. When {\tt turnTo} is called the robot stops to turn, this happens about once every 5-10 seconds; further improvements were implemented to adjust theta while the robot is in motion, but were discarded because the time constraint.
+
+The controller consistently moves to within 1\,cm of the target point as read by the odometer. However, the odometer incurs an additional error of approximately 1\,cm from wheel slippage, making the overall accuracy bound 2\,cm.
 
 \section{Further Improvements}
 
-``What steps can be taken to reduce the errors in navigation and odometry? In four (4) to six (6) sentences, Identify at least one hardware and one software solution, and provide an explanation as to why they would work.''
+Increasing the acceleration of the robot will result in greater wheel slippage, and increase the error in the odometer. The main sources of error using navigation and odometry is from slippage error and from mis-calibrations. The battery voltage gives an unknown variable for which the constants of calibration do not account. Wheel slippage can be reduced by decreasing the acceleration of the robot. Excluding the odometer, error in the navigation is also caused by the distance threshold, but this can be reduced by reducing the threshold.
+
+A software solution to reducing error in wheel slippage is to reduce the speed at which it moves, but this becomes an issue when time is important. Use of the an additional sensor, such as the light sensor, to aid in determining the robots position is a hardware solution.
 
 \bibliography{lab3}
 
