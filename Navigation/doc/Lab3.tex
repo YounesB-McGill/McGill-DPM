@@ -77,47 +77,184 @@
 
 Repeated robot runs on the 3-by-3 are seen in without odometer correction in Table~\ref{a} and with odometer correction in Table~\ref{b}.
 
+Calculate the differences in Equation~\ref{dx1}--\ref{dy10}.
+
+\begin{align}
+d_{x,1} &= (0.0) - (-0.00) \nonumber\\
+ &= 0.00 \label{dx1}\\
+d_{y,1} &= (-60.0) - (-60.11) \nonumber\\
+ &= 0.11 \label{dy1}
+\end{align}
+\begin{align}
+d_{x,2} &= (0.5) - (0.18) \nonumber\\
+ &= 0.32 \label{dx2}\\
+d_{y,2} &= (-59.5) - (-60.50) \nonumber\\
+ &= 1.00 \label{dy2}
+\end{align}
+\begin{align}
+d_{x,3} &= (0.5) - (-0.10) \nonumber\\
+ &= 0.60 \label{dx3}\\
+d_{y,3} &= (-59.5) - (-60.50) \nonumber\\
+ &= 1.00 \label{dy3}
+\end{align}
+\begin{align}
+d_{x,4} &= (0.5) - (0.06) \nonumber\\
+ &= 0.44 \label{dx4}\\
+d_{y,4} &= (-60.0) - (-60.31) \nonumber\\
+ &= 0.31 \label{dy4}
+\end{align}
+\begin{align}
+d_{x,5} &= (0.5) - (0.11) \nonumber\\
+ &= 0.39 \label{dx5}\\
+d_{y,5} &= (-60.5) - (-60.42) \nonumber\\
+ &= -0.08 \label{dy5}
+\end{align}
+\begin{align}
+d_{x,6} &= (0.0) - (0.17) \nonumber\\
+ &= -0.17 \label{dx6}\\
+d_{y,6} &= (-59.0) - (-60.51) \nonumber\\
+ &= 1.51 \label{dy6}
+\end{align}
+\begin{align}
+d_{x,7} &= (1.5) - (0.06) \nonumber\\
+ &= 1.44 \label{dx7}\\
+d_{y,7} &= (-61.0) - (-60.32) \nonumber\\
+ &= -0.68 \label{dy7}
+\end{align}
+\begin{align}
+d_{x,8} &= (1.5) - (-0.04) \nonumber\\
+ &= 1.54 \label{dx8}\\
+d_{y,8} &= (-61.0) - (-60.11) \nonumber\\
+ &= -0.89 \label{dy8}
+\end{align}
+\begin{align}
+d_{x,9} &= (1.0) - (-0.09) \nonumber\\
+ &= 1.09 \label{dx9}\\
+d_{y,9} &= (-60.0) - (-59.99) \nonumber\\
+ &= -0.01 \label{dy9}
+\end{align}
+\begin{align}
+d_{x,10} &= (0.5) - (0.17) \nonumber\\
+ &= 0.33 \label{dx10}\\
+d_{y,10} &= (-59.5) - (-60.50) \nonumber\\
+ &= 1.00 \label{dy10}
+\end{align}
+
+Calculate the sum of the differences (Equation~\ref{dx1}--\ref{dy10}) in Equation~\ref{sumx}--\ref{sumy}.
+
+\begin{align}
+\text{sum}_{x} &= \sum_{i=1}^{10} d_{x,i} \nonumber\\
+ &= (0.00) + \nonumber\\
+ &\quad\quad (0.32) + \nonumber\\
+ &\quad\quad (0.60) + \nonumber\\
+ &\quad\quad (0.44) + \nonumber\\
+ &\quad\quad (0.39) + \nonumber\\
+ &\quad\quad (-0.17) + \nonumber\\
+ &\quad\quad (1.44) + \nonumber\\
+ &\quad\quad (1.54) + \nonumber\\
+ &\quad\quad (1.09) + \nonumber\\
+ &\quad\quad (0.33) \nonumber\\
+ &= 5.98 \label{sumx}
+\end{align}
+
+\begin{align}
+\text{sum}_{y} &= \sum_{i=1}^{10} d_{y,i} \nonumber\\
+ &= (0.11) + \nonumber\\
+ &\quad\quad (1.00) + \nonumber\\
+ &\quad\quad (1.00) + \nonumber\\
+ &\quad\quad (0.31) + \nonumber\\
+ &\quad\quad (-0.08) + \nonumber\\
+ &\quad\quad (1.51) + \nonumber\\
+ &\quad\quad (-0.68) + \nonumber\\
+ &\quad\quad (-0.89) + \nonumber\\
+ &\quad\quad (-0.01) + \nonumber\\
+ &\quad\quad (1.00) \nonumber\\
+ &= 3.27 \label{sumy}
+\end{align}
+
+Calculate the sum of the differences (Equation~\ref{dx1}--\ref{dy10}) squared in Equation~\ref{sum2x}--\ref{sum2y}.
+
+\begin{align}
+\text{ssq}_{x} &= \sum_{i=1}^{10} d_{x,i}^{\phantom{x,i}2} \nonumber\\
+ &= (0.00)^2 + \nonumber\\
+ &\quad\quad (0.32)^2 + \nonumber\\
+ &\quad\quad (0.60)^2 + \nonumber\\
+ &\quad\quad (0.44)^2 + \nonumber\\
+ &\quad\quad (0.39)^2 + \nonumber\\
+ &\quad\quad (-0.17)^2 + \nonumber\\
+ &\quad\quad (1.44)^2 + \nonumber\\
+ &\quad\quad (1.54)^2 + \nonumber\\
+ &\quad\quad (1.09)^2 + \nonumber\\
+ &\quad\quad (0.33)^2 \nonumber\\
+ &= 6.58 \label{sum2x}
+\end{align}
+
+\begin{align}
+\text{ssq}_{y} &= \sum_{i=1}^{10} d_{y,i}^{\phantom{y,i}2} \nonumber\\
+ &= (0.11)^2 + \nonumber\\
+ &\quad\quad (1.00)^2 + \nonumber\\
+ &\quad\quad (1.00)^2 + \nonumber\\
+ &\quad\quad (0.31)^2 + \nonumber\\
+ &\quad\quad (-0.08)^2 + \nonumber\\
+ &\quad\quad (1.51)^2 + \nonumber\\
+ &\quad\quad (-0.68)^2 + \nonumber\\
+ &\quad\quad (-0.89)^2 + \nonumber\\
+ &\quad\quad (-0.01)^2 + \nonumber\\
+ &\quad\quad (1.00)^2 \nonumber\\
+ &= 6.65 \label{sum2y}
+\end{align}
+
+Calculate the mean from Equation~\ref{sumx}--\ref{sumy} in Equation~\ref{meanx}--\ref{meany}.
+
+\begin{align}
+\text{mean}_{x} &= \frac{\text{sum}_{x}}{N} \nonumber\\
+ &= \frac{5.98}{10} \nonumber\\
+ &= 0.598000 \label{meanx}\\
+\text{mean}_{y} &= \frac{\text{sum}_{y}}{N} \nonumber\\
+ &= \frac{3.27}{10} \nonumber\\
+ &= 0.327000 \label{meany}
+\end{align}
+Calculate the variance from Equation~\ref{sumx}--\ref{sumy} and \ref{sum2x}--\ref{sum2y} in Equation~\ref{varx}--\ref{vary}.
+
+\begin{align}
+\sigma_{x}^{\phantom{x}2} &= \frac{\text{ssq}_{x} - \frac{\text{sum}_{x}^{\phantom{x}2}}{N}}{N-1} \nonumber\\
+ &= \frac{6.58 - \frac{5.98^2}{10}}{10-1} \nonumber\\
+ &= 0.333684 \label{varx}\\
+\sigma_{y}^{\phantom{y}2} &= \frac{\text{ssq}_{y} - \frac{\text{sum}_{y}^{\phantom{y}2}}{N}}{N-1} \nonumber\\
+ &= \frac{6.65 - \frac{3.27^2}{10}}{10-1} \nonumber\\
+ &= 0.620001 \label{vary}
+\end{align}
+Calculate the corrected sample standard deviation from the variance (Equation~\ref{varx}--\ref{vary}) in Equation~\ref{stddx}--\ref{stddy}.
+
+\begin{align}
+\sigma_x &= \sqrt{\sigma_{x}^{\phantom{x}2}} \nonumber\\
+ &= \sqrt{0.333684} \nonumber\\
+ &= 0.577654 \label{stddx}\\
+\sigma_y &= \sqrt{\sigma_{y}^{\phantom{y}2}} \nonumber\\
+ &= \sqrt{0.620001} \nonumber\\
+ &= 0.787401 \label{stddy}
+\end{align}
 \begin{table*}[htb]
 \begin{center}\begin{tabular}{r@{}l r@{}l r@{}l r@{}l r@{}l r@{}l}
 &actual&&& &reported&&& &delta&& \\
 &x (cm)& &y (cm)& &x (cm)& &y (cm)& &x (cm)& &y (cm) \\
 \hline
--3&.0& -0&.5& -0&.10& -0&.10& -2&.9& -0&.4 \\
--1&.1& -0&.6& -0&.09& -0&.10& -1&.0& -0&.5 \\
--0&.6& -0&.4& -0&.11& -0&.14& -0&.5& -0&.3 \\
--2&.1& -2&.1& -0&.12& -0&.13& -2&.0& -2&.0 \\
--2&.4& -1&.8& -0&.11& -0&.10& -2&.3& -1&.7 \\
--2&.7& -0&.7& -0&.09& -0&.10& -2&.6& -0&.6 \\
--1&.6& -2&.5& -0&.09& -0&.09& -1&.5& -2&.4 \\
--1&.4& -1&.6& -0&.10& -0&.11& -1&.3& -1&.5 \\
--2&.5& -1&.9& -0&.11& -0&.10& -2&.4& -1&.8 \\
--2&.9& -2&.0& -0&.10& -0&.13& -2&.8& -1&.9 \\
+0&.0& -60&.0& -0&.00& -60&.11& 0&.0& 0&.1 \\
+0&.5& -59&.5& 0&.18& -60&.50& 0&.3& 1&.0 \\
+0&.5& -59&.5& -0&.10& -60&.50& 0&.6& 1&.0 \\
+0&.5& -60&.0& 0&.06& -60&.31& 0&.4& 0&.3 \\
+0&.5& -60&.5& 0&.11& -60&.42& 0&.4& -0&.1 \\
+0&.0& -59&.0& 0&.17& -60&.51& -0&.2& 1&.5 \\
+1&.5& -61&.0& 0&.06& -60&.32& 1&.4& -0&.7 \\
+1&.5& -61&.0& -0&.04& -60&.11& 1&.5& -0&.9 \\
+1&.0& -60&.0& -0&.09& -59&.99& 1&.1& -0&.0 \\
+0&.5& -59&.5& 0&.17& -60&.50& 0&.3& 1&.0 \\
 \end{tabular}\end{center}
-\caption{Reported error as read by the robot, and real error as read by a ruler and the difference between them for the [un]corrected code.
-The difference, as $(x, y)$, mean is $(-1.93, -1.30)$, variance is $(0.67, 0.61)$, and the corrected sample standard deviation is $(0.82, 0.78)$.}
+\caption{Reported error as read by the robot, and real error as read by a ruler and the difference between them.
+The difference, as $(x, y)$, mean is $(0.60, 0.33)$, variance is $(0.33, 0.62)$, and the corrected sample standard deviation is $(0.58, 0.79)$.}
 \label{a}
 \end{table*}
 
-\begin{table*}[htb]
-\begin{center}\begin{tabular}{r@{}l r@{}l r@{}l r@{}l r@{}l r@{}l}
-&actual&&& &reported&&& &delta&& \\
-&x (cm)& &y (cm)& &x (cm)& &y (cm)& &x (cm)& &y (cm) \\
-\hline
--2&.9& 1&.0& -3&.06& 1&.14& 0&.2& -0&.1 \\
--2&.4& 1&.3& -2&.48& 1&.39& 0&.1& -0&.1 \\
--2&.1& 1&.4& -2&.56& 1&.41& 0&.5& -0&.0 \\
--3&.1& 1&.1& -3&.12& 1&.09& 0&.0& 0&.0 \\
--1&.9& 1&.5& -2&.01& 1&.49& 0&.1& 0&.0 \\
--2&.8& 1&.1& -3&.01& 1&.10& 0&.2& 0&.0 \\
--2&.7& 1&.0& -2&.81& 1&.25& 0&.1& -0&.2 \\
--2&.2& 1&.5& -2&.46& 1&.38& 0&.3& 0&.1 \\
--3&.5& 1&.1& -3&.48& 1&.01& -0&.0& 0&.1 \\
--1&.1& 1&.3& -2&.10& 1&.29& 1&.0& 0&.0 \\
-\end{tabular}\end{center}
-\caption{Reported error as read by the robot, and real error as read by a ruler and the difference between them for the [un]corrected code.
-The difference, as $(x, y)$, mean is $(0.24, -0.02)$, variance is $(0.09, 0.01)$, and the corrected sample standard deviation is $(0.30, 0.11)$.}
-\label{b}
-\end{table*}
 
 \section{Data Analysis}
 
