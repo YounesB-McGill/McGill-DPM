@@ -61,21 +61,49 @@
 
 \begin{document}
 
-% math eq'ns line up with lists
-\abovedisplayskip=-\baselineskip
-
 \maketitle
 
-\abstract{An autonomous automated vehicle is programmed with a dead-reckoning system, and then enhanced with colour sensors aimed at the floor to detect grid lines. The odometer is calibrated and measured.}
+\abstract{We designed a software system that allows a robot to move to an absolute location while avoiding obstacles.}
 
 %Data Collection (2 sentences + data)
 %Observations and Conclusion
 %Error Analysis (When possible, specify sub, super, or linear error growth)
 %Further Improvements
 
-\section{Data Collection}
+\section{Data}
 
-Repeated robot runs on the 3-by-3 are seen in without odometer correction in Table~\ref{a} and with odometer correction in Table~\ref{b}.
+Repeated runs of the robot path in Figure~\ref{path} gave the data in Table~\ref{a}. We used more precise measurements values used in the odometer from our last lab\cite{alexneil2}; that made the error go down.
+
+\fig{path}{Robot navigation path in cm.\cite{lab3}}
+
+\begin{table*}[htb]
+\begin{center}\begin{tabular}{r@{}l r@{}l r@{}l r@{}l r@{}l r@{}l}
+&actual&&& &reported&&& &error&& \\
+&x (cm)& &y (cm)& &x (cm)& &y (cm)& &x (cm)& &y (cm) \\
+\hline
+0&.0& -60&.0& -0&.00& -60&.11& 0&.0& 0&.1 \\
+0&.5& -59&.5& 0&.18& -60&.50& 0&.3& 1&.0 \\
+0&.5& -59&.5& -0&.10& -60&.50& 0&.6& 1&.0 \\
+0&.5& -60&.0& 0&.06& -60&.31& 0&.4& 0&.3 \\
+0&.5& -60&.5& 0&.11& -60&.42& 0&.4& -0&.1 \\
+0&.0& -59&.0& 0&.17& -60&.51& -0&.2& 1&.5 \\
+1&.5& -61&.0& 0&.06& -60&.32& 1&.4& -0&.7 \\
+1&.5& -61&.0& -0&.04& -60&.11& 1&.5& -0&.9 \\
+1&.0& -60&.0& -0&.09& -59&.99& 1&.1& -0&.0 \\
+0&.5& -59&.5& 0&.17& -60&.50& 0&.3& 1&.0 \\
+\end{tabular}\end{center}
+\caption{Reported error as read by the robot, and real error as read by a ruler and the difference between them.
+The difference, as $(x, y)$, mean is $(0.60, 0.33)$, variance is $(0.33, 0.62)$, and the corrected sample standard deviation is $(0.58, 0.79)$.}
+\label{a}
+\end{table*}
+
+\section{Data Analysis}
+
+\subsection{Discussion}
+
+The errors are part of the odometer. When we measured the odometer values more precisely, our errors dropped significantly. The navigator is just the software that reads from the odometer and decides where to go to minimise the error. It works by comparing a set minimum required error to the actual error and deciding whether that's good enough. We could reduce the error in the software, but that could create a condition where it's never good enough an it loops back incessantly.
+
+\subsection{Error Analysis}
 
 Calculate the differences in Equation~\ref{dx1}--\ref{dy10}.
 
@@ -214,6 +242,7 @@ Calculate the mean from Equation~\ref{sumx}--\ref{sumy} in Equation~\ref{meanx}-
  &= \frac{3.27}{10} \nonumber\\
  &= 0.327000 \label{meany}
 \end{align}
+
 Calculate the variance from Equation~\ref{sumx}--\ref{sumy} and \ref{sum2x}--\ref{sum2y} in Equation~\ref{varx}--\ref{vary}.
 
 \begin{align}
@@ -224,6 +253,7 @@ Calculate the variance from Equation~\ref{sumx}--\ref{sumy} and \ref{sum2x}--\re
  &= \frac{6.65 - \frac{3.27^2}{10}}{10-1} \nonumber\\
  &= 0.620001 \label{vary}
 \end{align}
+
 Calculate the corrected sample standard deviation from the variance (Equation~\ref{varx}--\ref{vary}) in Equation~\ref{stddx}--\ref{stddy}.
 
 \begin{align}
@@ -234,77 +264,20 @@ Calculate the corrected sample standard deviation from the variance (Equation~\r
  &= \sqrt{0.620001} \nonumber\\
  &= 0.787401 \label{stddy}
 \end{align}
-\begin{table*}[htb]
-\begin{center}\begin{tabular}{r@{}l r@{}l r@{}l r@{}l r@{}l r@{}l}
-&actual&&& &reported&&& &delta&& \\
-&x (cm)& &y (cm)& &x (cm)& &y (cm)& &x (cm)& &y (cm) \\
-\hline
-0&.0& -60&.0& -0&.00& -60&.11& 0&.0& 0&.1 \\
-0&.5& -59&.5& 0&.18& -60&.50& 0&.3& 1&.0 \\
-0&.5& -59&.5& -0&.10& -60&.50& 0&.6& 1&.0 \\
-0&.5& -60&.0& 0&.06& -60&.31& 0&.4& 0&.3 \\
-0&.5& -60&.5& 0&.11& -60&.42& 0&.4& -0&.1 \\
-0&.0& -59&.0& 0&.17& -60&.51& -0&.2& 1&.5 \\
-1&.5& -61&.0& 0&.06& -60&.32& 1&.4& -0&.7 \\
-1&.5& -61&.0& -0&.04& -60&.11& 1&.5& -0&.9 \\
-1&.0& -60&.0& -0&.09& -59&.99& 1&.1& -0&.0 \\
-0&.5& -59&.5& 0&.17& -60&.50& 0&.3& 1&.0 \\
-\end{tabular}\end{center}
-\caption{Reported error as read by the robot, and real error as read by a ruler and the difference between them.
-The difference, as $(x, y)$, mean is $(0.60, 0.33)$, variance is $(0.33, 0.62)$, and the corrected sample standard deviation is $(0.58, 0.79)$.}
-\label{a}
-\end{table*}
-
-
-\section{Data Analysis}
-
-\begin{enumerate}
-
-\item ``What was the standard deviation of the results without correction (compute it for x and y separately, and provide the four (4) values in a table)? Did it decrease when correction was introduced? Explain why/why not.\cite{lab2}'' Standard deviation decreased when correction was used because using correction improves the accuracy of the odometer. Since standard deviation is a measure of the deviation of data from the mean, the use of correction would increase the consistency of the odometers estimated positions over a number of trials, thereby decreasing standard deviation. The completely blind reckoning odometer has a much higher chance of incurring error, which spreads data points over a larger range of values, increasing standard deviation. As expected, the absolute values the robot sensed were more with correction; when subtracted from the actual position it is more accurate to have the correction.
-
-\item ``With correction, do you expect the error in the x position or the y position to be smaller? Explain.'' The error is corrected in the direction of travel. We used a standard left-handed co-ordinate system in which the angles increase counter-clockwise. Our robot is aligned to the $x$ direction.
-%in which when theta is zero and the robot is pointing upward, which we define as north. When the robot moves north, x is incremented, and when the robot moves west, y is incremented. It then follows that when the robot moves east y is decremented, and when the robot moves south x in decremented. Going back to the question, this means that when traveling north or south, the robot will be correcting its x value, and when east or west it will be correcting its y value.
-Since the robot moves in a square starting going north, then east, south, and finally west, it corrects $x$, $y$, $x$, and then $y$. The value which is corrected more recently will incur less error because it has less time to incur error. In this case it is $y$. Thus the error in $y$ is expected to be less than $x$.
-
-\end{enumerate}
 
 \section{Observations and Conclusion}
 
-``Is the error you observed in the odometer (without correction) tolerable for larger distances (i.e. circumnavigating the field requires a travel distance five (5) times larger than that used for this lab)? Do you expect the error to grow linearly with respect to travel distance? Explain briefly.\cite{lab2}''
+We noticed experimentally that one actuator is not working, so we placed it on the top of our robot to hold the sensor. As such, the sensor can not move.
 
-The error in the dead reckoning odometer (the one without correction) is not tolerable as it grows linearly. This is because individual errors are independent from each other. Because future error is not effected by past error, the error will simply build up linearly over time. This is not suitable for large distances because without correction, the robot eventually goes astray. With the light sensor on the ground, it allows us to get the absolute position every tile. This corrects the odometer and limits the error. It's analogous to the heading gyroscope, which is quick-acting but neutrally-stable, being corrected by the compass, which is slow, but accurate.
+We tried {\tt rotate} and {\tt rotateTo} methods as seen in the last lab\cite{alexneil2}, but these inherently blocked output. The {\tt setSpeed} method was more appropriate. {\tt setSpeed} sets it to the absolute value of the speed; you then call {\tt forward} or {\tt backward} depending on the sign. This is not documented in the API.
 
-\section{Error Analysis}
+``In three to four sentences, explain the operation of your controller(s) for navigation. How accurately does it move the robot to its destination? How quickly does it settle (stop oscillating) on its destination? You do not need to provide a quantitative analysis.''
 
-See Figure~\ref{a} and Figure~\ref{b} for values. The value
-of the corrected sample standard deviation is $(0.82, 0.78)$ for
-the uncorrected and $(0.30, 0.11)$ for the corrected. The is due to slippage, imprecision, and the inaccuracy in the angle.
+``How would increasing the speed of the robot affect the accuracy of your navigation? What is the main source of error in navigation (and odometry)?''
 
 \section{Further Improvements}
 
-\begin{enumerate}
-
-\item ``Propose a means of, in software, reducing the slip of the robot's wheels (do not provide code).\cite{lab2}'' The easiest way to reduce wheel slippage is to limit the robot's acceleration. This would be implemented by having calling getSpeed and clamping the acceleration.
-% However, in the extreme this is impractical because the robot would be too slow to get anything done. The bigger the "field" or area the robot is allowed to move in, the more important going fast becomes because the robot has to cover move ground. But the farther the robot travels, the more error is accumulates. In software, a balance needs to be reached that weighs speed with accuracy. Additionally, if the robot has access to another sensor such as a light sensor and grid lines, it would go fast between grid lines and correct the accumulated error as it crosses a line. This is a method for reducing the error caused by slip, but not the slip itself. Other than determining the distance it has to travel, and using an algorithm to determine an optimal speed that minimizes slip and balances speed with accuracy, any other software method would require another sensor to be able to detect slip and correct for it. We demonstrated this in this lab using the light sensor to correct for error using the grid lines.
-
-\item ``Propose a means of, in software, correcting the angle reported by the odometer, when (do not provide code):\cite{lab2}''
-
-\begin{enumerate}
-\item ``The robot has two light sensors.\cite{lab2}''
-If the robot had two light sensors placed side by side on the front or back of the robot, it would be able to determine the angle it was facing every time it crossed a line, and correct theta accordingly. If the robot is aligned perpendicularly to the line, then the sensors will cross and thus detect the line at the same time. If it is not there will be a delay in the second sensor detecting the line. This time delay can be converted into a distance by getting the tachometer value of the motors when the first light sensor detects and finding its difference from the tachometer reading when the second sensor detects the same line (assuming the robot is traveling straight, a more complex algorithm could be used with measures both tachometers), converting this angle difference to radians, and multiplying by the radius of the wheel to get the distance traveled between the light sensors detecting the line. This creates a right triangle with the robots' skew and the line it is crossing. Determining the corrected theta will depend on which direction the robot is traveling in but the error in theta will be the inverse cosine of this calculated distance (could be approximated as a small angle) divided by the distance between the light sensors.
-
-\item ``The robot has only one light sensor.\cite{lab2}''
-If the robot only has one light sensor, there is not way to determine the angle it is facing as it crosses a line. However, if the robot remembers when it crosses a line and then measures the distance to the next line, assuming it knows beforehand the distance between the lines, which we did in the case of this lab, it can calculate its error in theta based on the error in the expected versus the measured distance traveled between lines detected by the light sensor.
-% For example, if the robot has a theta of 0, 90, 180, or 360 degrees and it is correct in this measurement, then the measured distance traveled should equal the actual distance between the lines.
-If the robot travels a distance larger than the actual distance between lines, and it is traveling in the simple square used in this lab, then a right triangle could be created with the actual distance the robot expects to travel between the lines and the distance it measured.
-The error in theta will be the inverse cosine of the actual distance between the lines (this could be assumed to be small, thus linear approximation could be used) divided by the measured distance traveled between light sensor detections.
-%The robot has to be traveling straight for this to work.
-This could also be used it the robot was traveling in a more complex pattern, where the Law of Cosines would be used.
-%than the square in this lab, but the algorithm would be more complex. The expected distance traveled based on theta would have to also be determined using the cosine of theta and compared with the measured distance.
-
-\end{enumerate}
-
-\end{enumerate}
+``What steps can be taken to reduce the errors in navigation and odometry? In four (4) to six (6) sentences, Identify at least one hardware and one software solution, and provide an explanation as to why they would work.''
 
 \bibliography{lab3}
 

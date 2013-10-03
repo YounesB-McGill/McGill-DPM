@@ -104,7 +104,7 @@ int main(int argc, char **argv) {
 	printf("\\text{mean}_{y} &= \\frac{\\text{sum}_{y}}{N} \\nonumber\\\\\n");
 	printf(" &= \\frac{%.2f}{%i} \\nonumber\\\\\n", sum.y, N);
 	printf(" &= %f \\label{meany}\n", mean.y);
-	printf("\\end{align}\n");
+	printf("\\end{align}\n\n");
 	
 	printf("Calculate the variance from Equation~\\ref{sumx}--\\ref{sumy} and \\ref{sum2x}--\\ref{sum2y} in Equation~\\ref{varx}--\\ref{vary}.\n\n");
 	printf("\\begin{align}\n");
@@ -115,7 +115,7 @@ int main(int argc, char **argv) {
 	printf("\\sigma_{y}^{\\phantom{y}2} &= \\frac{\\text{ssq}_{y} - \\frac{\\text{sum}_{y}^{\\phantom{y}2}}{N}}{N-1} \\nonumber\\\\\n");
 	printf(" &= \\frac{%.2f - \\frac{%.2f^2}{%i}}{%i-1} \\nonumber\\\\\n", ssq.y, sum.y, N, N);
 	printf(" &= %f \\label{vary}\n", var.y);
-	printf("\\end{align}\n");
+	printf("\\end{align}\n\n");
 	
 	printf("Calculate the corrected sample standard deviation from the variance (Equation~\\ref{varx}--\\ref{vary}) in Equation~\\ref{stddx}--\\ref{stddy}.\n\n");
 	printf("\\begin{align}\n");
@@ -126,7 +126,7 @@ int main(int argc, char **argv) {
 	printf("\\sigma_y &= \\sqrt{\\sigma_{y}^{\\phantom{y}2}} \\nonumber\\\\\n");
 	printf(" &= \\sqrt{%f} \\nonumber\\\\\n", var.y);
 	printf(" &= %f \\label{stddy}\n", stdd.y);
-	printf("\\end{align}\n");
+	printf("\\end{align}\n\n");
 
 	/*stderr = sqrt((ssq/N - mean*mean) / (double)N);*/
 
