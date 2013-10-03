@@ -1,0 +1,288 @@
+\documentclass[twocolumn]{article}
+
+% imports
+%\usepackage{times}      % font
+\usepackage{graphicx}   % include graphics
+\usepackage{fullpage}   % book margins -> std margins
+\usepackage{amsmath}    % {align}
+\usepackage{wrapfig}    % {wrapfigure}
+\usepackage{moreverb}   % \verbatimtabinput
+\usepackage[noend,noline]{algorithm2e} % \algorithm
+\usepackage{subfig}     % sub-figure
+\usepackage{textcomp}   % \textmu
+\usepackage{hyperref}   % pdf links
+\usepackage{url}        % url support
+
+% def name, id
+\def\name{Neil Edelman}
+\def\id{110121860}
+\def\bname{Alex Bhandari-Young}
+\def\bid{260520610}
+
+% ieee style
+\bibliographystyle{ieeetr}
+
+% set algoithm comments
+\SetKwComment{Comment}{$\bullet$}{}
+
+% define "\fig"
+\def\fig#1#2{\begin{figure}[!ht]\begin{center}
+\includegraphics[width=0.5\textwidth]{#1.jpg}
+\end{center}\caption{#2}\label{#1}\end{figure}}
+
+\def\wide#1#2{\begin{figure*}[hptb]\begin{center}
+\includegraphics[height=0.5\textwidth]{#1.jpg}
+\end{center}\vspace{-0pt}\caption{#2}\label{#1}\end{figure*}}
+
+% create new commands
+\def\^#1{\textsuperscript{#1}}
+\def\!{\overline}
+\def\degree{\ensuremath{^\circ}}
+
+% lists
+\renewcommand{\labelenumi}{\alph{enumi})}
+\renewcommand{\labelenumii}{\roman{enumii})}
+
+% for hyperref
+\hypersetup{
+  colorlinks = true,
+  urlcolor = blue,
+  linkcolor = blue,
+  pdfauthor = {\name},
+  pdftitle = {\name -- \id},
+  pdfsubject = {A1},
+  pdfpagemode = UseNone
+}
+
+% info
+\author{\bname~--~\bid, \name~--~\id}
+\title{Lab 3 -- Navigation (Group~51)}
+\date{2013-10-02}
+
+\begin{document}
+
+\maketitle
+
+\abstract{We designed a software system that allows a robot to move to an absolute location while avoiding obstacles.}
+
+%Data Collection (2 sentences + data)
+%Observations and Conclusion
+%Error Analysis (When possible, specify sub, super, or linear error growth)
+%Further Improvements
+
+\section{Data}
+
+Repeated runs of the robot path in Figure~\ref{path} gave the data in Table~\ref{a}. We used more precise measurements values used in the odometer from our last lab\cite{alexneil2}; that made the error go down.
+
+\fig{path}{Robot navigation path in cm.\cite{lab3}}
+
+\begin{table*}[htb]
+\begin{center}\begin{tabular}{r@{}l r@{}l r@{}l r@{}l r@{}l r@{}l}
+&actual&&& &reported&&& &error&& \\
+&x (cm)& &y (cm)& &x (cm)& &y (cm)& &x (cm)& &y (cm) \\
+\hline
+0&.0& -60&.0& -0&.00& -60&.11& 0&.0& 0&.1 \\
+0&.5& -59&.5& 0&.18& -60&.50& 0&.3& 1&.0 \\
+0&.5& -59&.5& -0&.10& -60&.50& 0&.6& 1&.0 \\
+0&.5& -60&.0& 0&.06& -60&.31& 0&.4& 0&.3 \\
+0&.5& -60&.5& 0&.11& -60&.42& 0&.4& -0&.1 \\
+0&.0& -59&.0& 0&.17& -60&.51& -0&.2& 1&.5 \\
+1&.5& -61&.0& 0&.06& -60&.32& 1&.4& -0&.7 \\
+1&.5& -61&.0& -0&.04& -60&.11& 1&.5& -0&.9 \\
+1&.0& -60&.0& -0&.09& -59&.99& 1&.1& -0&.0 \\
+0&.5& -59&.5& 0&.17& -60&.50& 0&.3& 1&.0 \\
+\end{tabular}\end{center}
+\caption{Reported error as read by the robot, and real error as read by a ruler and the difference between them.
+The difference, as $(x, y)$, mean is $(0.60, 0.33)$, variance is $(0.33, 0.62)$, and the corrected sample standard deviation is $(0.58, 0.79)$.}
+\label{a}
+\end{table*}
+
+\section{Data Analysis}
+
+\subsection{Discussion}
+
+The errors are part of the odometer. When we measured the odometer values more precisely, our errors dropped significantly. The navigator is just the software that reads from the odometer and decides where to go to minimise the error. It works by comparing a set minimum required error to the actual error and deciding whether that's good enough. We could reduce the error in the software, but that could create a condition where it's never good enough an it loops back incessantly.
+
+\subsection{Error Analysis}
+
+Calculate the differences in Equation~\ref{dx1}--\ref{dy10}.
+
+\begin{align}
+d_{x,1} &= (0.0) - (-0.00) \nonumber\\
+ &= 0.00 \label{dx1}\\
+d_{y,1} &= (-60.0) - (-60.11) \nonumber\\
+ &= 0.11 \label{dy1}
+\end{align}
+\begin{align}
+d_{x,2} &= (0.5) - (0.18) \nonumber\\
+ &= 0.32 \label{dx2}\\
+d_{y,2} &= (-59.5) - (-60.50) \nonumber\\
+ &= 1.00 \label{dy2}
+\end{align}
+\begin{align}
+d_{x,3} &= (0.5) - (-0.10) \nonumber\\
+ &= 0.60 \label{dx3}\\
+d_{y,3} &= (-59.5) - (-60.50) \nonumber\\
+ &= 1.00 \label{dy3}
+\end{align}
+\begin{align}
+d_{x,4} &= (0.5) - (0.06) \nonumber\\
+ &= 0.44 \label{dx4}\\
+d_{y,4} &= (-60.0) - (-60.31) \nonumber\\
+ &= 0.31 \label{dy4}
+\end{align}
+\begin{align}
+d_{x,5} &= (0.5) - (0.11) \nonumber\\
+ &= 0.39 \label{dx5}\\
+d_{y,5} &= (-60.5) - (-60.42) \nonumber\\
+ &= -0.08 \label{dy5}
+\end{align}
+\begin{align}
+d_{x,6} &= (0.0) - (0.17) \nonumber\\
+ &= -0.17 \label{dx6}\\
+d_{y,6} &= (-59.0) - (-60.51) \nonumber\\
+ &= 1.51 \label{dy6}
+\end{align}
+\begin{align}
+d_{x,7} &= (1.5) - (0.06) \nonumber\\
+ &= 1.44 \label{dx7}\\
+d_{y,7} &= (-61.0) - (-60.32) \nonumber\\
+ &= -0.68 \label{dy7}
+\end{align}
+\begin{align}
+d_{x,8} &= (1.5) - (-0.04) \nonumber\\
+ &= 1.54 \label{dx8}\\
+d_{y,8} &= (-61.0) - (-60.11) \nonumber\\
+ &= -0.89 \label{dy8}
+\end{align}
+\begin{align}
+d_{x,9} &= (1.0) - (-0.09) \nonumber\\
+ &= 1.09 \label{dx9}\\
+d_{y,9} &= (-60.0) - (-59.99) \nonumber\\
+ &= -0.01 \label{dy9}
+\end{align}
+\begin{align}
+d_{x,10} &= (0.5) - (0.17) \nonumber\\
+ &= 0.33 \label{dx10}\\
+d_{y,10} &= (-59.5) - (-60.50) \nonumber\\
+ &= 1.00 \label{dy10}
+\end{align}
+
+Calculate the sum of the differences (Equation~\ref{dx1}--\ref{dy10}) in Equation~\ref{sumx}--\ref{sumy}.
+
+\begin{align}
+\text{sum}_{x} &= \sum_{i=1}^{10} d_{x,i} \nonumber\\
+ &= (0.00) + \nonumber\\
+ &\quad\quad (0.32) + \nonumber\\
+ &\quad\quad (0.60) + \nonumber\\
+ &\quad\quad (0.44) + \nonumber\\
+ &\quad\quad (0.39) + \nonumber\\
+ &\quad\quad (-0.17) + \nonumber\\
+ &\quad\quad (1.44) + \nonumber\\
+ &\quad\quad (1.54) + \nonumber\\
+ &\quad\quad (1.09) + \nonumber\\
+ &\quad\quad (0.33) \nonumber\\
+ &= 5.98 \label{sumx}
+\end{align}
+
+\begin{align}
+\text{sum}_{y} &= \sum_{i=1}^{10} d_{y,i} \nonumber\\
+ &= (0.11) + \nonumber\\
+ &\quad\quad (1.00) + \nonumber\\
+ &\quad\quad (1.00) + \nonumber\\
+ &\quad\quad (0.31) + \nonumber\\
+ &\quad\quad (-0.08) + \nonumber\\
+ &\quad\quad (1.51) + \nonumber\\
+ &\quad\quad (-0.68) + \nonumber\\
+ &\quad\quad (-0.89) + \nonumber\\
+ &\quad\quad (-0.01) + \nonumber\\
+ &\quad\quad (1.00) \nonumber\\
+ &= 3.27 \label{sumy}
+\end{align}
+
+Calculate the sum of the differences (Equation~\ref{dx1}--\ref{dy10}) squared in Equation~\ref{sum2x}--\ref{sum2y}.
+
+\begin{align}
+\text{ssq}_{x} &= \sum_{i=1}^{10} d_{x,i}^{\phantom{x,i}2} \nonumber\\
+ &= (0.00)^2 + \nonumber\\
+ &\quad\quad (0.32)^2 + \nonumber\\
+ &\quad\quad (0.60)^2 + \nonumber\\
+ &\quad\quad (0.44)^2 + \nonumber\\
+ &\quad\quad (0.39)^2 + \nonumber\\
+ &\quad\quad (-0.17)^2 + \nonumber\\
+ &\quad\quad (1.44)^2 + \nonumber\\
+ &\quad\quad (1.54)^2 + \nonumber\\
+ &\quad\quad (1.09)^2 + \nonumber\\
+ &\quad\quad (0.33)^2 \nonumber\\
+ &= 6.58 \label{sum2x}
+\end{align}
+
+\begin{align}
+\text{ssq}_{y} &= \sum_{i=1}^{10} d_{y,i}^{\phantom{y,i}2} \nonumber\\
+ &= (0.11)^2 + \nonumber\\
+ &\quad\quad (1.00)^2 + \nonumber\\
+ &\quad\quad (1.00)^2 + \nonumber\\
+ &\quad\quad (0.31)^2 + \nonumber\\
+ &\quad\quad (-0.08)^2 + \nonumber\\
+ &\quad\quad (1.51)^2 + \nonumber\\
+ &\quad\quad (-0.68)^2 + \nonumber\\
+ &\quad\quad (-0.89)^2 + \nonumber\\
+ &\quad\quad (-0.01)^2 + \nonumber\\
+ &\quad\quad (1.00)^2 \nonumber\\
+ &= 6.65 \label{sum2y}
+\end{align}
+
+Calculate the mean from Equation~\ref{sumx}--\ref{sumy} in Equation~\ref{meanx}--\ref{meany}.
+
+\begin{align}
+\text{mean}_{x} &= \frac{\text{sum}_{x}}{N} \nonumber\\
+ &= \frac{5.98}{10} \nonumber\\
+ &= 0.598000 \label{meanx}\\
+\text{mean}_{y} &= \frac{\text{sum}_{y}}{N} \nonumber\\
+ &= \frac{3.27}{10} \nonumber\\
+ &= 0.327000 \label{meany}
+\end{align}
+
+Calculate the variance from Equation~\ref{sumx}--\ref{sumy} and \ref{sum2x}--\ref{sum2y} in Equation~\ref{varx}--\ref{vary}.
+
+\begin{align}
+\sigma_{x}^{\phantom{x}2} &= \frac{\text{ssq}_{x} - \frac{\text{sum}_{x}^{\phantom{x}2}}{N}}{N-1} \nonumber\\
+ &= \frac{6.58 - \frac{5.98^2}{10}}{10-1} \nonumber\\
+ &= 0.333684 \label{varx}\\
+\sigma_{y}^{\phantom{y}2} &= \frac{\text{ssq}_{y} - \frac{\text{sum}_{y}^{\phantom{y}2}}{N}}{N-1} \nonumber\\
+ &= \frac{6.65 - \frac{3.27^2}{10}}{10-1} \nonumber\\
+ &= 0.620001 \label{vary}
+\end{align}
+
+Calculate the corrected sample standard deviation from the variance (Equation~\ref{varx}--\ref{vary}) in Equation~\ref{stddx}--\ref{stddy}.
+
+\begin{align}
+\sigma_x &= \sqrt{\sigma_{x}^{\phantom{x}2}} \nonumber\\
+ &= \sqrt{0.333684} \nonumber\\
+ &= 0.577654 \label{stddx}\\
+\sigma_y &= \sqrt{\sigma_{y}^{\phantom{y}2}} \nonumber\\
+ &= \sqrt{0.620001} \nonumber\\
+ &= 0.787401 \label{stddy}
+\end{align}
+
+\section{Observations and Conclusion}
+
+We noticed experimentally that one actuator is not working, so we placed it on the top of our robot to hold the sensor. As such, the sensor can not move. This is an additional design constraint.
+
+We tried {\tt rotate} and {\tt rotateTo} methods as seen in the last lab\cite{alexneil2}, but these inherently blocked output. The {\tt setSpeed} method was more appropriate. {\tt setSpeed} sets it to the absolute value of the speed; you then call {\tt forward} or {\tt backward} depending on the sign. This is not documented in the API.
+
+The errors resulting from the navigator are due to the threshold distance from the target calculated, which was set to 3\,cm during this lab; because theta is corrected every ten cycles of the while loop, the robot consistently stops within 1\,cm of the target point. This can be corrected by decreasing this tolerated distance, but choosing a value too low will waste time because the robot will have to oscillate more to achieve it.
+
+The controller works by pointing the robot towards its target coordinate. It moves toward it, running in a while loop that checks the ultrasonic sensor for obstacles every cycle, and incrementing a count which allows it to check theta and run {\tt turnTo} to correct its angular error every ten cycles of the while loop. This loop runs while distance is greater than the threshold distance from the point, which is set to three. This results in no noticeable robot oscillation. When {\tt turnTo} is called the robot stops to turn, this happens about once every 5-10 seconds; further improvements were implemented to adjust theta while the robot is in motion, but were discarded because the time constraint.
+
+The controller consistently moves to within 1\,cm of the target point as read by the odometer. However, the odometer incurs an additional error of approximately 1\,cm from wheel slippage, making the overall accuracy bound 2\,cm.
+
+\section{Further Improvements}
+
+Increasing the acceleration of the robot will result in greater wheel slippage, and increase the error in the odometer. The main sources of error using navigation and odometry is from slippage error and from mis-calibrations. The battery voltage gives an unknown variable for which the constants of calibration do not account. Wheel slippage can be reduced by decreasing the acceleration of the robot. Excluding the odometer, error in the navigation is also caused by the distance threshold, but this can be reduced by reducing the threshold.
+
+A software solution to reducing error in wheel slippage is to reduce the speed at which it moves, but this becomes an issue when time is important. Use of the an additional sensor, such as the light sensor, to aid in determining the robots position is a hardware solution.
+
+\bibliography{lab3}
+
+\end{document}
