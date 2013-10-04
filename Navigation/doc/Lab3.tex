@@ -277,11 +277,19 @@ The controller works by pointing the robot towards its target coordinate. It mov
 
 The controller consistently moves to within 1\,cm of the target point as read by the odometer. However, the odometer incurs an additional error of approximately 1\,cm from wheel slippage, making the overall accuracy bound 2\,cm.
 
-\section{Further Improvements}
-
 Increasing the acceleration of the robot will result in greater wheel slippage, and increase the error in the odometer. The main sources of error using navigation and odometry is from slippage error and from mis-calibrations. The battery voltage gives an unknown variable for which the constants of calibration do not account. Wheel slippage can be reduced by decreasing the acceleration of the robot. Excluding the odometer, error in the navigation is also caused by the distance threshold, but this can be reduced by reducing the threshold.
 
-A software solution to reducing error in wheel slippage is to reduce the speed at which it moves, but this becomes an issue when time is important. Use of the an additional sensor, such as the light sensor, to aid in determining the robots position is a hardware solution.
+\section{Further Improvements}
+
+A software solution to reducing error in wheel slippage is to reduce the acceleration at which the robot moves; this becomes an issue when time is important. We haven't used the limit acceleration function of lejos. Use of the an additional sensor, such as the light sensor, to aid in determining the robots position is a hardware solution.
+
+Reducing the acceleration of the robot will reduce the error in odometry because wheel slippage causes the odometer indicate erroneous values.
+% When the wheels are rotating slower, there is more static friction between the wheels and the ground and less kinetic or sliding friction. Because static friction is stronger than kinetic friction moving fast induces more error.
+Wheel slippage can cause linear and angular error. Linear error
+%(in the x and y coordinates is not a big deal because it is small and does not affect the odometer's accuracy as the robot continues to move and it 
+can be corrected. Angular error, where there is slippage in one wheel that introduces error in the direction the robot thinks it is facing, can be more serious; as the robot moves forward, the error is linear in the distance traveled.
+%the odometer then extrapolates the robot's position as it moves forward; Incrementing $x$ and $y$ by the wrong amount because the recorded $\theta$ is incorrect. However, if reduced speed is not practical,
+The use of the light sensor to correct angular would be a very effective solution. The robot is able to correct $\theta$ with a single light sensor by remembering when it crosses a line, determining based on its knowledge of the distance between lines when it should detect the next line, and using trigonometry to determine the error in $\theta$. This and the method using two light sensors was described in detail in the previous lab report\cite{alexneil2}.
 
 \bibliography{lab3}
 
