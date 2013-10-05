@@ -1,6 +1,6 @@
 # MacOSX gcc 4.2.1
 
-FILES := Lab4 LCDInfo LightLocalizer Navigator Odometer TwoWheeledRobot USLocalizer
+FILES := Lab4 LCDInfo LightLocalizer Navigation Odometer TwoWheeledRobot USLocalizer
 BDIR  := bin
 SDIR  := src
 OBJS  := $(patsubst %,$(BDIR)/%.class,$(FILES))
