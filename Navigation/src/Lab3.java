@@ -27,10 +27,12 @@ public class Lab3 {
       nav.start();
       display.start();
 
-      //spawn thread for exit
+      /**Spawns a thread for exit. This allows the program to continue
+      while always monitoring the ecsape buttom so the user can abort
+      the program*/
 		(new Thread() {
          public void run() {
-            if (Button.waitForAnyPress() == Button.ID_ESCAPE)
+            if (Button.waitForAnyPress() == Button.ID_ESCAPE) //wait for the gray "escape" button to be pressed to exit
 		         System.exit(0);
          }
       }).start();
@@ -55,18 +57,18 @@ public class Lab3 {
         
 
 		/* press any key to exit */
-//      LCD.clear();
-//		LCD.drawString("Press any key.", 0, 1);
+      //once the program is finished, it exits at any press
 		Button.waitForAnyPress();
 		System.exit(0);
 	}
-   private static void wait(Navigator nav) {
-      while(nav.isNavigating()) {
- 			try {
-				Thread.sleep(nav.getPeriod());
-			} catch (Exception e) {
-				System.out.println("Error: " + e.getMessage());
-			}
-      }
-   }
+   /*This is useful if the navigator is blocking, which it currently is not*/
+//   private static void wait(Navigator nav) {
+//      while(nav.isNavigating()) {
+// 			try {
+//				Thread.sleep(nav.getPeriod());
+//			} catch (Exception e) {
+//				System.out.println("Error: " + e.getMessage());
+//			}
+//      }
+//   }
 }
