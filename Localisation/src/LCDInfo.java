@@ -8,14 +8,14 @@ public class LCDInfo implements TimerListener{
 	private Timer lcdTimer;
 	
 	// arrays for displaying data
-	private double [] pos;
+	private float [] pos;
 	
 	public LCDInfo(Odometer odo) {
 		this.odo = odo;
 		this.lcdTimer = new Timer(LCD_REFRESH, this);
 		
 		// initialise the arrays for displaying data
-		pos = new double [3];
+		pos = new float[3]; /* worst idea ever */
 		
 		// start the timer
 		lcdTimer.start();

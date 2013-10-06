@@ -8,9 +8,9 @@ public class Lab4 {
 		/* blade of death startup */
 		Motor.C.setSpeed(1000);
 		Motor.C.forward();
-		/* resume boring code */
+		/* resume boring code -- true? okay sure */
 		Odometer odo = new Odometer(patBot, true);
-		LCDInfo lcd = new LCDInfo(odo);
+		// /* breaks the drawtext */ LCDInfo lcd = new LCDInfo(odo);
 		UltrasonicSensor us = new UltrasonicSensor(SensorPort.S2);
 		LightSensor ls = new LightSensor(SensorPort.S1);
 		// perform the ultrasonic localization
@@ -27,6 +27,7 @@ public class Lab4 {
 		LightLocalizer lsl = new LightLocalizer(odo, ls);
 		lsl.doLocalization();			
 		
+		LCD.drawString("Press", 0,5);
 		Button.waitForAnyPress();
 	}
 
