@@ -82,11 +82,10 @@ public class USLocalizer {
 				 your operating range :[ . . . in fact, screw this . . . */
 				if(theta > 180f) theta -= 360f;
 				if(theta >= 0f && theta < 20f) break;
-				Sound.beep();
 				try { Thread.sleep(1000); } catch (InterruptedException e) {}
 			}
+			robot.stop();
 			LCD.drawString(" found.", 9,5);
-			robot.setRotationSpeed(0);
 			LCD.drawString("t "+odo.getTheta()+"  ", 0,3);
 		} else {
 			/*

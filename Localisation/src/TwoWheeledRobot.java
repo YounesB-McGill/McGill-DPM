@@ -101,6 +101,6 @@ public class TwoWheeledRobot {
 	public void stop() {
 		leftMotor.stop();
 		rightMotor.stop();
-		forwardSpeed = rotationalSpeed = 0f;
+		forwardSpeed = rotationSpeed = 0.0;
 	}
 }
