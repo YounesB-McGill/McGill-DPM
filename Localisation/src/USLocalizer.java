@@ -75,14 +75,14 @@ public class USLocalizer {
 			odo.correctTheta(correction);
 			LCD.drawString("t "+odo.getTheta()+"  ", 0,3);
 			LCD.drawString("Finding 0.", 0,5);
-			robot.setRotationSpeed(speed);
+			robot.setRotationSpeed(10);
 			for( ; ; ) {
 				float theta = odo.getTheta();
 				/* this is why you should never branch cut dead in the middle of
 				 your operating range :[ . . . in fact, screw this . . . */
 				if(theta > 180f) theta -= 360f;
 				if(theta >= 0f && theta < 20f) break;
-				try { Thread.sleep(1000); } catch (InterruptedException e) {}
+				try { Thread.sleep(100); } catch (InterruptedException e) {}
 			}
 			robot.stop();
 			LCD.drawString(" found.", 9,5);
