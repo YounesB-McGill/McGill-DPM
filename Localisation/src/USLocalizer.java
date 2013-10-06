@@ -1,5 +1,6 @@
 import lejos.nxt.UltrasonicSensor;
 import lejos.nxt.LCD;
+import lejos.nxt.Sound;
 
 public class USLocalizer {
 	public enum LocalizationType { FALLING_EDGE, RISING_EDGE };
@@ -39,7 +40,7 @@ public class USLocalizer {
 			}
 			try { Thread.sleep(1000); } catch (InterruptedException e) {}
 			// keep rotating until the robot sees a wall, then latch the angle
-			LCD.drawString("...hit.", 0,1);
+			LCD.drawString("...hit.   ", 0,1);
 			while((us = getFilteredData()) > distanceThreshold) {
 				LCD.drawString("US: "+us+"  ", 0, 0);
 			}
@@ -55,7 +56,7 @@ public class USLocalizer {
 			}
 			float b = odo.getTheta();
 			LCD.drawString("b "+b, 0,2);
-			robot.setRotationSpeed(0);
+			//robot.setRotationSpeed(0);
 			// angleA is clockwise from angleB, so assume the average of the
 			// angles to the right of angleB is 45 degrees past 'north'
 			/* when a and b are the same branch cut, this is so, otherwise
@@ -72,17 +73,21 @@ public class USLocalizer {
 			/* the angle, but not the position because we conviently forgot */
 			//odo.setPosition(0f, 0f, 0f);
 			odo.correctTheta(correction);
-			/* fixme: nope */
-			LCD.drawString("t "+odo.getTheta(), 0,3);
+			LCD.drawString("t "+odo.getTheta()+"  ", 0,3);
+			LCD.drawString("Finding 0.", 0,5);
 			robot.setRotationSpeed(speed);
 			for( ; ; ) {
 				float theta = odo.getTheta();
 				/* this is why you should never branch cut dead in the middle of
 				 your operating range :[ . . . in fact, screw this . . . */
 				if(theta > 180f) theta -= 360f;
-				if(theta > 1f) break;
+				if(theta >= 0f && theta < 20f) break;
+				Sound.beep();
 				try { Thread.sleep(1000); } catch (InterruptedException e) {}
 			}
+			LCD.drawString(" found.", 9,5);
+			robot.setRotationSpeed(0);
+			LCD.drawString("t "+odo.getTheta()+"  ", 0,3);
 		} else {
 			/*
 			 * The robot should turn until it sees the wall, then look for the

@@ -97,4 +97,10 @@ public class TwoWheeledRobot {
 		else
 			rightMotor.setSpeed((int)rightSpeed);
 	}
+	
+	public void stop() {
+		leftMotor.stop();
+		rightMotor.stop();
+		forwardSpeed = rotationalSpeed = 0f;
+	}
 }
