@@ -31,9 +31,13 @@ public class USLocalizer {
 			// rotate the robot until it sees no wall
 			robot.setRotationSpeed(10);
 			// keep rotating until the robot sees a wall, then latch the angle
-			while(getFilteredData() < 40);
+			int us;
+			while((us = getFilteredData()) > 40){
+				LCD.drawString("US: "+us+"  ", 0, 0);
+			}
 			float a = odo.getTheta();
 			LCD.drawString("t "+a, 0,0);
+			robot.setRotationSpeed(0);
 			// switch direction and wait until it sees no wall
 			
 			// keep rotating until the robot sees a wall, then latch the angle
@@ -42,7 +46,7 @@ public class USLocalizer {
 			// angles to the right of angleB is 45 degrees past 'north'
 			
 			// update the odometer position (example to follow:)
-			odo.setPosition(0f, 0f, 0f);
+			odo.setPosition(0f, 0f, 0f); /* stupid */
 		} else {
 			/*
 			 * The robot should turn until it sees the wall, then look for the
