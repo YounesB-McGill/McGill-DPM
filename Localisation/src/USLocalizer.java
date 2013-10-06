@@ -33,13 +33,13 @@ public class USLocalizer {
 		if (locType == LocalizationType.FALLING_EDGE) {
 			robot.setRotationSpeed(speed);
 			// rotate the robot until it sees no wall
-			LCD.drawString("Waiting until clear.", 0,1);
+			LCD.drawString("...clear.", 0,1);
 			while((us = getFilteredData()) < distanceThreshold) {
 				LCD.drawString("US: "+us+"  ", 0, 0);
 			}
 			try { Thread.sleep(1000); } catch (InterruptedException e) {}
 			// keep rotating until the robot sees a wall, then latch the angle
-			LCD.drawString("Waiting until hit.", 0,1);
+			LCD.drawString("...hit.", 0,1);
 			while((us = getFilteredData()) > distanceThreshold) {
 				LCD.drawString("US: "+us+"  ", 0, 0);
 			}
@@ -58,9 +58,21 @@ public class USLocalizer {
 			robot.setRotationSpeed(0);
 			// angleA is clockwise from angleB, so assume the average of the
 			// angles to the right of angleB is 45 degrees past 'north'
-			
+			/* when a and b are the same branch cut, this is so, otherwise
+			 incorrect */
+			if(a < b) b += 360f;
+			/* that's really scetchy and not at all standard */
+			/* the robot is at point b
+			 eg a = 105; b = 252 when facing away => 178.5
+			 eg a = 300; b = 85 when facing towards the wall => 192.5
+			 */
+			float correction = (a + b) * 0.5f;
 			// update the odometer position (example to follow:)
-			odo.setPosition(0f, 0f, 0f); /* stupid */
+			/* the angle, but not the position because we conviently forgot */
+			//odo.setPosition(0f, 0f, 0f);
+			odo.setDeltaTheta(correction);
+			/* fixme: nope */
+			LCD.drawString("t "+odo.getTheta(), 0,3);
 		} else {
 			/*
 			 * The robot should turn until it sees the wall, then look for the

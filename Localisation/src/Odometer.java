@@ -108,6 +108,11 @@ public class Odometer implements TimerListener {
 			this.theta = theta;
 		}
 	}
+	public void setDeltaTheta(final float theta) {
+		synchronized (lock) {
+			this.theta -= theta;
+		}
+	}
 	
 	// static 'helper' methods
 	/* they are only called one time? thus they are useless */
