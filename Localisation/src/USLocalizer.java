@@ -30,17 +30,17 @@ public class USLocalizer {
 		double angleA, angleB;
 		int us;
 		
-		/* this is stupid */
 		if (locType == LocalizationType.FALLING_EDGE) {
+			/* this is stupid */
 			robot.setRotationSpeed(speed);
 			// rotate the robot until it sees no wall
-			LCD.drawString("...clear.", 0,1);
+			LCD.drawString("wait clear  ", 0,1);
 			while((us = getFilteredData()) < distanceThreshold) {
 				LCD.drawString("US: "+us+"  ", 0, 0);
 			}
 			try { Thread.sleep(1000); } catch (InterruptedException e) {}
 			// keep rotating until the robot sees a wall, then latch the angle
-			LCD.drawString("...hit.   ", 0,1);
+			LCD.drawString("wait hit   ", 0,1);
 			while((us = getFilteredData()) > distanceThreshold) {
 				LCD.drawString("US: "+us+"  ", 0, 0);
 			}
@@ -63,19 +63,14 @@ public class USLocalizer {
 			 incorrect, fix it */
 			if(a < b) b += 360f;
 			/* that's really scetchy and not at all standard */
-			/* the robot is at point b -- but that's not important, since we add
-			 to the current value
-			 eg a = 105; b = 252 when facing away => 178.5
-			 eg a = 300; b = 85+360 when facing towards the wall => 192.5, 372.5
-			 */
 			float correction = 45 - (a + b) * 0.5f;
 			// update the odometer position (example to follow:)
 			/* the angle, but not the position because we conviently forgot */
 			//odo.setPosition(0f, 0f, 0f);
 			odo.correctTheta(correction);
 			LCD.drawString("t "+odo.getTheta()+"  ", 0,3);
-			LCD.drawString("Finding 0.", 0,5);
-			robot.setRotationSpeed(10);
+			LCD.drawString("finding 0  ", 0,5);
+			robot.setRotationSpeed(10); /* slow enough */
 			for( ; ; ) {
 				float theta = odo.getTheta();
 				/* this is why you should never branch cut dead in the middle of
@@ -84,6 +79,8 @@ public class USLocalizer {
 				if(theta >= 0f && theta < 20f) break;
 				try { Thread.sleep(100); } catch (InterruptedException e) {}
 			}
+			/* stop; don't use setRotationSpeed(0) because it completly fubars
+			 it, don't ask me why, it's not my code */
 			robot.stop();
 			LCD.drawString(" found.", 9,5);
 			LCD.drawString("t "+odo.getTheta()+"  ", 0,3);
@@ -94,10 +91,43 @@ public class USLocalizer {
 			 * This is very similar to the FALLING_EDGE routine, but the robot
 			 * will face toward the wall for most of it.
 			 */
-			
-			//
-			// FILL THIS IN
-			//
+			/* this is much better because we can get a distance to @ wall, and
+			 then set x, y, and theta; we don't do this, though, but we could
+			 (takes a maximum of 3 times longer) */
+			LCD.drawString("wait clear  ", 0,1);
+			robot.setRotationSpeed(speed);
+			/* this is stupid, it should store a buffer of us data, then get the
+			 linear intercept instead of approximating to the nearest
+			 measurement */
+			while((us = getFilteredData()) < distanceThreshold) {
+				LCD.drawString("US: "+us+"  ", 0, 0);
+			}
+			float a = odo.getTheta();
+			LCD.drawString("a "+a, 0,1);
+			robot.setRotationSpeed(-speed);
+			try { Thread.sleep(1000); } catch (InterruptedException e) {}
+			while((us = getFilteredData()) < distanceThreshold) {
+				LCD.drawString("US: "+us+"  ", 0, 0);
+			}
+			float b = odo.getTheta();
+			LCD.drawString("b "+b, 0,2);
+			if(a < b) b += 360f;
+			/* remember, theta's degrees are backwards and start at y */
+			float correction = 225 - (a + b) * 0.5f;
+			odo.correctTheta(correction);
+			LCD.drawString("t "+odo.getTheta()+"  ", 0,3);
+			LCD.drawString("finding 0  ", 0,5);
+			robot.setRotationSpeed(10); /* slow enough */
+			for( ; ; ) {
+				float theta = odo.getTheta();
+				/* branch on a different, more useful, cut */
+				if(theta > 180f) theta -= 360f;
+				if(theta <= 0f && theta > -20f) break;
+				try { Thread.sleep(100); } catch (InterruptedException e) {}
+			}
+			robot.stop();
+			LCD.drawString(" found.", 9,5);
+			LCD.drawString("t "+odo.getTheta()+"  ", 0,3);
 		}
 	}
 
