@@ -6,6 +6,8 @@ public class USLocalizer {
 	public static double ROTATION_SPEED = 30;
 
 	private final static int granularity = 36;
+	private final static int distanceThreshold = 36;
+	private final static double /* fixme */ speed = 50;
 	
 	private Odometer odo;
 	private TwoWheeledRobot robot;
@@ -25,23 +27,35 @@ public class USLocalizer {
 	public void doLocalization() {
 		double [] pos = new double [3];
 		double angleA, angleB;
+		int us;
 		
 		/* this is stupid */
 		if (locType == LocalizationType.FALLING_EDGE) {
+			robot.setRotationSpeed(speed);
 			// rotate the robot until it sees no wall
-			robot.setRotationSpeed(10);
+			LCD.drawString("Waiting until clear.", 0,1);
+			while((us = getFilteredData()) < distanceThreshold) {
+				LCD.drawString("US: "+us+"  ", 0, 0);
+			}
+			try { Thread.sleep(1000); } catch (InterruptedException e) {}
 			// keep rotating until the robot sees a wall, then latch the angle
-			int us;
-			while((us = getFilteredData()) > 40){
+			LCD.drawString("Waiting until hit.", 0,1);
+			while((us = getFilteredData()) > distanceThreshold) {
 				LCD.drawString("US: "+us+"  ", 0, 0);
 			}
 			float a = odo.getTheta();
-			LCD.drawString("t "+a, 0,0);
-			robot.setRotationSpeed(0);
+			LCD.drawString("a "+a, 0,1);
 			// switch direction and wait until it sees no wall
-			
+			robot.setRotationSpeed(-speed);
+			try { Thread.sleep(1000); } catch (InterruptedException e) {}
+
 			// keep rotating until the robot sees a wall, then latch the angle
-			
+			while((us = getFilteredData()) > distanceThreshold) {
+				LCD.drawString("US: "+us+"  ", 0, 0);
+			}
+			float b = odo.getTheta();
+			LCD.drawString("b "+b, 0,2);
+			robot.setRotationSpeed(0);
 			// angleA is clockwise from angleB, so assume the average of the
 			// angles to the right of angleB is 45 degrees past 'north'
 			
@@ -60,7 +74,8 @@ public class USLocalizer {
 			//
 		}
 	}
-	
+
+	/* fixme: get FILTED data */
 	private int getFilteredData() {
 		int distance;
 		
