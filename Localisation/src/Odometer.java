@@ -75,12 +75,12 @@ public class Odometer implements TimerListener {
 		return this.nav;
 	}
 	
-	// mutators
-	public void setPosition(double [] pos, boolean [] update) {
+	// mutators; update is studid --Neil */
+	public void setPosition(double [] pos/*, boolean [] update */) {
 		synchronized (lock) {
-			if (update[0]) x = pos[0];
-			if (update[1]) y = pos[1];
-			if (update[2]) theta = pos[2];
+			/*if (update[0])*/ x = pos[0];
+			/*if (update[1])*/ y = pos[1];
+			/*if (update[2])*/ theta = pos[2];
 		}
 	}
 	

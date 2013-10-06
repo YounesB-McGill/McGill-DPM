@@ -1,9 +1,12 @@
 import lejos.nxt.UltrasonicSensor;
+import lejos.nxt.LCD;
 
 public class USLocalizer {
 	public enum LocalizationType { FALLING_EDGE, RISING_EDGE };
 	public static double ROTATION_SPEED = 30;
 
+	private final static int granularity = 36;
+	
 	private Odometer odo;
 	private TwoWheeledRobot robot;
 	private UltrasonicSensor us;
@@ -23,9 +26,10 @@ public class USLocalizer {
 		double [] pos = new double [3];
 		double angleA, angleB;
 		
+		/* this is stupid */
 		if (locType == LocalizationType.FALLING_EDGE) {
 			// rotate the robot until it sees no wall
-			
+			robot.setRotationSpeed(10);
 			// keep rotating until the robot sees a wall, then latch the angle
 			
 			// switch direction and wait until it sees no wall
@@ -36,7 +40,7 @@ public class USLocalizer {
 			// angles to the right of angleB is 45 degrees past 'north'
 			
 			// update the odometer position (example to follow:)
-			odo.setPosition(new double [] {0.0, 0.0, 0.0}, new boolean [] {true, true, true});
+			odo.setPosition(new double [] {0.0, 0.0, 0.0}/*, new boolean [] {true, true, true}*/);
 		} else {
 			/*
 			 * The robot should turn until it sees the wall, then look for the

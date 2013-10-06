@@ -15,15 +15,15 @@ public class Lab4 {
 		LightSensor ls = new LightSensor(SensorPort.S1);
 		// perform the ultrasonic localization
 		USLocalizer usl = new USLocalizer(odo, us, USLocalizer.LocalizationType.FALLING_EDGE);
-		LCD.drawstring("US localisation", 0,0);
+		LCD.drawString("US localisation", 0,0);
 		usl.doLocalization();
 		
-		LCD.drawstring("Press", 0,1);
+		LCD.drawString("Press", 0,1);
 		Button.waitForAnyPress();
-		LCD.drawstring("     ", 0,1);
+		LCD.drawString("     ", 0,1);
 
 		// perform the light sensor localization
-		LCD.drawstring("Light localisation", 0,0);
+		LCD.drawString("Light localisation", 0,0);
 		LightLocalizer lsl = new LightLocalizer(odo, ls);
 		lsl.doLocalization();			
 		
