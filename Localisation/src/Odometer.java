@@ -108,9 +108,16 @@ public class Odometer implements TimerListener {
 			this.theta = theta;
 		}
 	}
-	public void setDeltaTheta(final float theta) {
+	/** fixme: this is laughable and lazy; really, you would use signed fixed
+	 point 0:32 for the entire circle, braching on [-Pi, Pi]; this is way more
+	 precise, does not go out of bounds, and has the branch cut behind the
+	 robot; floating point is good for dynamic range, not this */
+	public void correctTheta(final float theta) {
 		synchronized (lock) {
-			this.theta -= theta;
+			this.theta += theta;
+			/* fixme: lazy */
+			while(this.theta < 0f)   this.theta += 360f;
+			while(this.theta > 360f) this.theta -= 360f;
 		}
 	}
 	
@@ -122,7 +129,7 @@ public class Odometer implements TimerListener {
 		
 		return angle % 360.0f; /* facepalm */
 	}
-	
+	/* facepalm */
 	public static float minimumAngleFromTo(float a, float b) {
 		float d = fixDegAngle(b - a);
 		

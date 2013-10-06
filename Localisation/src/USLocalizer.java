@@ -59,20 +59,30 @@ public class USLocalizer {
 			// angleA is clockwise from angleB, so assume the average of the
 			// angles to the right of angleB is 45 degrees past 'north'
 			/* when a and b are the same branch cut, this is so, otherwise
-			 incorrect */
+			 incorrect, fix it */
 			if(a < b) b += 360f;
 			/* that's really scetchy and not at all standard */
-			/* the robot is at point b
+			/* the robot is at point b -- but that's not important, since we add
+			 to the current value
 			 eg a = 105; b = 252 when facing away => 178.5
-			 eg a = 300; b = 85 when facing towards the wall => 192.5
+			 eg a = 300; b = 85+360 when facing towards the wall => 192.5, 372.5
 			 */
-			float correction = (a + b) * 0.5f;
+			float correction = 45 - (a + b) * 0.5f;
 			// update the odometer position (example to follow:)
 			/* the angle, but not the position because we conviently forgot */
 			//odo.setPosition(0f, 0f, 0f);
-			odo.setDeltaTheta(correction);
+			odo.correctTheta(correction);
 			/* fixme: nope */
 			LCD.drawString("t "+odo.getTheta(), 0,3);
+			robot.setRotationSpeed(speed);
+			for( ; ; ) {
+				float theta = odo.getTheta();
+				/* this is why you should never branch cut dead in the middle of
+				 your operating range :[ . . . in fact, screw this . . . */
+				if(theta > 180f) theta -= 360f;
+				if(theta > 1f) break;
+				try { Thread.sleep(1000); } catch (InterruptedException e) {}
+			}
 		} else {
 			/*
 			 * The robot should turn until it sees the wall, then look for the
