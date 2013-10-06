@@ -85,6 +85,8 @@ public class Odometer implements TimerListener {
 	}
 	
 	// static 'helper' methods
+   //normalizes angle
+   //MIGHT CHANGE -- mod180 -180<->180
 	public static double fixDegAngle(double angle) {		
 		if (angle < 0.0)
 			angle = 360.0 + (angle % 360.0);

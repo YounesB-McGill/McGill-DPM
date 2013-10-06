@@ -4,17 +4,19 @@ public class LightLocalizer {
 	private Odometer odo;
 	private TwoWheeledRobot robot;
 	private LightSensor ls;
+   private Navigation nav;
 	
 	public LightLocalizer(Odometer odo, LightSensor ls) {
 		this.odo = odo;
 		this.robot = odo.getTwoWheeledRobot();
 		this.ls = ls;
-		
+	   this.nav  = odo.getNavigation();	
 		// turn on the light
 		ls.setFloodlight(true);
 	}
 	
 	public void doLocalization() {
+      nav.travelTo(33.0,54.0);
 		// drive to location listed in tutorial
 		// start rotating and clock all 4 gridlines
 		// do trig to compute (0,0) and 0 degrees
