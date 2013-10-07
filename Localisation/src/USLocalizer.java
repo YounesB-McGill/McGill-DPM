@@ -8,7 +8,7 @@ public class USLocalizer {
 
 	private final static int granularity = 36;
 	private final static int distanceThreshold = 36;
-	private final static double /* fixme */ speed = 10/*50*/;
+	private final static double /* fixme */ speed = 50;
 	
 	private Odometer odo;
 	private TwoWheeledRobot robot;
@@ -96,10 +96,13 @@ public class USLocalizer {
 			/* this is much better because we can get a distance to @ wall, and
 			 then set x, y, and theta; we don't do this, though, but we could
 			 (takes a maximum of 3 times longer) */
-			robot.setRotationSpeed(-speed);
-			LCD.drawString("wait hit  ", 0,1);
-			while((us = getFilteredData()) > distanceThreshold) {
-				LCD.drawString("US: "+us+"  ", 0, 0);
+			if((us = getFilteredData()) > distanceThreshold) {
+				robot.setRotationSpeed(-speed);
+				LCD.drawString("wait hit  ", 0,1);
+				while((us = getFilteredData()) > distanceThreshold) {
+					LCD.drawString("US: "+us+"  ", 0, 0);
+				}
+				try { Thread.sleep(200); } catch (InterruptedException e) {}
 			}
 			robot.setRotationSpeed(speed);
 			LCD.drawString("wait clear  ", 0,1);
@@ -120,7 +123,7 @@ public class USLocalizer {
 			float correction = 225 - (a + b) * 0.5f;
 			odo.correctTheta(correction);
 			LCD.drawString("t "+odo.getTheta()+"  ", 0,3);
-			try { Thread.sleep(1000); } catch (InterruptedException e) {}
+			try { Thread.sleep(2000); } catch (InterruptedException e) {}
 			LCD.drawString("finding 0  ", 0,5);
 			robot.setRotationSpeed(-10); /* slow enough */
 			for( ; ; ) {
