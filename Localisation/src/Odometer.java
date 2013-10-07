@@ -100,12 +100,24 @@ public class Odometer implements TimerListener {
 		return this.nav;
 	}
 	
-	// mutators; update is studid, this is how to write a setter --Neil */
-	public void setPosition(final float x, final float y, final float theta) {
+	// mutators
+	/* update is studid, this is how to write a setter --Neil
+	but this is stupid, so we comment it out */
+	/*public void setPosition(final float x, final float y, final float theta) {
 		synchronized (lock) {
 			this.x = x;
 			this.y = y;
 			this.theta = theta;
+		}
+	}*/
+	public void setX(final float x) {
+		synchronized (lock) {
+			this.x = x;
+		}
+	}
+	public void setY(final float y) {
+		synchronized (lock) {
+			this.y = y;
 		}
 	}
 	/** fixme: this is laughable and lazy; really, you would use signed fixed

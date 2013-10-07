@@ -10,7 +10,9 @@ public class USLocalizer {
 	private final static int distanceThreshold = 36;
 	private final static double /* fixme */ speed = 50;
 	private final static boolean isMeasure = false;
-	
+	private final static float cmToUltrasound = 3f;
+	private final static float cmSquare = 30f;
+
 	private Odometer odo;
 	private TwoWheeledRobot robot;
 	private UltrasonicSensor us;
@@ -173,12 +175,17 @@ public class USLocalizer {
 			float y = us = getFilteredData();
 			LCD.drawString("Y "+us, 0,1);
 			/* so (x,y) are not at the centre of rotation, fix this */
-			x -= 3;
-			y -= 3;
+			x -= cmToUltrasound;
+			y -= cmToUltrasound;
 			/* set the odometer, confusingly and I'm sure the lab designers
 			 were drunk when they decided this, (0,0) is after the first square,
-			 so (0,0) is on the first line */
-			// THIS
+			 so (0,0) is on the first line,  */
+			odo.setX(-cmSquare - x);
+			odo.setY(-cmSquare - y);
+			x = odo.getX();
+			y = odo.getY();
+			float t = odo.getTheta();
+			LCD.drawString("X "+x+"\nY: "+y+"\nT: "+t+" ", 0,0);
 		}
 	}
 
