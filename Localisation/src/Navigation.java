@@ -47,7 +47,7 @@ public class Navigation {
          dx = xTarget - position[0];
          dy = yTarget - position[1];
          //this is the theta that we want to turn to
-         double theta = Math.toDegrees(Math.atan2(dy,dx)) - position[2];
+         double theta = Math.toDegrees(Math.atan2(dy,dx))/* - position[2]*/;
 		   //update distance
          dist = Math.sqrt(dx*dx + dy*dy);
          //get ultrasonic sensor distance
