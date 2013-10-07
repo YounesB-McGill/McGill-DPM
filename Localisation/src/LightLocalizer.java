@@ -1,10 +1,11 @@
 import lejos.nxt.LightSensor;
-
+import lejos.nxt.Sound;
 public class LightLocalizer {
 	private Odometer odo;
 	private TwoWheeledRobot robot;
 	private LightSensor ls;
    private Navigation nav;
+   private double d = 5.4; //light sensor distance
 	
 	public LightLocalizer(Odometer odo, LightSensor ls) {
 		this.odo = odo;
@@ -21,12 +22,16 @@ public class LightLocalizer {
 		// start rotating and clock all 4 gridlines
       int blip = 0; //light sensor detection (should only be triggered by lines)
       double[] position = new double[3];
+      double[] getPosition = new double[3];
       double[] theta = new double[4]; //stores the four heading values for blips
       robot.setRotationSpeed(-50); //rotate left
 		while(blip<4) { //rotate for 4 "blips"
-         if(ls.whatever())
-            theta[blip] = Math.toDegrees((odo.getPosition())[2]); //get theta and change to degrees before setting to theta array
-            blip++;
+         odo.getPosition(getPosition);
+         if(ls.readValue()<40) { //if blip
+            theta[blip] = Math.toDegrees(getPosition[2]); //get theta and change to degrees before setting to theta array
+            blip++; //count blip
+            Sound.beep();
+         }
       }
       robot.setRotationSpeed(0); //stop
       // do trig to compute (0,0) and 0 degrees
@@ -37,7 +42,7 @@ public class LightLocalizer {
       //apply fomula
       position[0] = -d*Math.sin(thetaY/2);//x computed
       position[1] = -d*Math.cos(thetaX/2);//y computed
-      position[2] = position[2] + thetaC;//theta computed
+      position[2] = getPosition[2] + thetaC;//theta computed
 		// when done travel to (0,0) and turn to 0 degrees
       nav.travelTo(0,0);
       nav.turnTo(0);
