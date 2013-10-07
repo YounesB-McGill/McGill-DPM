@@ -16,11 +16,16 @@ public class Lab4 {
 		// perform the ultrasonic localization
 		USLocalizer usl = new USLocalizer(odo, us, USLocalizer.LocalizationType./*RISING_EDGE*/FALLING_EDGE);
 		LCD.drawString("US localisation", 0,4);
-		usl.doLocalization();
+		// skip it usl.doLocalization();
+		odo.setX(0/*-15*/);
+		odo.setY(-15);
 		
 		LCD.drawString("Press", 0,5);
 		Button.waitForAnyPress();
 		LCD.drawString("     ", 0,5);
+		
+		LCD.drawString("Goto (0,0)", 0,0);
+		odo.travelTo(0f,0f);
 
 		// perform the light sensor localization
 		LCD.drawString("Light localisation", 0,4);

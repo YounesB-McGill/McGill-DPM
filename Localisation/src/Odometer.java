@@ -150,4 +150,9 @@ public class Odometer implements TimerListener {
 		else
 			return d - 360.0f;
 	}
+
+	/** this is fucked up, we need to draw a class diagram */
+	public void travelTo(final float x, final float y) {
+		nav.travelTo(x, y);
+	}
 }
