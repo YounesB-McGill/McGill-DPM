@@ -6,9 +6,9 @@ import lejos.nxt.LCD;
 public class Navigation {
 	// put your navigation code here 
 	
-	private final static float dist2Tolerance = 5f; /* cm^{1/2} */
+	private final static float dist2Tolerance = 0.5f; /* cm^{1/2} */
 	private final static float pTheta = 3.0f; /* proportional theta in degrees */
-	private final static float pDist  = 3.0f; /* proportional distance in cm */
+	private final static float pDist  = 15.0f; /* proportional distance in cm */
 
 	private Odometer odo;
 	private TwoWheeledRobot robot;
@@ -25,6 +25,9 @@ public class Navigation {
 		/* yeah, that's good if you want to get a robot from the '70s, but let's
 		 try and get a smoother motion (fixme: i, d) */
 		for( ; ; ) {
+			/* good on paper, but when uploaded to robot, gets close, then goes off
+			 in a random direction (-90) at unstable and incresing speed for
+			 NO REASON; fixed by converting crazy coordinates to standard */
 			xCurrent = odo.getX();
 			yCurrent = odo.getY();
 			x = xTarget - xCurrent;
@@ -32,15 +35,18 @@ public class Navigation {
 			dist2 = x*x + y*y;
 			if(dist2 < dist2Tolerance) break;
 			tCurrent = odo.getTheta();
-			/* tCurrent branch cut is useless, change */
-			if(tCurrent > 180f) tCurrent -= 360f;
+			/* this is why you programme in standard coordinates, omg this took
+			 so long to debug */
+			tCurrent = -tCurrent + 90f;
+			if(tCurrent < 180f) tCurrent += 360f;
 			tTarget = (float)Math.toDegrees(Math.atan2(y, x));
 			t = tTarget - tCurrent;
-			//LCD.drawString("x "+x+"\ny "+y+"\ntt "+tTarget+"\ntc "+tCurrent, 0,1);
-			LCD.drawString("x "+xCurrent+"\ny "+yCurrent+"\nt "+tCurrent, 0,1);
+			if(t < -180f)     t += 360f;
+			else if(t > 180f) t -= 360f;
+			LCD.drawString("x "+x+"\ny "+y+"\nt "+t, 0,1);
 			/* the theta */
-			l =  t * pTheta;
-			r = -t * pTheta;
+			l = -t * pTheta;
+			r =  t * pTheta;
 			/* the dist */
 			dist = (float)Math.sqrt(dist2);
 			LCD.drawString("d "+dist, 0,5);
@@ -53,9 +59,11 @@ public class Navigation {
 			/* wait */
 			try { Thread.sleep(1000); } catch (InterruptedException e) { }
 		}
+		robot.stop();
 	}
 	
 	public void turnTo(float angle) {
 		// USE THE FUNCTIONS setForwardSpeed and setRotationalSpeed from TwoWheeledRobot!
+		
 	}
 }

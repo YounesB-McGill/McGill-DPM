@@ -17,7 +17,7 @@ public class Lab4 {
 		USLocalizer usl = new USLocalizer(odo, us, USLocalizer.LocalizationType./*RISING_EDGE*/FALLING_EDGE);
 		LCD.drawString("US localisation", 0,4);
 		// skip it usl.doLocalization();
-		odo.setX(0/*-15*/);
+		odo.setX(-15);
 		odo.setY(-15);
 		
 		LCD.drawString("Press", 0,5);
