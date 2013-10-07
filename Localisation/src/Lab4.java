@@ -14,7 +14,7 @@ public class Lab4 {
 		UltrasonicSensor us = new UltrasonicSensor(SensorPort.S1);
 		LightSensor ls = new LightSensor(SensorPort.S4);
 		// perform the ultrasonic localization
-		USLocalizer usl = new USLocalizer(odo, us, USLocalizer.LocalizationType.RISING_EDGE/*FALLING_EDGE*/);
+		USLocalizer usl = new USLocalizer(odo, us, USLocalizer.LocalizationType./*RISING_EDGE*/FALLING_EDGE);
 		LCD.drawString("US localisation", 0,4);
 		usl.doLocalization();
 		

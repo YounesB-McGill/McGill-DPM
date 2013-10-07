@@ -9,6 +9,7 @@ public class USLocalizer {
 	private final static int granularity = 36;
 	private final static int distanceThreshold = 36;
 	private final static double /* fixme */ speed = 50;
+	private final static boolean isMeasure = false;
 	
 	private Odometer odo;
 	private TwoWheeledRobot robot;
@@ -71,20 +72,23 @@ public class USLocalizer {
 			//odo.setPosition(0f, 0f, 0f);
 			odo.correctTheta(correction);
 			LCD.drawString("t "+odo.getTheta()+"  ", 0,3);
-			LCD.drawString("finding 0  ", 0,5);
-			robot.setRotationSpeed(10); /* slow enough */
-			for( ; ; ) {
-				float theta = odo.getTheta();
-				/* this is why you should never branch cut dead in the middle of
-				 your operating range :[ . . . in fact, screw this . . . */
-				if(theta > 180f) theta -= 360f;
-				if(theta >= 0f && theta < 20f) break;
-				try { Thread.sleep(100); } catch (InterruptedException e) {}
+			/* this is code for the measurements */
+			if(isMeasure) {
+				LCD.drawString("finding 0  ", 0,5);
+				robot.setRotationSpeed(10); /* slow enough */
+				for( ; ; ) {
+					float theta = odo.getTheta();
+					/* this is why you should never branch cut dead in the middle of
+					 your operating range :[ . . . in fact, screw this . . . */
+					if(theta > 180f) theta -= 360f;
+					if(theta >= 0f && theta < 20f) break;
+					try { Thread.sleep(100); } catch (InterruptedException e) {}
+				}
+				/* stop; don't use setRotationSpeed(0) because it completly fubars
+				 it, don't ask me why, it's not my code */
+				robot.stop();
+				LCD.drawString(" found.", 9,5);
 			}
-			/* stop; don't use setRotationSpeed(0) because it completly fubars
-			 it, don't ask me why, it's not my code */
-			robot.stop();
-			LCD.drawString(" found.", 9,5);
 			LCD.drawString("t "+odo.getTheta()+"  ", 0,3);
 		} else {
 			/*
@@ -124,18 +128,57 @@ public class USLocalizer {
 			odo.correctTheta(correction);
 			LCD.drawString("t "+odo.getTheta()+"  ", 0,3);
 			try { Thread.sleep(2000); } catch (InterruptedException e) {}
-			LCD.drawString("finding 0  ", 0,5);
-			robot.setRotationSpeed(-10); /* slow enough */
+			if(isMeasure) {
+				LCD.drawString("finding 0  ", 0,5);
+				robot.setRotationSpeed(-10); /* slow enough */
+				for( ; ; ) {
+					float theta = odo.getTheta();
+					/* branch on a different, more useful, cut */
+					if(theta > 180f) theta -= 360f;
+					if(theta <= 0f && theta > -20f) break;
+					try { Thread.sleep(100); } catch (InterruptedException e) {}
+				}
+				robot.stop();
+				LCD.drawString(" found.", 9,5);
+			}
+			LCD.drawString("t "+odo.getTheta()+"  ", 0,3);
+		}
+		/* approx distance from x, y */
+		if(!isMeasure) {
+			/* fixme: we should just store the data and get it from there */
+			float error, theta;
 			for( ; ; ) {
-				float theta = odo.getTheta();
-				/* branch on a different, more useful, cut */
-				if(theta > 180f) theta -= 360f;
-				if(theta <= 0f && theta > -20f) break;
-				try { Thread.sleep(100); } catch (InterruptedException e) {}
+				theta = odo.getTheta();
+				if(theta <= 45f) theta += 360f; /* facepalm, [-Pi,Pi] really */
+				error = odo.getTheta() - 270;
+				if(error < 0.5) break;
+				/* hack p-control, the i (integral) is replaced with a constant
+				 which is not correct, but the robot is going clockwise and it
+				 needs to get there */
+				robot.setRotationSpeed(-error * 1f - 5f);
+				try { Thread.sleep(50); } catch (InterruptedException e) {}
 			}
 			robot.stop();
-			LCD.drawString(" found.", 9,5);
-			LCD.drawString("t "+odo.getTheta()+"  ", 0,3);
+			float x = us = getFilteredData();
+			LCD.clear();
+			LCD.drawString("X "+us, 0,0);
+			for( ; ; ) {
+				theta = odo.getTheta();
+				error = odo.getTheta() - 180;
+				if(error < 0.5) break;
+				robot.setRotationSpeed(-error * 1f - 5f);
+				try { Thread.sleep(50); } catch (InterruptedException e) {}
+			}
+			robot.stop();
+			float y = us = getFilteredData();
+			LCD.drawString("Y "+us, 0,1);
+			/* so (x,y) are not at the centre of rotation, fix this */
+			x -= 3;
+			y -= 3;
+			/* set the odometer, confusingly and I'm sure the lab designers
+			 were drunk when they decided this, (0,0) is after the first square,
+			 so (0,0) is on the first line */
+			// THIS
 		}
 	}
 
