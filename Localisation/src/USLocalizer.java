@@ -180,8 +180,8 @@ public class USLocalizer {
 			/* set the odometer, confusingly and I'm sure the lab designers
 			 were drunk when they decided this, (0,0) is after the first square,
 			 so (0,0) is on the first line,  */
-			odo.setX(-cmSquare - x);
-			odo.setY(-cmSquare - y);
+			odo.setX(-cmSquare + x);
+			odo.setY(-cmSquare + y);
 			x = odo.getX();
 			y = odo.getY();
 			float t = odo.getTheta();
