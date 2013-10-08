@@ -104,7 +104,7 @@ public class TwoWheeledRobot {
 		forwardSpeed = rotationSpeed = 0.0;
 	}
 	
-	public void setLeftSpeed(float s) {
+	public void setLeftSpeed(final float s) {
 		leftMotor.setSpeed(s);
 		if(s > 0f) {
 			leftMotor.forward();
@@ -113,7 +113,7 @@ public class TwoWheeledRobot {
 		}
 	}
 
-	public void setRightSpeed(float s) {
+	public void setRightSpeed(final float s) {
 		rightMotor.setSpeed(s);
 		if(s > 0f) {
 			rightMotor.forward();

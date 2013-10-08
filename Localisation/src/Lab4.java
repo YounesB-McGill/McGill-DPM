@@ -24,8 +24,12 @@ public class Lab4 {
 		Button.waitForAnyPress();
 		LCD.drawString("     ", 0,5);
 		
+		LCD.clear();
 		LCD.drawString("Goto (0,0)", 0,0);
 		odo.travelTo(0f,0f);
+		LCD.clear();
+		LCD.drawString("Turn to 0", 0,0);
+		odo.turnTo(0f);
 
 		// perform the light sensor localization
 		LCD.drawString("Light localisation", 0,4);

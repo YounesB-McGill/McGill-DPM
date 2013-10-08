@@ -155,4 +155,7 @@ public class Odometer implements TimerListener {
 	public void travelTo(final float x, final float y) {
 		nav.travelTo(x, y);
 	}
+	public void turnTo(final float a) {
+		nav.turnTo(a);
+	}
 }

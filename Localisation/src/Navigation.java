@@ -7,7 +7,8 @@ public class Navigation {
 	// put your navigation code here 
 	
 	private final static float dist2Tolerance = 0.5f; /* cm^{1/2} */
-	private final static float pTheta = 3.0f; /* proportional theta in degrees */
+	private final static float angleTolerance = 2f; /* deg */
+	private final static float pTheta = 5.0f; /* proportional theta in degrees */
 	private final static float pDist  = 15.0f; /* proportional distance in cm */
 
 	private Odometer odo;
@@ -57,13 +58,31 @@ public class Navigation {
 			robot.setLeftSpeed(l);
 			robot.setRightSpeed(r);
 			/* wait */
-			try { Thread.sleep(1000); } catch (InterruptedException e) { }
+			try { Thread.sleep(100); } catch (InterruptedException e) { }
 		}
 		robot.stop();
 	}
 	
-	public void turnTo(float angle) {
-		// USE THE FUNCTIONS setForwardSpeed and setRotationalSpeed from TwoWheeledRobot!
+	public void turnTo(final float angle) {
+		float tTarget, tCurrent, t, l, r;
 		
+		// USE THE FUNCTIONS setForwardSpeed and setRotationalSpeed from TwoWheeledRobot!
+		tTarget = angle % 360f;
+		if(tTarget > 180f) tTarget -= 360f;
+		for( ; ; ) {
+			tCurrent = odo.getTheta();
+			if(tCurrent > 180f) tCurrent -= 360f;
+			t = tTarget - tCurrent;
+			if(t < -180f)     t += 360f;
+			else if(t > 180f) t -= 360f;
+			if(t < angleTolerance && t > -angleTolerance) break;
+			LCD.drawString("t "+t, 0,2);
+			/* reversed */
+			l =  t * pTheta;
+			r = -t * pTheta;
+			robot.setLeftSpeed(l);
+			robot.setRightSpeed(r);
+		}
+		robot.stop();
 	}
 }
