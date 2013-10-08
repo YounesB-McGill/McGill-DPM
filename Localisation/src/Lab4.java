@@ -13,27 +13,28 @@ public class Lab4 {
 		// /* breaks the drawtext */ LCDInfo lcd = new LCDInfo(odo);
 		UltrasonicSensor us = new UltrasonicSensor(SensorPort.S1);
 		LightSensor ls = new LightSensor(SensorPort.S4);
-		// perform the ultrasonic localization
-		USLocalizer usl = new USLocalizer(odo, us, USLocalizer.LocalizationType./*RISING_EDGE*/FALLING_EDGE);
-		LCD.drawString("US localisation", 0,4);
-		// skip it usl.doLocalization();
-		odo.setX(-15);
-		odo.setY(-15);
-		
-		LCD.drawString("Press", 0,5);
-		Button.waitForAnyPress();
-		LCD.drawString("     ", 0,5);
-		
-		LCD.clear();
-		LCD.drawString("Goto (0,0)", 0,0);
-		odo.travelTo(0f,0f);
-		LCD.clear();
-		LCD.drawString("Turn to 0", 0,0);
-		odo.turnTo(0f);
+//		// perform the ultrasonic localization
+//		USLocalizer usl = new USLocalizer(odo, us, USLocalizer.LocalizationType./*RISING_EDGE*/FALLING_EDGE);
+//		LCD.drawString("US localisation", 0,4);
+//		// skip it usl.doLocalization();
+//		odo.setX(-15);
+//		odo.setY(-15);
+//		
+//		LCD.drawString("Press", 0,5);
+//		Button.waitForAnyPress();
+//		LCD.drawString("     ", 0,5);
+//		
+//		LCD.clear();
+//		LCD.drawString("Goto (0,0)", 0,0);
+//		odo.travelTo(0f,0f);
+//		LCD.clear();
+//		LCD.drawString("Turn to 0", 0,0);
+//		odo.turnTo(0f);
 
 		// perform the light sensor localization
 		LCD.drawString("Light localisation", 0,4);
 		LightLocalizer lsl = new LightLocalizer(odo, ls);
+      LCD.clear();
 		lsl.doLocalization();			
 		
 		LCD.drawString("Press", 0,5);
