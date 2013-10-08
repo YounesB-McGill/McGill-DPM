@@ -1,9 +1,11 @@
+/* Lab 4, Group 51 -- Alex Bhandari-Young and Neil Edelman */
+
 import lejos.util.Timer;
 import lejos.util.TimerListener;
 
 public class Odometer implements TimerListener {
-	/* hello! we don't need doubles, float is overkill, should be using fixed
-	 point; doubles don't exist on nxj anyway */
+	/* we don't need doubles, float is overkill, should be using fixed point;
+	 doubles don't exist on nxj anyway */
 	public static final int DEFAULT_PERIOD = 25;
 	private TwoWheeledRobot robot;
 	private Timer odometerTimer;
@@ -26,7 +28,11 @@ public class Odometer implements TimerListener {
 		y = 0f;
 		theta = 0f;
 		oldDH = new double[2];
-		dDH = new double[2]; /* when you do this, god kills a virgin kitten */
+		dDH = new double[2]; /* this should be a new class, class Orientation
+							  for example, even with two elements; you may
+							  change them later and then you'd have to change
+							  all this impossible to read code; also, very
+							  useful to subtract them etc */
 		lock = new Object(); /* why not just use "this", instead of creating
 							  unnecessary objects? */
 		
@@ -91,7 +97,7 @@ public class Odometer implements TimerListener {
 		}
 	}	
 	
-	/* why? */
+	/* soooo . . . synecdoche? */
 	public TwoWheeledRobot getTwoWheeledRobot() {
 		return robot;
 	}
@@ -101,8 +107,9 @@ public class Odometer implements TimerListener {
 	}
 	
 	// mutators
-	/* update is studid, this is how to write a setter --Neil
-	but this is stupid, so we comment it out */
+	/* update is crazy, this is how to write a setter --Neil
+	but this is crazy, so we comment it out
+	it's used in something, so uncomment it */
 	public void setPosition(float[] position) {
 		synchronized (lock) {
 			this.x = position[0];
@@ -120,7 +127,7 @@ public class Odometer implements TimerListener {
 			this.y = y;
 		}
 	}
-	/** fixme: this is laughable and lazy; really, you would use signed fixed
+	/** fixme: this is lazy; really, you would use signed fixed
 	 point 0:32 for the entire circle, braching on [-Pi, Pi]; this is way more
 	 precise, does not go out of bounds, and has the branch cut behind the
 	 robot; floating point is good for dynamic range, not this */
@@ -141,7 +148,6 @@ public class Odometer implements TimerListener {
 		
 		return angle % 360.0f; /* facepalm */
 	}
-	/* facepalm */
 	public static float minimumAngleFromTo(float a, float b) {
 		float d = fixDegAngle(b - a);
 		
@@ -151,7 +157,7 @@ public class Odometer implements TimerListener {
 			return d - 360.0f;
 	}
 
-	/** this is fucked up, we need to draw a class diagram */
+	/** we need to draw a class diagram and modify classes, this is not optimal */
 	public void travelTo(final float x, final float y) {
 		nav.travelTo(x, y);
 	}

@@ -1,3 +1,5 @@
+/* Lab 4, Group 51 -- Alex Bhandari-Young and Neil Edelman */
+
 import lejos.nxt.NXTRegulatedMotor;
 
 public class TwoWheeledRobot {
@@ -98,12 +100,16 @@ public class TwoWheeledRobot {
 			rightMotor.setSpeed((int)rightSpeed);
 	}
 	
+	/** important to have because setSpeed(0) doesn't work very well */
 	public void stop() {
 		leftMotor.stop();
 		rightMotor.stop();
 		forwardSpeed = rotationSpeed = 0.0;
 	}
 	
+	/** set r/l speeds indepedently is good for pid-control;
+	 eg stays to to left, it increases the speed of the right wheel without
+	 stopping to correct; we use p-control */
 	public void setLeftSpeed(final float s) {
 		leftMotor.setSpeed(s);
 		if(s > 0f) {
@@ -112,7 +118,6 @@ public class TwoWheeledRobot {
 			leftMotor.backward();
 		}
 	}
-
 	public void setRightSpeed(final float s) {
 		rightMotor.setSpeed(s);
 		if(s > 0f) {

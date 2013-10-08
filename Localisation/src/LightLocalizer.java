@@ -1,3 +1,5 @@
+/* Lab 4, Group 51 -- Alex Bhandari-Young and Neil Edelman */
+
 /* LightSensor Locatization File
 This class runs when doLocatization is called. It assumes that the robot is oriented at -x,-y 
 from the origin, thus rotating allows the light sensor to cross
@@ -26,6 +28,7 @@ public class LightLocalizer {
 	
 	public void doLocalization() {
 		// drive to location listed in tutorial
+		/* done in Lab4.java */
 //      nav.travelTo(-6,-6);
 //      nav.turnTo(0);
 		// start rotating and clock all 4 gridlines

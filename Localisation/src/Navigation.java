@@ -1,3 +1,5 @@
+/* Lab 4, Group 51 -- Alex Bhandari-Young and Neil Edelman */
+
 import lejos.nxt.LCD;
 
 /* this should not be in a separete file from Odometry,
@@ -24,7 +26,8 @@ public class Navigation {
 		float l, r, speed;
 		// USE THE FUNCTIONS setForwardSpeed and setRotationalSpeed from TwoWheeledRobot!
 		/* yeah, that's good if you want to get a robot from the '70s, but let's
-		 try and get a smoother motion (fixme: i, d) */
+		 try and get a smoother motion (fixme: integal, derivative, would make
+		 a faster, more stable ride to the setpoint) */
 		for( ; ; ) {
 			/* good on paper, but when uploaded to robot, gets close, then goes off
 			 in a random direction (-90) at unstable and incresing speed for
@@ -36,8 +39,8 @@ public class Navigation {
 			dist2 = x*x + y*y;
 			if(dist2 < dist2Tolerance) break;
 			tCurrent = odo.getTheta();
-			/* this is why you programme in standard coordinates, omg this took
-			 so long to debug */
+			/* this is why you programme in standard coordinates; this took so
+			 long to debug :[ */
 			tCurrent = -tCurrent + 90f;
 			if(tCurrent < 180f) tCurrent += 360f;
 			tTarget = (float)Math.toDegrees(Math.atan2(y, x));
@@ -65,8 +68,7 @@ public class Navigation {
 	
 	public void turnTo(final float angle) {
 		float tTarget, tCurrent, t, l, r;
-		
-		// USE THE FUNCTIONS setForwardSpeed and setRotationalSpeed from TwoWheeledRobot!
+
 		tTarget = angle % 360f;
 		if(tTarget > 180f) tTarget -= 360f;
 		for( ; ; ) {

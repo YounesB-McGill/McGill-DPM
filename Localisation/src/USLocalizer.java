@@ -1,3 +1,5 @@
+/* Lab 4, Group 51 -- Alex Bhandari-Young and Neil Edelman */
+
 import lejos.nxt.UltrasonicSensor;
 import lejos.nxt.LCD;
 import lejos.nxt.Sound;
@@ -6,12 +8,15 @@ public class USLocalizer {
 	public enum LocalizationType { FALLING_EDGE, RISING_EDGE };
 	public static double ROTATION_SPEED = 30;
 
-	private final static int granularity = 36;
+	private final static int granularity       = 36;
 	private final static int distanceThreshold = 36;
-	private final static double /* fixme */ speed = 50;
-	private final static boolean isMeasure = false;
-	private final static float cmToUltrasound = 1f;/* really 3, but the sensor is reads higher values than is acutally the case  at close distances */
-	private final static float cmSquare = 30f;
+	/* fixme: double */
+	private final static double speed          = 50;
+	private final static boolean isMeasure     = false;
+	/* really 3, but the sensor is reads higher values than is acutally the
+	 case at close distances */
+	private final static float cmToUltrasound  = 1f;
+	private final static float cmSquare        = 30f;
 
 	private Odometer odo;
 	private TwoWheeledRobot robot;
@@ -34,7 +39,7 @@ public class USLocalizer {
 		int us;
 		
 		if (locType == LocalizationType.FALLING_EDGE) {
-			/* this is stupid, it should store a buffer of us data, then get the
+			/* fixme: it should store a buffer of us data, then get the
 			 linear intercept instead of approximating to the nearest
 			 measurement */
 			robot.setRotationSpeed(speed);
@@ -43,6 +48,7 @@ public class USLocalizer {
 			while((us = getFilteredData()) < distanceThreshold) {
 				LCD.drawString("US: "+us+"  ", 0, 0);
 			}
+			/* get clear of the wall */
 			try { Thread.sleep(1000); } catch (InterruptedException e) {}
 			// keep rotating until the robot sees a wall, then latch the angle
 			LCD.drawString("wait hit   ", 0,1);
@@ -53,8 +59,8 @@ public class USLocalizer {
 			LCD.drawString("a "+a, 0,1);
 			// switch direction and wait until it sees no wall
 			robot.setRotationSpeed(-speed);
+			/* get clear of the region where the distance is indeterminate */
 			try { Thread.sleep(1000); } catch (InterruptedException e) {}
-
 			// keep rotating until the robot sees a wall, then latch the angle
 			while((us = getFilteredData()) > distanceThreshold) {
 				LCD.drawString("US: "+us+"  ", 0, 0);
@@ -67,11 +73,12 @@ public class USLocalizer {
 			/* when a and b are the same branch cut, this is so, otherwise
 			 incorrect, fix it */
 			if(a < b) b += 360f;
-			/* that's really scetchy and not at all standard */
+			/* that's really scetchy and not at all standard, but as long as
+			 it's consistent */
 			float correction = 45 - (a + b) * 0.5f;
 			// update the odometer position (example to follow:)
-			/* the angle, but not the position because we conviently forgot */
 			//odo.setPosition(0f, 0f, 0f);
+			/* to complicated, wrote a new method */
 			odo.correctTheta(correction);
 			LCD.drawString("t "+odo.getTheta()+"  ", 0,3);
 			/* this is code for the measurements */
@@ -81,13 +88,12 @@ public class USLocalizer {
 				for( ; ; ) {
 					float theta = odo.getTheta();
 					/* this is why you should never branch cut dead in the middle of
-					 your operating range :[ . . . in fact, screw this . . . */
+					 your operating range :[ . . . */
 					if(theta > 180f) theta -= 360f;
 					if(theta >= 0f && theta < 20f) break;
 					try { Thread.sleep(100); } catch (InterruptedException e) {}
 				}
-				/* stop; don't use setRotationSpeed(0) because it completly fubars
-				 it, don't ask me why, it's not my code */
+				/* don't setRotationSpeed(0) because it's completely fubar */
 				robot.stop();
 				LCD.drawString(" found.", 9,5);
 			}
@@ -145,7 +151,7 @@ public class USLocalizer {
 			}
 			LCD.drawString("t "+odo.getTheta()+"  ", 0,3);
 		}
-		/* approx distance from x, y */
+		/* approx distance from x, y (we conviently forgot :[ ) */
 		if(!isMeasure) {
 			/* fixme: we should just store the data and get it from there */
 			float error, theta;
@@ -154,9 +160,9 @@ public class USLocalizer {
 				if(theta <= 45f) theta += 360f; /* facepalm, [-Pi,Pi] really */
 				error = odo.getTheta() - 270;
 				if(error < 0.5) break;
-				/* hack p-control, the i (integral) is replaced with a constant
+				/* hack: p-control, the i (integral) is replaced with a constant
 				 which is not correct, but the robot is going clockwise and it
-				 needs to get there */
+				 needs to get there not at a snail's pace */
 				robot.setRotationSpeed(-error * 1f - 5f);
 				try { Thread.sleep(50); } catch (InterruptedException e) {}
 			}
@@ -177,8 +183,7 @@ public class USLocalizer {
 			/* so (x,y) are not at the centre of rotation, fix this */
 			x -= cmToUltrasound;
 			y -= cmToUltrasound;
-			/* set the odometer, confusingly and I'm sure the lab designers
-			 were drunk when they decided this, (0,0) is after the first square,
+			/* set the odometer, confusingly (0,0) is after the first square,
 			 so (0,0) is on the first line,  */
 			odo.setX(-cmSquare + x);
 			odo.setY(-cmSquare + y);
@@ -189,7 +194,8 @@ public class USLocalizer {
 		}
 	}
 
-	/* fixme: get FILTED data */
+	/* fixme: get FILTED data; this is especially critical when two robots are
+	 getting sound distances at the same time at the same frequency */
 	private int getFilteredData() {
 		int distance;
 		

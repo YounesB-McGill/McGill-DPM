@@ -1,3 +1,5 @@
+/* Lab 4, Group 51 -- Alex Bhandari-Young and Neil Edelman */
+
 import lejos.nxt.LCD;
 import lejos.util.Timer;
 import lejos.util.TimerListener;
@@ -17,7 +19,7 @@ public class LCDInfo implements TimerListener{
       this.light = light;
 		
 		// initialise the arrays for displaying data
-		pos = new float[3]; /* worst idea ever */
+		pos = new float[3]; /* confusing, why? */
 		
 		// start the timer
 		lcdTimer.start();
@@ -31,6 +33,7 @@ public class LCDInfo implements TimerListener{
 		LCD.drawString("H: ", 0, 2);
 		LCD.drawString("L: ", 0, 2);
 		LCD.drawString("C: ", 0, 2);
+		/* why do you mutiply it by 10? */
 		LCD.drawInt((int)(pos[0] * 10), 3, 0);
 		LCD.drawInt((int)(pos[1] * 10), 3, 1);
 		LCD.drawInt((int)pos[2], 3, 2);

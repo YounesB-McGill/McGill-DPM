@@ -1,3 +1,5 @@
+/* Lab 4, Group 51 -- Alex Bhandari-Young and Neil Edelman */
+
 import lejos.nxt.*;
 
 public class Lab4 {
@@ -20,9 +22,11 @@ public class Lab4 {
 		LCD.drawString("     ", 0,5);
 		
 		LCD.clear();
-		LCD.drawString("Goto (-4,-4)", 0,0);
+		/* experimentally determined */
+		LCD.drawString("Goto (-3,-3)", 0,0);
 		odo.travelTo(-3f,-3f);
 		LCD.clear();
+		/* make sure that the 'south' line is hit first */
 		LCD.drawString("Turn to 45", 0,0);
 		odo.turnTo(45f);
 
