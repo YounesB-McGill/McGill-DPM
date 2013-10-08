@@ -7,26 +7,29 @@ public class Lab4 {
 	public static void main(String[] args) {
 		// setup the odometer, display, and ultrasonic and light sensors
 		TwoWheeledRobot patBot = new TwoWheeledRobot(Motor.A, Motor.B);
-		/* resume boring code -- true? okay sure */
+		/* spinning wheel of death with our defective actuator code goes here;
+		 took out b/c of battery drain */
 		Odometer odo = new Odometer(patBot, true);
-		// /* breaks the drawtext */ LCDInfo lcd = new LCDInfo(odo);
+		// /* breaks the drawtext debug */ LCDInfo lcd = new LCDInfo(odo);
 		UltrasonicSensor us = new UltrasonicSensor(SensorPort.S1);
 		LightSensor ls = new LightSensor(SensorPort.S4);
-//		// perform the ultrasonic localization
+		// perform the ultrasonic localization
 		USLocalizer usl = new USLocalizer(odo, us, USLocalizer.LocalizationType./*RISING_EDGE*/FALLING_EDGE);
 		LCD.drawString("US localisation", 0,4);
 		usl.doLocalization();
 		
-		LCD.drawString("Press", 0,5);
-//		Button.waitForAnyPress();
-		LCD.drawString("     ", 0,5);
+		/* annoying having to press */
+		/* LCD.drawString("Press", 0,5);
+		Button.waitForAnyPress();
+		LCD.drawString("     ", 0,5); */
 		
 		LCD.clear();
 		/* experimentally determined */
 		LCD.drawString("Goto (-3,-3)", 0,0);
 		odo.travelTo(-3f,-3f);
 		LCD.clear();
-		/* make sure that the 'south' line is hit first */
+		/* make sure that the 'south' line is hit first (the light sensor is on
+		 the other side of the robot) */
 		LCD.drawString("Turn to 45", 0,0);
 		odo.turnTo(45f);
 

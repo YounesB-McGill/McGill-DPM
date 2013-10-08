@@ -8,10 +8,10 @@ import lejos.nxt.LCD;
 public class Navigation {
 	// put your navigation code here 
 	
-	private final static float dist2Tolerance = 0.5f; /* cm^{1/2} */
-	private final static float angleTolerance = 2f; /* deg */
-	private final static float pTheta = 5.0f; /* proportional theta in degrees */
-	private final static float pDist  = 15.0f; /* proportional distance in cm */
+	private final static float dist2Tolerance = 0.5f;  /* cm^{1/2} */
+	private final static float angleTolerance = 2f;    /* deg */
+	private final static float pTheta         = 5.0f;  /* proportional theta in degrees */
+	private final static float pDist          = 15.0f; /* proportional distance in cm */
 
 	private Odometer odo;
 	private TwoWheeledRobot robot;
@@ -25,7 +25,7 @@ public class Navigation {
 		float xCurrent, yCurrent, tCurrent, tTarget, x, y, t, dist2, dist;
 		float l, r, speed;
 		// USE THE FUNCTIONS setForwardSpeed and setRotationalSpeed from TwoWheeledRobot!
-		/* yeah, that's good if you want to get a robot from the '70s, but let's
+		/* that's good if you want to get a robot from the '70s, but let's
 		 try and get a smoother motion (fixme: integal, derivative, would make
 		 a faster, more stable ride to the setpoint) */
 		for( ; ; ) {

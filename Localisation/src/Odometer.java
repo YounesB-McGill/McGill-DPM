@@ -21,7 +21,7 @@ public class Odometer implements TimerListener {
 	public Odometer(TwoWheeledRobot robot, int period, boolean start) {
 		// initialise variables
 		this.robot = robot;
-		/* why is Nav under Odo? this is crap */
+		/* why is Nav under Odo? */
 		this.nav = new Navigation(this);
 		odometerTimer = new Timer(period, this);
 		x = 0f;
@@ -141,7 +141,7 @@ public class Odometer implements TimerListener {
 	}
 	
 	// static 'helper' methods
-	/* they are only called one time? thus they are useless */
+	/* they are only called one time? thus they are useless? */
 	public static float fixDegAngle(float angle) {
 		if (angle < 0.0)
 			angle = 360.0f + (angle % 360.0f);
