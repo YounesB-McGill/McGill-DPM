@@ -103,13 +103,13 @@ public class Odometer implements TimerListener {
 	// mutators
 	/* update is studid, this is how to write a setter --Neil
 	but this is stupid, so we comment it out */
-	/*public void setPosition(final float x, final float y, final float theta) {
+	public void setPosition(float[] position) {
 		synchronized (lock) {
-			this.x = x;
-			this.y = y;
-			this.theta = theta;
+			this.x = position[0];
+			this.y = position[1];
+			this.theta = position[2];
 		}
-	}*/
+	}
 	public void setX(final float x) {
 		synchronized (lock) {
 			this.x = x;

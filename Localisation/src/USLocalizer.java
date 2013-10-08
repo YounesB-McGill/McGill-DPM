@@ -10,7 +10,7 @@ public class USLocalizer {
 	private final static int distanceThreshold = 36;
 	private final static double /* fixme */ speed = 50;
 	private final static boolean isMeasure = false;
-	private final static float cmToUltrasound = 3f;
+	private final static float cmToUltrasound = 1f;/* really 3, but the sensor is reads higher values than is acutally the case  at close distances */
 	private final static float cmSquare = 30f;
 
 	private Odometer odo;

@@ -5,40 +5,36 @@ public class Lab4 {
 	public static void main(String[] args) {
 		// setup the odometer, display, and ultrasonic and light sensors
 		TwoWheeledRobot patBot = new TwoWheeledRobot(Motor.A, Motor.B);
-		/* blade of death startup */
-		Motor.C.setSpeed(1000);
-		Motor.C.forward();
 		/* resume boring code -- true? okay sure */
 		Odometer odo = new Odometer(patBot, true);
 		// /* breaks the drawtext */ LCDInfo lcd = new LCDInfo(odo);
 		UltrasonicSensor us = new UltrasonicSensor(SensorPort.S1);
 		LightSensor ls = new LightSensor(SensorPort.S4);
 //		// perform the ultrasonic localization
-//		USLocalizer usl = new USLocalizer(odo, us, USLocalizer.LocalizationType./*RISING_EDGE*/FALLING_EDGE);
-//		LCD.drawString("US localisation", 0,4);
-//		// skip it usl.doLocalization();
-//		odo.setX(-15);
-//		odo.setY(-15);
-//		
-//		LCD.drawString("Press", 0,5);
+		USLocalizer usl = new USLocalizer(odo, us, USLocalizer.LocalizationType./*RISING_EDGE*/FALLING_EDGE);
+		LCD.drawString("US localisation", 0,4);
+		usl.doLocalization();
+		
+		LCD.drawString("Press", 0,5);
 //		Button.waitForAnyPress();
-//		LCD.drawString("     ", 0,5);
-//		
-//		LCD.clear();
-//		LCD.drawString("Goto (0,0)", 0,0);
-//		odo.travelTo(0f,0f);
-//		LCD.clear();
-//		LCD.drawString("Turn to 0", 0,0);
-//		odo.turnTo(0f);
+		LCD.drawString("     ", 0,5);
+		
+		LCD.clear();
+		LCD.drawString("Goto (-4,-4)", 0,0);
+		odo.travelTo(-3f,-3f);
+		LCD.clear();
+		LCD.drawString("Turn to 45", 0,0);
+		odo.turnTo(45f);
 
 		// perform the light sensor localization
 		LCD.drawString("Light localisation", 0,4);
 		LightLocalizer lsl = new LightLocalizer(odo, ls);
-      LCD.clear();
-		lsl.doLocalization();			
+	   LCDInfo lcd = new LCDInfo(odo,lsl);
+      lsl.doLocalization();			
 		
 		LCD.drawString("Press", 0,5);
 		Button.waitForAnyPress();
+
 	}
 
 }
