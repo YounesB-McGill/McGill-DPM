@@ -18,7 +18,7 @@ public class LightLocalizer {
 	
 	public void doLocalization() {
 		// drive to location listed in tutorial
-      nav.travelTo(-5,-5);
+      nav.travelTo(30,30);
 		// start rotating and clock all 4 gridlines
       int blip = 0; //light sensor detection (should only be triggered by lines)
       double[] position = new double[3];

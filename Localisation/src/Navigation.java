@@ -8,9 +8,9 @@ public class Navigation {
 	private Odometer odometer;
 	private TwoWheeledRobot robot;
    //constants for robot attributes
-	private final double distError = 10; /* cm^{-1/2} */
+	private final double distError = 1; /* cm^{-1/2} */
 //   private final float uDistThreshold = 25;
-   private final int sleepPeriod = 200;
+   private final int sleepPeriod = 50;
    private final double thetaThreshold = 3; //keep theta within 3 degrees
 
 //   private static final SensorPort usPort = SensorPort.S1;
@@ -80,7 +80,7 @@ public class Navigation {
 //            turnCount = -1; //this is updated to 0 below causing turnTo to run and fix the robots direction after the correction around the object
 //         }
          //move forward
-			robot.setForwardSpeed(200);
+			robot.setForwardSpeed(50);
  			try {
 				Thread.sleep(sleepPeriod);
 			} catch (Exception e) {
@@ -95,13 +95,13 @@ public class Navigation {
 	
       // USE THE FUNCTIONS setForwardSpeed and setRotationSpeed from TwoWheeledRobot!
 	public void turnTo(double angle) {
-      robot.setRotationSpeed(200);
+      robot.setRotationSpeed(100);
       if(angle > 180) { //rotate left
-         robot.setRotationSpeed(-200);
+         robot.setRotationSpeed(-100);
          while(position[2] >  angle){odometer.getPosition(position);}
       }
       else { //rotate right
-         robot.setRotationSpeed(200);
+         robot.setRotationSpeed(100);
          while(position[2] <  angle){odometer.getPosition(position);}
       }
       robot.setRotationSpeed(0);
