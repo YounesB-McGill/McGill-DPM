@@ -4,139 +4,101 @@
 #include <stdio.h>  /* fprintf */
 #include <math.h>
 
+/* hack */
 #define N 10
-
-struct Vec2_t {
-	double x, y;
-};
 
 /** private (entry point) */
 int main(int argc, char **argv) {
-	struct Vec2_t reported[N], actual[N], d[N];
-	struct Vec2_t sum, ssq;
-	struct Vec2_t mean, var, stdd;
+	double hack;
+	double start[N], final[N], reported[N], d[N];
+	double sum, ssq;
+	double mean, var, stdd;
 	int i;
 	char buffer[120], buffer2[120], *s, *t;
+	char *label = "none";
 
+	if(2 <= argc) label = argv[1];
 	for(i = 0; i < N; i++) {
-		scanf("%lf\t%lf\t%lf\t%lf\t\n", &reported[i].x, &reported[i].y, &actual[i].x, &actual[i].y);
+		scanf("%lf\t%lf\t%lf\n", &start[i], &reported[i], &final[i]);
 	}
 
-	printf("Calculate the differences in Equation~\\ref{dx1}--\\ref{dy%i}.\n\n", N);
-	for(i = 0, sum.x = sum.y = 0, ssq.x = ssq.y = 0; i < N; i++) {
-		d[i].x = actual[i].x - reported[i].x;
-		d[i].y = actual[i].y - reported[i].y;
+	printf("Calculate the differences in Equation~\\ref{%s-d1}--\\ref{%s-d%i}.\n\n", label, label, N);
+	for(i = 0, sum = 0, ssq = 0; i < N; i++) {
+		hack = final[i];
+		if(hack >= 180.0)      hack -= 360.0;
+		d[i] = hack - reported[i];
+		if(d[i] >= 180.0)      d[i] -= 360.0;
+		else if(d[i] < -180.0) d[i] += 360.0;
 		/* compute std dev */
-		sum.x += d[i].x;
-		sum.y += d[i].y;
-		ssq.x += d[i].x * d[i].x;
-		ssq.y += d[i].y * d[i].y;
+		sum += d[i];
+		ssq += d[i] * d[i];
 
 		/* bah */
 		printf("\\begin{align}\n");
-		printf("d_{x,%i} &= (%.1f) - (%.2f) \\nonumber\\\\\n", i+1, actual[i].x, reported[i].x);
-		printf(" &= %.2f \\label{dx%i}\\\\\n", d[i].x, i+1);
-		printf("d_{y,%i} &= (%.1f) - (%.2f) \\nonumber\\\\\n", i+1, actual[i].y, reported[i].y);
-		printf(" &= %.2f \\label{dy%i}\n", d[i].y, i+1);
+		printf("d_{%i} &= ((%.0f) - (%.4f))_{360[-180,180]} \\nonumber\\\\\n", i+1, final[i], reported[i]);
+		printf(" &= %.4f \\label{%s-d%i}\n", d[i], label, i+1);
 		printf("\\end{align}\n");
 	}
 	printf("\n");
 
-	printf("Calculate the sum of the differences (Equation~\\ref{dx1}--\\ref{dy%i}) in Equation~\\ref{sumx}--\\ref{sumy}.\n\n", N);
+	printf("Calculate the sum of the differences (Equation~\\ref{%s-d1}--\\ref{%s-d%i}) in Equation~\\ref{%s-sum}.\n\n", label, label, N, label);
 	printf("\\begin{align}\n");
-	printf("\\text{sum}_{x} &= \\sum_{i=1}^{%i} d_{x,i} \\nonumber\\\\\n", N);
+	printf("\\text{sum} &= \\sum_{i=1}^{%i} d_{i} \\nonumber\\\\\n", N);
 	printf(" &= ", N);
 	for(i = 0; i < N; i++) {
-		printf("(%.2f)", d[i].x);
+		printf("(%.4f)", d[i]);
 		if(i != N - 1) printf(" + \\nonumber\\\\\n &\\quad\\quad ");
 	}
 	printf(" \\nonumber\\\\\n");
-	printf(" &= %.2f \\label{sumx}\n", sum.x);
+	printf(" &= %.4f \\label{%s-sum}\n", sum, label);
 	printf("\\end{align}\n\n");
 
+	printf("Calculate the sum of the differences (Equation~\\ref{%s-d1}--\\ref{%s-d%i}) squared in Equation~\\ref{%s-sum2}.\n\n", label, label, N, label);
 	printf("\\begin{align}\n");
-	printf("\\text{sum}_{y} &= \\sum_{i=1}^{%i} d_{y,i} \\nonumber\\\\\n", N);
+	printf("\\text{ssq} &= \\sum_{i=1}^{%i} d_{i}^{\\phantom{i}2} \\nonumber\\\\\n", N);
 	printf(" &= ", N);
 	for(i = 0; i < N; i++) {
-		printf("(%.2f)", d[i].y);
+		printf("(%.2f)^2", d[i]);
 		if(i != N - 1) printf(" + \\nonumber\\\\\n &\\quad\\quad ");
 	}
 	printf(" \\nonumber\\\\\n");
-	printf(" &= %.2f \\label{sumy}\n", sum.y);
+	printf(" &= %.2f \\label{%s-sum2}\n", ssq, label);
+	printf("\\end{align}\n\n");
+	
+	mean = sum / N;
+	var  = (ssq - sum*sum/N) / (N-1);
+	stdd = sqrt(var);
+	
+	printf("Calculate the mean from Equation~\\ref{%s-sum} in Equation~\\ref{%s-mean}.\n\n", label, label);
+	printf("\\begin{align}\n");
+	printf("\\text{mean} &= \\frac{\\text{sum}}{N} \\nonumber\\\\\n");
+	printf(" &= \\frac{%.4f}{%i} \\nonumber\\\\\n", sum, N);	
+	printf(" &= %f \\label{%s-mean}\n", mean, label);
 	printf("\\end{align}\n\n");
 
-	printf("Calculate the sum of the differences (Equation~\\ref{dx1}--\\ref{dy%i}) squared in Equation~\\ref{sum2x}--\\ref{sum2y}.\n\n", N);
+	printf("Calculate the variance from Equation~\\ref{%s-sum} and \\ref{%s-sum2} in Equation~\\ref{%s-var}.\n\n", label, label, label);
 	printf("\\begin{align}\n");
-	printf("\\text{ssq}_{x} &= \\sum_{i=1}^{%i} d_{x,i}^{\\phantom{x,i}2} \\nonumber\\\\\n", N);
-	printf(" &= ", N);
-	for(i = 0; i < N; i++) {
-		printf("(%.2f)^2", d[i].x);
-		if(i != N - 1) printf(" + \\nonumber\\\\\n &\\quad\\quad ");
-	}
-	printf(" \\nonumber\\\\\n");
-	printf(" &= %.2f \\label{sum2x}\n", ssq.x);
+	printf("\\sigma^{2} &= \\frac{\\text{ssq} - \\frac{\\text{sum}^{2}}{N}}{N-1} \\nonumber\\\\\n");
+	printf(" &= \\frac{%.4f - \\frac{%.4f^2}{%i}}{%i-1} \\nonumber\\\\\n", ssq, sum, N, N);
+	printf(" &= %f \\label{%s-var}\n", var, label);
 	printf("\\end{align}\n\n");
-	
-	printf("\\begin{align}\n");
-	printf("\\text{ssq}_{y} &= \\sum_{i=1}^{%i} d_{y,i}^{\\phantom{y,i}2} \\nonumber\\\\\n", N);
-	printf(" &= ", N);
-	for(i = 0; i < N; i++) {
-		printf("(%.2f)^2", d[i].y);
-		if(i != N - 1) printf(" + \\nonumber\\\\\n &\\quad\\quad ");
-	}
-	printf(" \\nonumber\\\\\n");
-	printf(" &= %.2f \\label{sum2y}\n", ssq.y);	
-	printf("\\end{align}\n\n");
-	
-	mean.x = sum.x / N;
-	mean.y = sum.y / N;
-	var.x  = (ssq.x - sum.x*sum.x/N) / (N-1);
-	var.y  = (ssq.y - sum.y*sum.y/N) / (N-1);
-	stdd.x = sqrt(var.x);
-	stdd.y = sqrt(var.y);
-	
-	printf("Calculate the mean from Equation~\\ref{sumx}--\\ref{sumy} in Equation~\\ref{meanx}--\\ref{meany}.\n\n");
-	printf("\\begin{align}\n");
-	printf("\\text{mean}_{x} &= \\frac{\\text{sum}_{x}}{N} \\nonumber\\\\\n");
-	printf(" &= \\frac{%.2f}{%i} \\nonumber\\\\\n", sum.x, N);	
-	printf(" &= %f \\label{meanx}\\\\\n", mean.x);
 
-	printf("\\text{mean}_{y} &= \\frac{\\text{sum}_{y}}{N} \\nonumber\\\\\n");
-	printf(" &= \\frac{%.2f}{%i} \\nonumber\\\\\n", sum.y, N);
-	printf(" &= %f \\label{meany}\n", mean.y);
-	printf("\\end{align}\n\n");
-	
-	printf("Calculate the variance from Equation~\\ref{sumx}--\\ref{sumy} and \\ref{sum2x}--\\ref{sum2y} in Equation~\\ref{varx}--\\ref{vary}.\n\n");
+	printf("Calculate the corrected sample standard deviation from the variance (Equation~\\ref{%s-var}) in Equation~\\ref{%s-stdd}.\n\n", label, label);
 	printf("\\begin{align}\n");
-	printf("\\sigma_{x}^{\\phantom{x}2} &= \\frac{\\text{ssq}_{x} - \\frac{\\text{sum}_{x}^{\\phantom{x}2}}{N}}{N-1} \\nonumber\\\\\n");
-	printf(" &= \\frac{%.2f - \\frac{%.2f^2}{%i}}{%i-1} \\nonumber\\\\\n", ssq.x, sum.x, N, N);
-	printf(" &= %f \\label{varx}\\\\\n", var.x);
-	
-	printf("\\sigma_{y}^{\\phantom{y}2} &= \\frac{\\text{ssq}_{y} - \\frac{\\text{sum}_{y}^{\\phantom{y}2}}{N}}{N-1} \\nonumber\\\\\n");
-	printf(" &= \\frac{%.2f - \\frac{%.2f^2}{%i}}{%i-1} \\nonumber\\\\\n", ssq.y, sum.y, N, N);
-	printf(" &= %f \\label{vary}\n", var.y);
-	printf("\\end{align}\n\n");
-	
-	printf("Calculate the corrected sample standard deviation from the variance (Equation~\\ref{varx}--\\ref{vary}) in Equation~\\ref{stddx}--\\ref{stddy}.\n\n");
-	printf("\\begin{align}\n");
-	printf("\\sigma_x &= \\sqrt{\\sigma_{x}^{\\phantom{x}2}} \\nonumber\\\\\n");
-	printf(" &= \\sqrt{%f} \\nonumber\\\\\n", var.x);
-	printf(" &= %f \\label{stddx}\\\\\n", stdd.x);
-
-	printf("\\sigma_y &= \\sqrt{\\sigma_{y}^{\\phantom{y}2}} \\nonumber\\\\\n");
-	printf(" &= \\sqrt{%f} \\nonumber\\\\\n", var.y);
-	printf(" &= %f \\label{stddy}\n", stdd.y);
+	printf("\\sigma &= \\sqrt{\\sigma^{2}} \\nonumber\\\\\n");
+	printf(" &= \\sqrt{%f} \\nonumber\\\\\n", var);
+	printf(" &= %f \\label{%s-stdd}\n", stdd, label);
 	printf("\\end{align}\n\n");
 
 	/*stderr = sqrt((ssq/N - mean*mean) / (double)N);*/
 
 	printf("\\begin{table*}[htb]\n");
-	printf("\\begin{center}\\begin{tabular}{r@{}l r@{}l r@{}l r@{}l r@{}l r@{}l}\n");
-	printf("&actual&&& &reported&&& &delta&& \\\\\n");
-	printf("&x (cm)& &y (cm)& &x (cm)& &y (cm)& &x (cm)& &y (cm) \\\\\n");
+	printf("\\begin{center}\\begin{tabular}{r@{}l r@{}l r@{}l r@{}l}\n");
+	/* printf("&initial&&& &final&&& &real&& \\\\\n"); */
+	printf("&$\\theta_{\\text{start}}$ (\\degree)& &$\\theta_{\\text{final}}$ (\\degree)& &$\\theta_{\\text{reported}}$ (\\degree)& &$\\theta_{\\text{error}}$ (cm) \\\\\n");
 	printf("\\hline\n");
 	for(i = 0; i < N; i++) {
-		snprintf(buffer, sizeof(buffer), "%.1f& %.1f& %.2f& %.2f& %.1f& %.1f \\\\", actual[i].x, actual[i].y, reported[i].x, reported[i].y, d[i].x, d[i].y);
+		snprintf(buffer, sizeof(buffer), "%.0f&& %.0f&& %.4f& %.4f \\\\", start[i], final[i], reported[i], d[i]);
 		/* replace '.' by '&.' */
 		for(s = buffer, t = buffer2; s; s++) {
 			if(t == buffer2 + sizeof(buffer2) - 2) {
@@ -156,8 +118,8 @@ int main(int argc, char **argv) {
 		printf("%s\n", buffer2);
 	}
 	printf("\\end{tabular}\\end{center}\n");
-	printf("\\caption{Reported error as read by the robot, and real error as read by a ruler and the difference between them.\n");
-	printf("The difference, as $(x, y)$, mean is $(%.2f, %.2f)$, variance is $(%.2f, %.2f)$, and the corrected sample standard deviation is $(%.2f, %.2f)$.}\n", mean.x, mean.y, var.x, var.y, stdd.x, stdd.y);
+	printf("\\caption{$\\theta_{\\text{start}}$ is the starting orientation of the robot.\n");
+	printf("The error mean is $%.2f$, variance is $%.2f$, and the corrected sample standard deviation is $%.2f$.}\n", mean, var, stdd);
 	printf("\\label{a}\n");
 	printf("\\end{table*}\n");
 
