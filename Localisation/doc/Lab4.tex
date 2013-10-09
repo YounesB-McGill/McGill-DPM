@@ -82,7 +82,247 @@
 
 Automatic.
 
+Calculate the differences in Equation~\ref{open-d1}--\ref{open-d10}.
 
+\begin{align}
+d_{1} &= ((359) - (1.8366))_{360[-180,180]} \nonumber\\
+ &= -2.8366 \label{open-d1}
+\end{align}
+\begin{align}
+d_{2} &= ((359) - (0.9664))_{360[-180,180]} \nonumber\\
+ &= -1.9664 \label{open-d2}
+\end{align}
+\begin{align}
+d_{3} &= ((0) - (1.6627))_{360[-180,180]} \nonumber\\
+ &= -1.6627 \label{open-d3}
+\end{align}
+\begin{align}
+d_{4} &= ((0) - (1.8364))_{360[-180,180]} \nonumber\\
+ &= -1.8364 \label{open-d4}
+\end{align}
+\begin{align}
+d_{5} &= ((359) - (1.4885))_{360[-180,180]} \nonumber\\
+ &= -2.4885 \label{open-d5}
+\end{align}
+\begin{align}
+d_{6} &= ((359) - (1.9662))_{360[-180,180]} \nonumber\\
+ &= -2.9662 \label{open-d6}
+\end{align}
+\begin{align}
+d_{7} &= ((0) - (1.8364))_{360[-180,180]} \nonumber\\
+ &= -1.8364 \label{open-d7}
+\end{align}
+\begin{align}
+d_{8} &= ((359) - (1.0112))_{360[-180,180]} \nonumber\\
+ &= -2.0112 \label{open-d8}
+\end{align}
+\begin{align}
+d_{9} &= ((0) - (1.0104))_{360[-180,180]} \nonumber\\
+ &= -1.0104 \label{open-d9}
+\end{align}
+\begin{align}
+d_{10} &= ((359) - (2.1846))_{360[-180,180]} \nonumber\\
+ &= -3.1846 \label{open-d10}
+\end{align}
+
+Calculate the sum of the differences (Equation~\ref{open-d1}--\ref{open-d10}) in Equation~\ref{open-sum}.
+
+\begin{align}
+\text{sum} &= \sum_{i=1}^{10} d_{i} \nonumber\\
+ &= (-2.8366) + \nonumber\\
+ &\quad\quad (-1.9664) + \nonumber\\
+ &\quad\quad (-1.6627) + \nonumber\\
+ &\quad\quad (-1.8364) + \nonumber\\
+ &\quad\quad (-2.4885) + \nonumber\\
+ &\quad\quad (-2.9662) + \nonumber\\
+ &\quad\quad (-1.8364) + \nonumber\\
+ &\quad\quad (-2.0112) + \nonumber\\
+ &\quad\quad (-1.0104) + \nonumber\\
+ &\quad\quad (-3.1846) \nonumber\\
+ &= -21.7994 \label{open-sum}
+\end{align}
+
+Calculate the sum of the differences (Equation~\ref{open-d1}--\ref{open-d10}) squared in Equation~\ref{open-sum2}.
+
+\begin{align}
+\text{ssq} &= \sum_{i=1}^{10} d_{i}^{\phantom{i}2} \nonumber\\
+ &= (-2.84)^2 + \nonumber\\
+ &\quad\quad (-1.97)^2 + \nonumber\\
+ &\quad\quad (-1.66)^2 + \nonumber\\
+ &\quad\quad (-1.84)^2 + \nonumber\\
+ &\quad\quad (-2.49)^2 + \nonumber\\
+ &\quad\quad (-2.97)^2 + \nonumber\\
+ &\quad\quad (-1.84)^2 + \nonumber\\
+ &\quad\quad (-2.01)^2 + \nonumber\\
+ &\quad\quad (-1.01)^2 + \nonumber\\
+ &\quad\quad (-3.18)^2 \nonumber\\
+ &= 51.62 \label{open-sum2}
+\end{align}
+
+Calculate the mean from Equation~\ref{open-sum} in Equation~\ref{open-mean}.
+
+\begin{align}
+\text{mean} &= \frac{\text{sum}}{N} \nonumber\\
+ &= \frac{-21.7994}{10} \nonumber\\
+ &= -2.179940 \label{open-mean}
+\end{align}
+
+Calculate the variance from Equation~\ref{open-sum} and \ref{open-sum2} in Equation~\ref{open-var}.
+
+\begin{align}
+\sigma^{2} &= \frac{\text{ssq} - \frac{\text{sum}^{2}}{N}}{N-1} \nonumber\\
+ &= \frac{51.6208 - \frac{-21.7994^2}{10}}{10-1} \nonumber\\
+ &= 0.455492 \label{open-var}
+\end{align}
+
+Calculate the corrected sample standard deviation from the variance (Equation~\ref{open-var}) in Equation~\ref{open-stdd}.
+
+\begin{align}
+\sigma &= \sqrt{\sigma^{2}} \nonumber\\
+ &= \sqrt{0.455492} \nonumber\\
+ &= 0.674902 \label{open-stdd}
+\end{align}
+
+\begin{table*}[htb]
+\begin{center}\begin{tabular}{r@{}l r@{}l r@{}l r@{}l}
+&$\theta_{\text{start}}$ (\degree)& &$\theta_{\text{final}}$ (\degree)& &$\theta_{\text{reported}}$ (\degree)& &$\theta_{\text{error}}$ (cm) \\
+\hline
+45&& 359&& 1&.8366& -2&.8366 \\
+0&& 359&& 0&.9664& -1&.9664 \\
+315&& 0&& 1&.6627& -1&.6627 \\
+270&& 0&& 1&.8364& -1&.8364 \\
+225&& 359&& 1&.4885& -2&.4885 \\
+180&& 359&& 1&.9662& -2&.9662 \\
+135&& 0&& 1&.8364& -1&.8364 \\
+90&& 359&& 1&.0112& -2&.0112 \\
+345&& 0&& 1&.0104& -1&.0104 \\
+15&& 359&& 2&.1846& -3&.1846 \\
+\end{tabular}\end{center}
+\caption{$\theta_{\text{start}}$ is the starting orientation of the robot.
+The error mean is $-2.1799$, variance is $0.4555$, and the corrected sample standard deviation is $0.6749$.}
+\label{open}
+\end{table*}
+
+Calculate the differences in Equation~\ref{wall-d1}--\ref{wall-d10}.
+
+\begin{align}
+d_{1} &= ((358) - (358.2120))_{360[-180,180]} \nonumber\\
+ &= -0.2120 \label{wall-d1}
+\end{align}
+\begin{align}
+d_{2} &= ((1) - (358.5603))_{360[-180,180]} \nonumber\\
+ &= 2.4397 \label{wall-d2}
+\end{align}
+\begin{align}
+d_{3} &= ((0) - (358.4330))_{360[-180,180]} \nonumber\\
+ &= 1.5670 \label{wall-d3}
+\end{align}
+\begin{align}
+d_{4} &= ((0) - (358.9086))_{360[-180,180]} \nonumber\\
+ &= 1.0914 \label{wall-d4}
+\end{align}
+\begin{align}
+d_{5} &= ((0) - (358.5604))_{360[-180,180]} \nonumber\\
+ &= 1.4396 \label{wall-d5}
+\end{align}
+\begin{align}
+d_{6} &= ((358) - (358.4733))_{360[-180,180]} \nonumber\\
+ &= -0.4733 \label{wall-d6}
+\end{align}
+\begin{align}
+d_{7} &= ((359) - (358.3862))_{360[-180,180]} \nonumber\\
+ &= 0.6138 \label{wall-d7}
+\end{align}
+\begin{align}
+d_{8} &= ((358) - (359.2564))_{360[-180,180]} \nonumber\\
+ &= -1.2564 \label{wall-d8}
+\end{align}
+\begin{align}
+d_{9} &= ((0) - (358.4733))_{360[-180,180]} \nonumber\\
+ &= 1.5267 \label{wall-d9}
+\end{align}
+\begin{align}
+d_{10} &= ((0) - (358.2121))_{360[-180,180]} \nonumber\\
+ &= 1.7879 \label{wall-d10}
+\end{align}
+
+Calculate the sum of the differences (Equation~\ref{wall-d1}--\ref{wall-d10}) in Equation~\ref{wall-sum}.
+
+\begin{align}
+\text{sum} &= \sum_{i=1}^{10} d_{i} \nonumber\\
+ &= (-0.2120) + \nonumber\\
+ &\quad\quad (2.4397) + \nonumber\\
+ &\quad\quad (1.5670) + \nonumber\\
+ &\quad\quad (1.0914) + \nonumber\\
+ &\quad\quad (1.4396) + \nonumber\\
+ &\quad\quad (-0.4733) + \nonumber\\
+ &\quad\quad (0.6138) + \nonumber\\
+ &\quad\quad (-1.2564) + \nonumber\\
+ &\quad\quad (1.5267) + \nonumber\\
+ &\quad\quad (1.7879) \nonumber\\
+ &= 8.5244 \label{wall-sum}
+\end{align}
+
+Calculate the sum of the differences (Equation~\ref{wall-d1}--\ref{wall-d10}) squared in Equation~\ref{wall-sum2}.
+
+\begin{align}
+\text{ssq} &= \sum_{i=1}^{10} d_{i}^{\phantom{i}2} \nonumber\\
+ &= (-0.21)^2 + \nonumber\\
+ &\quad\quad (2.44)^2 + \nonumber\\
+ &\quad\quad (1.57)^2 + \nonumber\\
+ &\quad\quad (1.09)^2 + \nonumber\\
+ &\quad\quad (1.44)^2 + \nonumber\\
+ &\quad\quad (-0.47)^2 + \nonumber\\
+ &\quad\quad (0.61)^2 + \nonumber\\
+ &\quad\quad (-1.26)^2 + \nonumber\\
+ &\quad\quad (1.53)^2 + \nonumber\\
+ &\quad\quad (1.79)^2 \nonumber\\
+ &= 19.42 \label{wall-sum2}
+\end{align}
+
+Calculate the mean from Equation~\ref{wall-sum} in Equation~\ref{wall-mean}.
+
+\begin{align}
+\text{mean} &= \frac{\text{sum}}{N} \nonumber\\
+ &= \frac{8.5244}{10} \nonumber\\
+ &= 0.852440 \label{wall-mean}
+\end{align}
+
+Calculate the variance from Equation~\ref{wall-sum} and \ref{wall-sum2} in Equation~\ref{wall-var}.
+
+\begin{align}
+\sigma^{2} &= \frac{\text{ssq} - \frac{\text{sum}^{2}}{N}}{N-1} \nonumber\\
+ &= \frac{19.4229 - \frac{8.5244^2}{10}}{10-1} \nonumber\\
+ &= 1.350704 \label{wall-var}
+\end{align}
+
+Calculate the corrected sample standard deviation from the variance (Equation~\ref{wall-var}) in Equation~\ref{wall-stdd}.
+
+\begin{align}
+\sigma &= \sqrt{\sigma^{2}} \nonumber\\
+ &= \sqrt{1.350704} \nonumber\\
+ &= 1.162198 \label{wall-stdd}
+\end{align}
+
+\begin{table*}[htb]
+\begin{center}\begin{tabular}{r@{}l r@{}l r@{}l r@{}l}
+&$\theta_{\text{start}}$ (\degree)& &$\theta_{\text{final}}$ (\degree)& &$\theta_{\text{reported}}$ (\degree)& &$\theta_{\text{error}}$ (cm) \\
+\hline
+45&& 358&& 358&.2120& -0&.2120 \\
+0&& 1&& 358&.5603& 2&.4397 \\
+315&& 0&& 358&.4330& 1&.5670 \\
+270&& 0&& 358&.9086& 1&.0914 \\
+225&& 0&& 358&.5604& 1&.4396 \\
+180&& 358&& 358&.4733& -0&.4733 \\
+135&& 359&& 358&.3862& 0&.6138 \\
+90&& 358&& 359&.2564& -1&.2564 \\
+345&& 0&& 358&.4733& 1&.5267 \\
+15&& 0&& 358&.2121& 1&.7879 \\
+\end{tabular}\end{center}
+\caption{$\theta_{\text{start}}$ is the starting orientation of the robot.
+The error mean is $0.8524$, variance is $1.3507$, and the corrected sample standard deviation is $1.1622$.}
+\label{wall}
+\end{table*}
 
 
 

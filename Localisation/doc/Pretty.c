@@ -119,8 +119,8 @@ int main(int argc, char **argv) {
 	}
 	printf("\\end{tabular}\\end{center}\n");
 	printf("\\caption{$\\theta_{\\text{start}}$ is the starting orientation of the robot.\n");
-	printf("The error mean is $%.2f$, variance is $%.2f$, and the corrected sample standard deviation is $%.2f$.}\n", mean, var, stdd);
-	printf("\\label{a}\n");
+	printf("The error mean is $%.4f$, variance is $%.4f$, and the corrected sample standard deviation is $%.4f$.}\n", mean, var, stdd);
+	printf("\\label{%s}\n", label);
 	printf("\\end{table*}\n");
 
 	//printf("mean %f, varience %f, corrected sample stadard deviation %f\n", mean, var, stdd);
