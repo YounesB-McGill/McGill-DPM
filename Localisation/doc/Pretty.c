@@ -1,4 +1,4 @@
-/* DPM lab 2 */
+/* DPM lab 4 */
 
 #include <stdlib.h> /* malloc free */
 #include <stdio.h>  /* fprintf */
