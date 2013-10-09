@@ -72,6 +72,48 @@
 
 \section{Data}
 
+\begin{table*}[htb]
+\begin{center}\begin{tabular}{r@{}l r@{}l r@{}l r@{}l}
+&$\theta_{\text{start}}$ (\degree)& &$\theta_{\text{final}}$ (\degree)& &$\theta_{\text{reported}}$ (\degree)& &$\theta_{\text{error}}$ (cm) \\
+\hline
+45&& 359&& 1&.8366& -2&.8366 \\
+0&& 359&& 0&.9664& -1&.9664 \\
+315&& 0&& 1&.6627& -1&.6627 \\
+270&& 0&& 1&.8364& -1&.8364 \\
+225&& 359&& 1&.4885& -2&.4885 \\
+180&& 359&& 1&.9662& -2&.9662 \\
+135&& 0&& 1&.8364& -1&.8364 \\
+90&& 359&& 1&.0112& -2&.0112 \\
+345&& 0&& 1&.0104& -1&.0104 \\
+15&& 359&& 2&.1846& -3&.1846 \\
+\end{tabular}\end{center}
+\caption{$\theta_{\text{start}}$ is the starting orientation of the robot.
+The error mean is $-2.1799$, variance is $0.4555$, and the corrected sample standard deviation is $0.6749$.}
+\label{open}
+\end{table*}
+
+\begin{table*}[htb]
+\begin{center}\begin{tabular}{r@{}l r@{}l r@{}l r@{}l}
+&$\theta_{\text{start}}$ (\degree)& &$\theta_{\text{final}}$ (\degree)& &$\theta_{\text{reported}}$ (\degree)& &$\theta_{\text{error}}$ (cm) \\
+\hline
+45&& 358&& 358&.2120& -0&.2120 \\
+0&& 1&& 358&.5603& 2&.4397 \\
+315&& 0&& 358&.4330& 1&.5670 \\
+270&& 0&& 358&.9086& 1&.0914 \\
+225&& 0&& 358&.5604& 1&.4396 \\
+180&& 358&& 358&.4733& -0&.4733 \\
+135&& 359&& 358&.3862& 0&.6138 \\
+90&& 358&& 359&.2564& -1&.2564 \\
+345&& 0&& 358&.4733& 1&.5267 \\
+15&& 0&& 358&.2121& 1&.7879 \\
+\end{tabular}\end{center}
+\caption{$\theta_{\text{start}}$ is the starting orientation of the robot.
+The error mean is $0.8524$, variance is $1.3507$, and the corrected sample standard deviation is $1.1622$.}
+\label{wall}
+\end{table*}
+
+
+
 \cite{alexneil3}
 
 \section{Data Analysis}
@@ -80,7 +122,7 @@
 
 \subsection{Error Analysis}
 
-Automatic.
+This is facing away from the wall.
 
 Calculate the differences in Equation~\ref{open-d1}--\ref{open-d10}.
 
@@ -183,25 +225,7 @@ Calculate the corrected sample standard deviation from the variance (Equation~\r
  &= 0.674902 \label{open-stdd}
 \end{align}
 
-\begin{table*}[htb]
-\begin{center}\begin{tabular}{r@{}l r@{}l r@{}l r@{}l}
-&$\theta_{\text{start}}$ (\degree)& &$\theta_{\text{final}}$ (\degree)& &$\theta_{\text{reported}}$ (\degree)& &$\theta_{\text{error}}$ (cm) \\
-\hline
-45&& 359&& 1&.8366& -2&.8366 \\
-0&& 359&& 0&.9664& -1&.9664 \\
-315&& 0&& 1&.6627& -1&.6627 \\
-270&& 0&& 1&.8364& -1&.8364 \\
-225&& 359&& 1&.4885& -2&.4885 \\
-180&& 359&& 1&.9662& -2&.9662 \\
-135&& 0&& 1&.8364& -1&.8364 \\
-90&& 359&& 1&.0112& -2&.0112 \\
-345&& 0&& 1&.0104& -1&.0104 \\
-15&& 359&& 2&.1846& -3&.1846 \\
-\end{tabular}\end{center}
-\caption{$\theta_{\text{start}}$ is the starting orientation of the robot.
-The error mean is $-2.1799$, variance is $0.4555$, and the corrected sample standard deviation is $0.6749$.}
-\label{open}
-\end{table*}
+This is facing the wall.
 
 Calculate the differences in Equation~\ref{wall-d1}--\ref{wall-d10}.
 
@@ -304,25 +328,6 @@ Calculate the corrected sample standard deviation from the variance (Equation~\r
  &= 1.162198 \label{wall-stdd}
 \end{align}
 
-\begin{table*}[htb]
-\begin{center}\begin{tabular}{r@{}l r@{}l r@{}l r@{}l}
-&$\theta_{\text{start}}$ (\degree)& &$\theta_{\text{final}}$ (\degree)& &$\theta_{\text{reported}}$ (\degree)& &$\theta_{\text{error}}$ (cm) \\
-\hline
-45&& 358&& 358&.2120& -0&.2120 \\
-0&& 1&& 358&.5603& 2&.4397 \\
-315&& 0&& 358&.4330& 1&.5670 \\
-270&& 0&& 358&.9086& 1&.0914 \\
-225&& 0&& 358&.5604& 1&.4396 \\
-180&& 358&& 358&.4733& -0&.4733 \\
-135&& 359&& 358&.3862& 0&.6138 \\
-90&& 358&& 359&.2564& -1&.2564 \\
-345&& 0&& 358&.4733& 1&.5267 \\
-15&& 0&& 358&.2121& 1&.7879 \\
-\end{tabular}\end{center}
-\caption{$\theta_{\text{start}}$ is the starting orientation of the robot.
-The error mean is $0.8524$, variance is $1.3507$, and the corrected sample standard deviation is $1.1622$.}
-\label{wall}
-\end{table*}
 
 
 
