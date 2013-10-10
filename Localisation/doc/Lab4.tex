@@ -63,7 +63,7 @@
 
 \maketitle
 
-\abstract{Abstract.\cite{lab4}}
+\abstract{We complete initial localisation in the first square of an arena surrounded by walls. We do this by pinging the ultrasonic sensor while rotating in place; we then go to the edge of the square and rotate, where the light sensor gives us a more accurate localisation.}
 
 %Data Collection (2 sentences + data)
 %Observations and Conclusion
@@ -71,6 +71,8 @@
 %Further Improvements
 
 \section{Data}
+
+The robot was programmed with two initial ultrasonic sensor localisations: one, it turns until it is facing the arena, and turns until it gets a near sensor reading signalling the other wall (falling edge;) two, it turns until it faces the wall and keeps turning until it is facing the arena (rising edge.) It then turns until it is facing zero within a certain tolerance. The data for falling edge is in Table~\ref{open} and the data for rising edge is in Table~\ref{wall}. The $\theta_{\text{start}}$ is the starting position of our robot.
 
 \begin{table*}[htb]
 \begin{center}\begin{tabular}{r@{}l r@{}l r@{}l r@{}l}
@@ -87,7 +89,8 @@
 345&& 0&& 1&.0104& -1&.0104 \\
 15&& 359&& 2&.1846& -3&.1846 \\
 \end{tabular}\end{center}
-\caption{$\theta_{\text{start}}$ is the starting orientation of the robot.
+\caption{Facing out using {\tt LocalizationType.FALLING\_EDGE}.
+$\theta_{\text{start}}$ is the starting orientation of the robot.
 The error mean is $-2.1799$, variance is $0.4555$, and the corrected sample standard deviation is $0.6749$.}
 \label{open}
 \end{table*}
@@ -107,22 +110,31 @@ The error mean is $-2.1799$, variance is $0.4555$, and the corrected sample stan
 345&& 0&& 358&.4733& 1&.5267 \\
 15&& 0&& 358&.2121& 1&.7879 \\
 \end{tabular}\end{center}
-\caption{$\theta_{\text{start}}$ is the starting orientation of the robot.
+\caption{Facing the wall using {\tt LocalizationType.RISING\_EDGE}.
+$\theta_{\text{start}}$ is the starting orientation of the robot.
 The error mean is $0.8524$, variance is $1.3507$, and the corrected sample standard deviation is $1.1622$.}
 \label{wall}
 \end{table*}
 
-
-
-\cite{alexneil3}
-
 \section{Data Analysis}
+
+We see from the data in Table~\ref{open} and Table~\ref{wall} that it doesn't matter what position it starts in, it will localise successfully.
+
+Discepancies.
+
+Experimentally, other robots using the same frequency and pinging off our robot sometimes confused it; the sound waves caused it to read a wall or gap when none was there.
+
+The data for rising edge theoretically takes up to three times longer to collect; from the corner, the wall is taking up three quarters of the solid angle while the arena only takes one quarter. However, this does not happen in practice because the robot takes up a non-negligible space when compared to 40\,cm, which is the wall detection threshold. If we increased it, then objects in the playing field would be more likely to register as walls. We could better this by making a more complex algorithm. However, we could store the data from the rising edge and later calculate the wall distances without going back and measuring them again.
+
+{\tt getFilteredData} was not filtered. It was better than Lab 3\cite{alexneil3} because it waited for pinging.
+
+\cite{lab4}
 
 \subsection{Discussion}
 
 \subsection{Error Analysis}
 
-This is facing away from the wall.
+The following are falling edge caluculations.
 
 Calculate the differences in Equation~\ref{open-d1}--\ref{open-d10}.
 
@@ -225,7 +237,7 @@ Calculate the corrected sample standard deviation from the variance (Equation~\r
  &= 0.674902 \label{open-stdd}
 \end{align}
 
-This is facing the wall.
+This is facing the wall with rising edge.
 
 Calculate the differences in Equation~\ref{wall-d1}--\ref{wall-d10}.
 
@@ -328,15 +340,9 @@ Calculate the corrected sample standard deviation from the variance (Equation~\r
  &= 1.162198 \label{wall-stdd}
 \end{align}
 
-
-
-
-
-
-
 \section{Observations and Conclusion}
 
-We attached our defective servomotor to the top of our robot; we then attached menacing parts to it, and set it spinning at top speed. This added personality.
+We attached our defective servomotor to the top of our robot; we then attached menacing parts to it, and set it spinning at top speed. This was scrapped because it was unwieldy in the testing of other parts and a drain on the battery.
 
 \section{Further Improvements}
 
