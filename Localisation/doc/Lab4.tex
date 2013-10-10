@@ -124,9 +124,9 @@ Discepancies.
 
 Experimentally, other robots using the same frequency and pinging off our robot sometimes confused it; the sound waves caused it to read a wall or gap when none was there.
 
-The data for rising edge theoretically takes up to three times longer to collect; from the corner, the wall is taking up three quarters of the solid angle while the arena only takes one quarter. However, this does not happen in practice because the robot takes up a non-negligible space when compared to 40\,cm, which is the wall detection threshold. If we increased it, then objects in the playing field would be more likely to register as walls. We could better this by making a more complex algorithm. However, we could store the data from the rising edge and later calculate the wall distances without going back and measuring them again.
+The data for rising edge theoretically takes up to three times longer to collect; from the corner, the wall is taking up three quarters of the solid angle while the arena only takes one quarter. However, this does not happen in practice because the robot takes up a non-negligible space when compared to 40\,cm, which is the wall detection threshold. If we increased it, then objects in the playing field would be more likely to register as walls. We could better this by making a more complex algorithm. However, we could store the data from the rising edge and later calculate the wall distances without going back and measuring them again. This would suggest using rising edge localisation.
 
-{\tt getFilteredData} was not filtered. It was better than Lab 3\cite{alexneil3} because it waited for pinging.
+However, {\tt getFilteredData} was not filtered. It was better than Lab 3\cite{alexneil3} because it waited for pinging. This disproportionally affects rising edge. Instead of writing complex code for filtering, the more reliable falling edge was used. The reason is the error is disproportionally false negatives; facing the open space was preferable. We then do a ping of each wall to compete our ultrasonic localisation. We found that the readings of the sensor are inaccurate at short distances so these are approximate.
 
 \cite{lab4}
 
