@@ -120,7 +120,11 @@ The error mean is $0.8524$, variance is $1.3507$, and the corrected sample stand
 
 We see from the data in Table~\ref{open} and Table~\ref{wall} that it doesn't matter what position it starts in, it will localise successfully.
 
-Discepancies.
+The discrepancies always on one side are caused by the polling. The polling rate is 100\,ms and the turn rate is 10\degree s$^{-1}$, leading to maximum error in Equation~\ref{degerr}.
+
+\begin{align}
+\frac{10\text{\degree s}^{-1}}{100\text{\,ms}} &= 1\degree\label{degerr}
+\end{align}
 
 Experimentally, other robots using the same frequency and pinging off our robot sometimes confused it; the sound waves caused it to read a wall or gap when none was there.
 
