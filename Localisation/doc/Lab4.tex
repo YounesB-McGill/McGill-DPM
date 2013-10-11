@@ -148,7 +148,8 @@ It then moves to $(-3, -3)$ and turns to 45\degree~to begin it's light sensor lo
 
 %{\tt Navigation}: this should not be a different class then {\tt Odometer}, and possibly {\tt TwoWheeledRobot}. {\tt setForwardSpeed} and {\tt setRotationalSpeed} imedeate.
 
-There were a number of problems with the provided code that cost us a large amout of time. The class structure, for instance, was rather poor (having both navigation and odometer containing instances of eachother). However, Sean Lawlor, head TA, provided additional code which was better, and we should have used. In the future, it would make sense to provide students with only the well written code.
+There were a number of problems with the provided code that cost us a large amout of time. The class structure, for instance, was rather poor (having both navigation and odometer containing instances of eachother). However, Sean Lawlor, head TA, provided additional code which was better, and we should have used.
+%In the future, it would make sense to provide students with only the well written code.
 %This caused the majority of our problems.
 
 %We attached our defective servomotor to the top of our robot; we then attached menacing parts to it, and set it spinning at top speed. This was scrapped because it was unwieldy in the testing of other parts and a drain on the battery.
@@ -179,7 +180,8 @@ Turn all around and record the ultrasonic sensor readings.
 The minima of the result will be the closest things to it;
 in this case, we expect to have two minima within 30\,cm corresponding
 to the two walls. However, the ultrasonic sensor is very
-imprecise and is only good up to a few cm. We could apply an averaging filter to reduce the noise, but this blocks out small objects which we would otherwise detect.
+imprecise and is only good up to a few cm. We may get several minima close to the real minima.
+We could apply an averaging filter to reduce the noise, but this blocks out small objects which we would otherwise detect.
 
 %Question 3:
 % I have no idea what you're talking about
