@@ -9,7 +9,8 @@ import lejos.nxt.NXTRegulatedMotor;
 /* Robot */
 
 class Robot {
-	static final int NAV_DELAY = 100; /* ms */
+	static final int   NAV_DELAY = 100; /* ms */
+	static final int SONAR_DELAY = 50;  /* ms */
 	static final NXTRegulatedMotor leftMotor = Motor.A, rightMotor = Motor.B;
 
 	UltrasonicSensor us = new UltrasonicSensor(SensorPort.S1);
@@ -53,7 +54,7 @@ class Robot {
 	}
 
 	/** set r/l speeds indepedently is good for pid-control */
-	public void setLeftSpeed(final int s) {
+	private void setLeftSpeed(final int s) {
 		leftMotor.setSpeed(s);
 		if(s > 0) {
 			leftMotor.forward();
@@ -63,7 +64,7 @@ class Robot {
 			leftMotor.stop();
 		}
 	}
-	public void setRightSpeed(final int s) {
+	private void setRightSpeed(final int s) {
 		rightMotor.setSpeed(s);
 		if(s > 0) {
 			rightMotor.forward();
@@ -73,10 +74,18 @@ class Robot {
 			rightMotor.stop();
 		}
 	}
-	public void stop() {
+	private void stop() {
 		leftMotor.stop();
 		rightMotor.stop();
 	}
+	
+	/** fixme: get FILTED data; this is especially critical when two robots are
+	 getting sound distances at the same time at the same frequency */
+	private int pingSonar() {
+		us.ping();
+		try { Thread.sleep(SONAR_DELAY); } catch (InterruptedException e) { }
+		return us.getDistance();
+	}	
 
 	public String toString() {
 		return "Robot"+this.hashCode();
