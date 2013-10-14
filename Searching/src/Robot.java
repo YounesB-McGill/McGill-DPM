@@ -3,11 +3,14 @@
 import lejos.nxt.SensorPort;
 import lejos.nxt.UltrasonicSensor;
 import lejos.nxt.LightSensor;
+import lejos.nxt.Motor;
+import lejos.nxt.NXTRegulatedMotor;
 
 /* Robot */
 
 class Robot {
 	static final int NAV_DELAY = 100; /* ms */
+	static final NXTRegulatedMotor leftMotor = Motor.A, rightMotor = Motor.B;
 
 	UltrasonicSensor us = new UltrasonicSensor(SensorPort.S1);
 	LightSensor      ls = new LightSensor(SensorPort.S4);
@@ -33,6 +36,8 @@ class Robot {
 		while(angle.next()) {
 			try { Thread.sleep(NAV_DELAY); } catch (InterruptedException e) { }
 		}*/
+		int t;
+		int r, l;
 		for( ; ; ) {
 			t = theta - position.theta;
 			if(t > -angleTolerance && t < angleTolerance) break;
@@ -45,24 +50,30 @@ class Robot {
 		this.stop();
 	}
 
-	/** set r/l speeds indepedently is good for pid-control;
-	 eg stays to to left, it increases the speed of the right wheel without
-	 stopping to correct; we use p-control */
+	/** set r/l speeds indepedently is good for pid-control */
 	public void setLeftSpeed(final int s) {
 		leftMotor.setSpeed(s);
 		if(s > 0) {
 			leftMotor.forward();
-		} else {
+		} else if(s < 0) {
 			leftMotor.backward();
+		} else {
+			leftMotor.stop();
 		}
 	}
 	public void setRightSpeed(final int s) {
 		rightMotor.setSpeed(s);
 		if(s > 0) {
 			rightMotor.forward();
-		} else {
+		} else if(s < 0) {
 			rightMotor.backward();
+		} else {
+			rightMotor.stop();
 		}
+	}
+	public void stop() {
+		leftMotor.stop();
+		rightMotor.stop();
 	}
 
 	public String toString() {
