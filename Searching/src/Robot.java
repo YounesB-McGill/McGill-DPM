@@ -15,7 +15,9 @@ class Robot {
 	UltrasonicSensor us = new UltrasonicSensor(SensorPort.S1);
 	LightSensor      ls = new LightSensor(SensorPort.S4);
 	Position   position = new Position();
+	/* this is the actal values */
 	final int angleTolerance = Position.fromDegrees(2f), angleP = 5;
+	/* this is what we're moving towards */
 	Controller    angle = new Controller(1f, 1f, 1f, 0.5f);
 	Controller distance = new Controller(1f, 1f, 1f, 0.5f);
 
