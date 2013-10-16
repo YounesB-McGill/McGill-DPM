@@ -15,8 +15,8 @@ public class Lab5 {
 
 	public static void main(String args[]) {
       
-      UltrasonicSensor uSensor = new UltrasonicSensor(SensorPort.S4/*port*/);
-      ColorSensor cSensor = new ColorSensor(SensorPort.S3/*port*/);
+      UltrasonicSensor uSensor = new UltrasonicSensor(SensorPort.S4);
+      ColorSensor cSensor = new ColorSensor(SensorPort.S3);
       TwoWheeledRobot robot = new TwoWheeledRobot(Motor.A,Motor.B);
       Odometer odometer = new Odometer(robot,true);
       Detection detection = new Detection(odometer,uSensor,cSensor);
@@ -26,7 +26,7 @@ public class Lab5 {
       //15 pings in 140.625ms. Distance recalculated on every 8th and 15th ping,
       //meaning every 75ms then ~66ms repeating after 140ms for the first value.
       //Get distance calls or returns will need to be timed. Might make getDistance blocking.
-
+      LCDInfo ldc = new LCDInfo(odometer,ultrasonicListener);
       
       //start timer
       ultrasonicTimer.start();

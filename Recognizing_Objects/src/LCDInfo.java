@@ -5,18 +5,20 @@ import lejos.util.Timer;
 import lejos.util.TimerListener;
 
 public class LCDInfo implements TimerListener{
-	public static final int LCD_REFRESH = 100;
+	public static final int LCD_REFRESH = 10/*temp: swich back to 100 later*/;
 	private Odometer odo;
 	private Timer lcdTimer;
    private LightLocalizer light;
+   private UltrasonicListener uListener;
 	
 	// arrays for displaying data
 	private float [] pos;
 	
-	public LCDInfo(Odometer odo,LightLocalizer light) {
+	public LCDInfo(Odometer odo,UltrasonicListener uListener) {
 		this.odo = odo;
 		this.lcdTimer = new Timer(LCD_REFRESH, this);
       this.light = light;
+      this.uListener = uListener;
 		
 		// initialise the arrays for displaying data
 		pos = new float[3]; /* confusing, why? */
@@ -26,18 +28,14 @@ public class LCDInfo implements TimerListener{
 	}
 	
 	public void timedOut() { 
-		odo.getPosition(pos);
 		LCD.clear();
-		LCD.drawString("X: ", 0, 0);
-		LCD.drawString("Y: ", 0, 1);
-		LCD.drawString("H: ", 0, 2);
-		LCD.drawString("L: ", 0, 2);
-		LCD.drawString("C: ", 0, 2);
-		/* why do you mutiply it by 10? */
-		LCD.drawInt((int)(pos[0] * 10), 3, 0);
-		LCD.drawInt((int)(pos[1] * 10), 3, 1);
-		LCD.drawInt((int)pos[2], 3, 2);
-      LCD.drawInt(light.getLS(),3,3);
-      LCD.drawInt(light.getCount(),3,4);
+		LCD.drawString("X value: ", 0, 0);
+		LCD.drawString("Y value: ", 0, 1);
+		LCD.drawString("Theta value: ", 0, 2);
+		LCD.drawString("Distance: ", 0, 3);
+		LCD.drawInt((int)(odo.cmGetX()), 13, 0);
+		LCD.drawInt((int)(odo.cmGetY()), 13, 1);
+		LCD.drawInt((int)(odo.getTheta()), 13, 2);
+      LCD.drawInt(uListener.getDistance(), 13, 3);
 	}
 }
