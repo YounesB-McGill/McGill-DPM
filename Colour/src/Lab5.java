@@ -48,9 +48,10 @@ public class Lab5 {
 			colour.normalize();
 
 			/* compare with styrofoam and wood; I think technically, we should
-			 convert to a quatnion to get the great circle distance, but that's
-			 kind of like measureing a distance between two points taking into
-			 account the curvature of the Earth; it's monotonanic and close */
+			 convert to a quaternion to get the great circle distance, but
+			 that's kind of like measureing a distance between two points
+			 taking into account the curvature of the Earth; it's monotonanic
+			 and close */
 			colourDiff.sub(colour, styrofoam);
 			s = colourDiff.lengthSquared();
 			colourDiff.sub(colour, woodblock);
