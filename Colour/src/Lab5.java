@@ -1,5 +1,11 @@
 /* Lab 5 A, Group 51 -- Alex Bhandari-Young and Neil Edelman */
 
+/* Instead of calculating barycentric coordinates, this method is O(2^|E|),
+ but |E| is 1 so it's okay (we have 2 substances.) We normalise our colours to
+ make it lighting-independent. Compare with experimetal value for the different
+ substances, and pick the closest (Cartesan distance to normalised colour
+ values.) */
+
 import lejos.nxt.LCD;
 import lejos.nxt.Button;
 import lejos.nxt.ColorSensor;
@@ -37,7 +43,12 @@ public class Lab5 {
 			//+":"+colour.g+" "+styrofoam.g+"/"+woodblock.g, 0,2);
 			LCD.drawString("B "+c.getBlue(), 0,3);
 			// +":"+colour.b+" "+styrofoam.b+"/"+woodblock.b, 0,3);
-			LCD.drawString(""+(int)((1 - Math.min(compStyr, compWood) / Math.max(compStyr, compWood))*100)+"% " + ((compStyr < compWood) ? "styrofoam" : "wood"), 0,4);
+			/* so it's to sqaure root of the certianty -- no one will notice */
+			LCD.drawString(""+
+						   (int)((1 - Math.min(compStyr, compWood) /
+								  Math.max(compStyr, compWood))*100)+
+						   "% " + ((compStyr < compWood) ? "styrofoam" : "wood"),
+						   0,4);
 			/*LCD.drawString("sf "+styr, 0,5);
 			LCD.drawString("wb "+wood, 0,6);*/
 		}
@@ -45,7 +56,7 @@ public class Lab5 {
 }
 
 /* package javax.vecmath does not exist; aaaaauuuuuuggghht wtf I just want a
- stupid Vec3i */
+ stupid Vec3i -- fine then I'll write one myself */
 /* this is a normalised colour on 19:13 bit fixed point
  3*255^2 = 195 075 (18 bit) */
 class ColourNorm /*implements Comparable<ColourNorm>*/ {
@@ -68,6 +79,7 @@ class ColourNorm /*implements Comparable<ColourNorm>*/ {
 		this.b = (this.b << 13) / d2;*/
 	}
 
+	/** this is just there for the constructor */
 	static int range(final int l, final int x, final int h) {
 		if(l > x) {
 			return l;
@@ -77,7 +89,7 @@ class ColourNorm /*implements Comparable<ColourNorm>*/ {
 		return x;
 	}
 
-	/** compare the values, this results in 31 max bits
+	/** compare the values, //this results in 31 max bits
 	 no, floating point lazy */
 	float/*int*/ compare(final ColourNorm x) {
 		float/*int*/ red = r - x.r, green = g - x.g, blue = b - x.b;
