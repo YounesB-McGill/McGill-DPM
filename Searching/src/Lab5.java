@@ -2,6 +2,7 @@
 
 import lejos.nxt.LCD;
 import lejos.nxt.Button;
+/* that's a bummer! import java.util.concurrent.Executors; */
 
 /* this is a driver that instantaties a Robot and makes it do stuff */
 class Lab5 {
@@ -10,13 +11,15 @@ class Lab5 {
 	public static void main(String args[]) {
 		Robot robot = new Robot();
 
+		new Thread(robot).start();
 		LCD.clear();
 		System.out.println("Status: "+robot.getStatus());
+		LCD.drawString("Goto (-3,-3)", 0,0);
+		robot.travelTo(-3f,-3f);
+		/* wait for it to travel */
 		while(robot.getStatus() != Robot.Status.PLOTTING) {
 			try { Thread.sleep(COMMAND_DELAY); } catch (InterruptedException e) { };
 		}
-		LCD.drawString("Goto (-3,-3)", 0,0);
-		robot.travelTo(-3f,-3f);
 		LCD.clear();
 		LCD.drawString("Turn to 45", 0,0);
 		robot.turnTo(45f);

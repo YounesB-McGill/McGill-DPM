@@ -8,12 +8,15 @@ import lejos.nxt.NXTRegulatedMotor;
 
 /* Robot */
 
-class Robot {
+/* "In most cases, the Runnable interface should be used if you are only
+ planning to override the run() method and no other Thread methods." */
+
+class Robot implements Runnable {
 	static final int   NAV_DELAY = 100; /* ms */
 	static final int SONAR_DELAY = 50;  /* ms */
 	static final NXTRegulatedMotor leftMotor = Motor.A, rightMotor = Motor.B;
 
-	enum Status { PLOTTING, EVADING, EXPLORING, PUSHING };
+	enum Status { PLOTTING, EVADING, EXPLORING, NAVIGATING, PUSHING };
 
 	Status status;
 
@@ -33,7 +36,11 @@ class Robot {
 	public Status getStatus() {
 		return status;
 	}
-	
+
+	public void run() {
+		
+	}
+
 	public void travelTo(final float x, final float y) {
 		
 	}
@@ -50,6 +57,7 @@ class Robot {
 		}*/
 		int t;
 		int r, l;
+
 		for( ; ; ) {
 			t = theta - position.theta;
 			if(t > -angleTolerance && t < angleTolerance) break;
