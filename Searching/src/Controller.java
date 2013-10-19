@@ -2,16 +2,17 @@
 
 /* Controller: implements PID control */
 
-class Controller {
-	float p, i, d, tolerance;
-	float setpoint;
-	float x;
+public class Controller<N extends Number> {
+	N p, i, d, tolerance;
+	N setpoint;
+	N x;
 
-	public Controller(final float p, final float i, final float d, final float tolerance) {
+	public Controller(final N p, final N i, final N d, final N tolerance) {
 		this.p = p;
 		this.i = i;
 		this.d = d;
-		this.tolerance = (tolerance <= 0f) ? 1f : tolerance;
+		this.tolerance = tolerance;
+		/* uuumm don't know how to do this . . . (tolerance.intValue() <= 0) ? (???) : tolerance; */
 	}
 
 	/** next step; returns true if within tolerance value of setpoint */
@@ -19,7 +20,7 @@ class Controller {
 		return false;
 	}
 
-	public void setSetpoint(final float setpoint) {
+	public void setSetpoint(final N setpoint) {
 		this.setpoint = setpoint;
 	}
 

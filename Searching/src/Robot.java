@@ -13,18 +13,27 @@ class Robot {
 	static final int SONAR_DELAY = 50;  /* ms */
 	static final NXTRegulatedMotor leftMotor = Motor.A, rightMotor = Motor.B;
 
+	enum Status { PLOTTING, EVADING, EXPLORING, PUSHING };
+
+	Status status;
+
 	UltrasonicSensor us = new UltrasonicSensor(SensorPort.S1);
 	LightSensor      ls = new LightSensor(SensorPort.S4);
 	Position   position = new Position();
 	/* this is the actal values */
 	final int angleTolerance = Position.fromDegrees(2f), angleP = 5;
 	/* this is what we're moving towards */
-	Controller    angle = new Controller(1f, 1f, 1f, 0.5f);
-	Controller distance = new Controller(1f, 1f, 1f, 0.5f);
+	Controller<Integer>  angle = new Controller<Integer>(1, 1, 1, 1);
+	Controller<Float> distance = new Controller<Float>(1f, 1f, 1f, 0.5f);
 
 	public Robot() {
+		status = Status.PLOTTING;
 	}
 
+	public Status getStatus() {
+		return status;
+	}
+	
 	public void travelTo(final float x, final float y) {
 		
 	}

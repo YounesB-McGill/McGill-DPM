@@ -8,7 +8,7 @@ SRCS  := $(patsubst %,$(SDIR)/%.java,$(FILES))
 BACK  := backup
 
 CC   := nxjc
-CF   := -g:none -O -verbose -d $(BDIR) $(SDIR)/*.java
+CF   := -g:none -O -verbose -d $(BDIR) $(SDIR)/*.java -Xlint:unchecked
 
 default: $(OBJS)
 

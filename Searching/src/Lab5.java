@@ -11,6 +11,10 @@ class Lab5 {
 		Robot robot = new Robot();
 
 		LCD.clear();
+		System.out.println("Status: "+robot.getStatus());
+		while(robot.getStatus() != Robot.Status.PLOTTING) {
+			try { Thread.sleep(100); } catch (InterruptedException e) { };
+		}
 		LCD.drawString("Goto (-3,-3)", 0,0);
 		robot.travelTo(-3f,-3f);
 		LCD.clear();

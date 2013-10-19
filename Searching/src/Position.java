@@ -5,8 +5,8 @@ import java.lang.Integer;
 /* Position */
 
 class Position {
-	public int /* float? */ x, y;
-	public int theta; /* signed 0:32 fixed point */
+	public float x, y; /* lazy */
+	public int theta;  /* signed 0:32 fixed point */
 
 	public Position() {
 	}
