@@ -5,7 +5,7 @@ import lejos.nxt.Button;
 
 /* this is a driver that instantaties a Robot and makes it do stuff */
 class Lab5 {
-	int var;
+	static final int COMMAND_DELAY = 200;
 
 	public static void main(String args[]) {
 		Robot robot = new Robot();
@@ -13,7 +13,7 @@ class Lab5 {
 		LCD.clear();
 		System.out.println("Status: "+robot.getStatus());
 		while(robot.getStatus() != Robot.Status.PLOTTING) {
-			try { Thread.sleep(100); } catch (InterruptedException e) { };
+			try { Thread.sleep(COMMAND_DELAY); } catch (InterruptedException e) { };
 		}
 		LCD.drawString("Goto (-3,-3)", 0,0);
 		robot.travelTo(-3f,-3f);
