@@ -6,6 +6,8 @@ import lejos.nxt.LightSensor;
 import lejos.nxt.Motor;
 import lejos.nxt.NXTRegulatedMotor;
 
+import lejos.nxt.LCD;
+
 /* Robot */
 
 /* "In most cases, the Runnable interface should be used if you are only
@@ -16,19 +18,22 @@ class Robot implements Runnable {
 	static final int SONAR_DELAY = 50;  /* ms */
 	static final NXTRegulatedMotor leftMotor = Motor.A, rightMotor = Motor.B;
 
-	enum Status { PLOTTING, EVADING, EXPLORING, NAVIGATING, PUSHING };
+	enum Status { PLOTTING, SUCCESS, ROTATING, TRAVELLING, EVADING, EXPLORING, PUSHING };
 
 	Status status;
 
 	UltrasonicSensor us = new UltrasonicSensor(SensorPort.S1);
 	LightSensor      ls = new LightSensor(SensorPort.S4);
+	Odometer   odometer = new Odometer(leftMotor, rightMotor);
 	Position   position = new Position();
+	Position     target = new Position();
 	/* this is the actal values */
-	final int angleTolerance = Position.fromDegrees(2f), angleP = 5;
+	final float/*int*/ angleTolerance = Position.fromDegrees(2f), angleP = 5;
 	/* this is what we're moving towards */
 	Controller<Integer>  angle = new Controller<Integer>(1, 1, 1, 1);
 	Controller<Float> distance = new Controller<Float>(1f, 1f, 1f, 0.5f);
 
+	/** the constructor */
 	public Robot() {
 		status = Status.PLOTTING;
 	}
@@ -37,37 +42,64 @@ class Robot implements Runnable {
 		return status;
 	}
 
+	/** this acts as the control */
 	public void run() {
-		
+		for( ; ; ) {
+			switch(status) {
+				case PLOTTING:
+					break;
+				case SUCCESS:
+					return;
+				case ROTATING:
+					this.rotate();
+					LCD.drawString(""+odometer, 0, 0);
+					break;
+				case TRAVELLING:
+					status = Status.PLOTTING;
+					break;
+			}
+			try { Thread.sleep(NAV_DELAY); } catch (InterruptedException e) { }
+		}
+	}
+
+	public void shutdown() {
+		status = Status.SUCCESS;
+		return;
 	}
 
 	public void travelTo(final float x, final float y) {
-		
+		status = Status.TRAVELLING;
 	}
 
-	/** this turns to a [0,360) degree */
-	public void turnTo(final float degrees) {
-		this.turnTo(Position.fromDegrees(degrees));
+	/** this sets the target to a [0,360) degree */
+	public void turnTo(final float theta/*degrees*/) {
+		/*this.turnTo(Position.fromDegrees(degrees));*/
+		target.theta = theta;
+		status = Status.ROTATING;
 	}
-	/** this turns to a {0,32} fixed point angle */
-	public void turnTo(final int theta) {
-		/*angle.setSetpoint(theta);
-		while(angle.next()) {
-			try { Thread.sleep(NAV_DELAY); } catch (InterruptedException e) { }
-		}*/
-		int t;
+	/** this sets the target to a {0,32} fixed point angle; flag rotating */
+	/*public void turnTo(final int theta) {
+		target.theta = theta;
+		status = Status.ROTATING;
+	}*/
+
+	/** this implements a rotation by parts */
+	void rotate() {
+		float/*int*/ t;
 		int r, l;
 
-		for( ; ; ) {
-			t = theta - position.theta;
-			if(t > -angleTolerance && t < angleTolerance) break;
-			l =  t * angleP;
-			r = -t * angleP;
-			this.setLeftSpeed(l);
-			this.setRightSpeed(r);
-			try { Thread.sleep(NAV_DELAY); } catch (InterruptedException e) { }
+		/*t = target.theta - position.theta;
+		if(t > -angleTolerance && t < angleTolerance) {
+			this.stop();
+			status = Status.PLOTTING;
+			return;
 		}
-		this.stop();
+		l = (int)( t * angleP);
+		r = (int)(-t * angleP);*/
+		l = 20;
+		r = -20;
+		this.setLeftSpeed(l);
+		this.setRightSpeed(r);
 	}
 
 	/** set r/l speeds indepedently is good for pid-control */

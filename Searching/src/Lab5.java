@@ -12,19 +12,31 @@ class Lab5 {
 		Robot robot = new Robot();
 
 		new Thread(robot).start();
-		LCD.clear();
-		System.out.println("Status: "+robot.getStatus());
-		LCD.drawString("Goto (-3,-3)", 0,0);
+		System.out.println(""+robot.getStatus());
+		Button.waitForAnyPress();
+
+		System.out.println("Goto (-3,-3)");
 		robot.travelTo(-3f,-3f);
+		System.out.println(""+robot.getStatus());
 		/* wait for it to travel */
 		while(robot.getStatus() != Robot.Status.PLOTTING) {
 			try { Thread.sleep(COMMAND_DELAY); } catch (InterruptedException e) { };
 		}
-		LCD.clear();
-		LCD.drawString("Turn to 45", 0,0);
+		System.out.println(""+robot.getStatus());
+		Button.waitForAnyPress();
+
+		System.out.println("Turn to 45");
 		robot.turnTo(45f);
-		LCD.clear();
-		LCD.drawString("Press", 0,0);
+		System.out.println(""+robot.getStatus());
+		/* wait for it to travel */
+		while(robot.getStatus() != Robot.Status.PLOTTING) {
+			try { Thread.sleep(COMMAND_DELAY); } catch (InterruptedException e) { };
+		}
+		System.out.println(""+robot.getStatus());
+		Button.waitForAnyPress();
+		
+		robot.shutdown();
+		System.out.println("Press");
 		Button.waitForAnyPress();
 	}
 }

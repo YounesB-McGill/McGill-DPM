@@ -5,8 +5,17 @@ import java.lang.Integer;
 /* Position */
 
 class Position {
+
 	public float x, y; /* lazy */
-	public int theta;  /* signed 0:32 fixed point */
+	/*        ---|--
+	         /   |  \
+	INT_MAX v    |   |
+	---------^----------- 0
+	INT_MIN  |   |   |
+	          \  |  /
+	           --|--
+	 */
+	public float/*int*/ theta;  /* signed 0:32 fixed point */
 
 	public Position() {
 	}
@@ -15,12 +24,13 @@ class Position {
 		return "Position("+x+","+y+":"+theta+")";
 	}
 
-	public static int fromDegrees(float degree) {
+	public static float/*int*/ fromDegrees(float degree) {
 		if(0 < degree) {
 			while(degree < 180f) degree += 360f;
 		} else {
 			while(180f <= degree) degree -= 360f;
 		}
-		return (int)(degree * (-(float)Integer.MIN_VALUE / 180f));
+		return degree;
+		//(int)(degree * (-(float)Integer.MIN_VALUE / 180f));
 	}
 }
