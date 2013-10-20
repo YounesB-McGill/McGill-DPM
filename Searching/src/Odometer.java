@@ -52,6 +52,13 @@ public class Odometer implements TimerListener {
 		angle        += newAngle;
 	}
 
+	/** accessors */
+	public float getTheta() {
+		synchronized (this) {
+			return theta;
+		}
+	}
+
 	public String toString() {
 		return "O("+(int)x+","+(int)y+";"+(int)theta+")";
 	}

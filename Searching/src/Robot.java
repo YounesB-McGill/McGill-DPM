@@ -7,6 +7,7 @@ import lejos.nxt.Motor;
 import lejos.nxt.NXTRegulatedMotor;
 
 import lejos.nxt.LCD;
+import lejos.nxt.Button;
 
 /* Robot */
 
@@ -96,10 +97,15 @@ class Robot implements Runnable {
 		}
 		l = (int)( t * angleP);
 		r = (int)(-t * angleP);*/
-		l = 20;
-		r = -20;
-		this.setLeftSpeed(l);
-		this.setRightSpeed(r);
+		if(!Button.ENTER.isDown()) {
+			l = 300;
+			r = -300;
+			this.setLeftSpeed(l);
+			this.setRightSpeed(r);
+		} else {
+			this.stop();
+			status = Status.PLOTTING;
+		}
 	}
 
 	/** set r/l speeds indepedently is good for pid-control */
