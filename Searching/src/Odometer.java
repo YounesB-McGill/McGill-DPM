@@ -18,8 +18,8 @@ public class Odometer implements TimerListener {
 
 	Timer timer = new Timer(ODOMETER_DELAY, this);
 
-	int displacement, angle;
-	float x, y, theta;
+	int displacement, heading;
+	Position p = new Position();
 
 	/** constructor */
 	public Odometer(final NXTRegulatedMotor leftMotor, final NXTRegulatedMotor rightMotor) {
@@ -40,44 +40,46 @@ public class Odometer implements TimerListener {
 		 ignore overflows anyway */
 
 		int displacement = right + left - this.displacement;
-		int angle        = right - left - this.angle;
+		int heading      = right - left - this.heading;
 
 		/* cm */
 		float d = displacement * RADIUS * 0.5f * FROM_DEGREES;
 		/* radians */
-		float t = angle * MUL_WIDTH;
+		float t = heading * MUL_WIDTH;
 
 		float x = d * (float)Math.cos(t);
 		float y = d * (float)Math.sin(t);
 
 		synchronized(this) {
-			this.theta += t;
-			this.x += x;
-			this.y += y;
+			p.x += x;
+			p.y += y;
+			p.theta += t;
+			if(p.theta < -180f) p.theta += 360f;
+			if(180f <= p.theta) p.theta -= 360f;
 		}
 
 		this.displacement += displacement;
-		this.angle        += angle;
+		this.heading      += heading;
 	}
 
 	/** accessors */
 	public float getTheta() {
 		synchronized(this) {
-			return theta;
+			return p.theta;
 		}
 	}
 	public float getX() {
 		synchronized(this) {
-			return x;
+			return p.x;
 		}
 	}
 	public float getY() {
 		synchronized(this) {
-			return y;
+			return p.y;
 		}
 	}
 
 	public String toString() {
-		return "O("+(int)x+","+(int)y+";"+(int)theta+")";
+		return "O" + p;
 	}
 }

@@ -97,7 +97,7 @@ class Robot implements Runnable {
 		}
 		l = (int)( t * angleP);
 		r = (int)(-t * angleP);*/
-		if((odometer.getTheta() < 360) /*&& (!Button.ENTER.isDown())*/) {
+		if((odometer.getTheta() < 90f) /*&& (!Button.ENTER.isDown())*/) {
 			l = -100;
 			r = 100;
 			this.setLeftSpeed(l);
