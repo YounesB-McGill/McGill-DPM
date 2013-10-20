@@ -6,20 +6,19 @@ import lejos.util.TimerListener;
 
 /* this is very basic */
 public class Odometer implements TimerListener {
+	static final float FROM_DEGREES   = (float)Math.PI / 180f;
 	/* FIXME: have the time be a fn of the speed */
 	static final int ODOMETER_DELAY = 25;
-	static final float LEFT_RADIUS  = 2.75f;
-	static final float RIGHT_RADIUS = 2.75f;
-	static final float WIDTH        = 15.8f;
-	static final float ONEOVERWIDTH = 1f /*1f / WIDTH*/;
+	static final float RADIUS       = 2.75f;
+	/* static final float WIDTH     = 15.8f; */
+	/* experiment: rotated by 10 000 went 4.75, 10000/360/4.75 */
+	static final float MUL_WIDTH    = 0.171f;
 
 	final NXTRegulatedMotor leftMotor, rightMotor;
 
 	Timer timer = new Timer(ODOMETER_DELAY, this);
 
-	float displacement;
-	float angle;
-	
+	int displacement, angle;
 	float x, y, theta;
 
 	/** constructor */
@@ -31,31 +30,50 @@ public class Odometer implements TimerListener {
 
 	/** TimerListener function */
 	public void timedOut() {
-		float left  = leftMotor.getTachoCount()  * LEFT_RADIUS;
-		float right = rightMotor.getTachoCount() * RIGHT_RADIUS;
+		/* get tach values */
+		int  left = leftMotor.getTachoCount();
+		int right = rightMotor.getTachoCount();
 
-		/* cm (converts cm / deg) */
-		float newDisplacement = (left + right) * 0.5f * ((float)Math.PI / 180f);
+		/* reset tach */
+		/*leftMotor.resetTachoCount();
+		rightMotor.resetTachoCount(); <- results in 0, I think this would
+		 ignore overflows anyway */
+
+		int displacement = right + left - this.displacement;
+		int angle        = right - left - this.angle;
+
+		/* cm */
+		float d = displacement * RADIUS * 0.5f * FROM_DEGREES;
 		/* radians */
-		float newAngle        = (left - right) * ONEOVERWIDTH;
+		float t = angle * MUL_WIDTH;
 
-		newDisplacement -= displacement;
-		newAngle        -= angle;
+		float x = d * (float)Math.cos(t);
+		float y = d * (float)Math.sin(t);
 
 		synchronized(this) {
-			theta += newAngle;
-			x += newDisplacement * Math.sin(theta);
-			y += newDisplacement * Math.cos(theta);
+			this.theta += t;
+			this.x += x;
+			this.y += y;
 		}
 
-		displacement += newDisplacement;
-		angle        += newAngle;
+		this.displacement += displacement;
+		this.angle        += angle;
 	}
 
 	/** accessors */
 	public float getTheta() {
-		synchronized (this) {
+		synchronized(this) {
 			return theta;
+		}
+	}
+	public float getX() {
+		synchronized(this) {
+			return x;
+		}
+	}
+	public float getY() {
+		synchronized(this) {
+			return y;
 		}
 	}
 
