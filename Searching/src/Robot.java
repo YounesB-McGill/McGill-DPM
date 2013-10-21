@@ -57,7 +57,7 @@ class Robot implements Runnable {
 		return status;
 	}
 
-	public Colour.ColourValue getColour() {
+	public Colour.Value getColour() {
 		return colour.getColourValue();
 	}
 
