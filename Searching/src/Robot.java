@@ -32,7 +32,7 @@ class Robot implements Runnable {
 	UltrasonicSensor us = new UltrasonicSensor(SensorPort.S1);
 	LightSensor      ls = new LightSensor(SensorPort.S4);
 	Odometer   odometer = new Odometer(leftMotor, rightMotor);
-	Position     target = new Position();
+	Position     target = new Position(), d = new Position();
 
 	/** the constructor */
 	public Robot() {
@@ -76,6 +76,7 @@ class Robot implements Runnable {
 
 	/** this sets the target to a [0,360) degree */
 	public void turnTo(final float theta/*degrees*/) {
+		angle.reset();
 		/*this.turnTo(Position.fromDegrees(degrees));*/
 		System.out.println("Turn("+(int)theta+")");
 		target.theta = theta;
@@ -90,6 +91,9 @@ class Robot implements Runnable {
 		target.x = x;
 		target.y = y;
 		//status = Status.TRAVELLING;
+
+		distance.reset();
+		angle.reset();
 
 		/* fixme: ghetto */
 
@@ -110,7 +114,7 @@ class Robot implements Runnable {
 			if(angle.isWithin(angleTolerance)) break;
 			this.setLeftSpeed(-right);
 			this.setRightSpeed(right);
-			try { Thread.sleep(100); } catch (InterruptedException e) { } /* bad */
+			try { Thread.sleep(100); } catch (InterruptedException e) { }
 		}
 		for( ; ; ) {
 			p = odometer.getPositionCopy();
@@ -121,7 +125,7 @@ class Robot implements Runnable {
 			speed = dist * 25f;
 			this.setLeftSpeed(speed);
 			this.setRightSpeed(speed);
-			try { Thread.sleep(100); } catch (InterruptedException e) { } /* bad */
+			try { Thread.sleep(100); } catch (InterruptedException e) { }
 		}
 		this.stop();
 		status = Status.PLOTTING;
@@ -148,21 +152,19 @@ class Robot implements Runnable {
 	/** travels to a certain position */
 	void travel() {
 		Position p = odometer.getPositionCopy();
-		float x = target.x - p.x;
-		float y = target.y - p.y;
-		float dist = (float)Math.sqrt(x*x + y*y);
+		d.x     = target.x - p.x;
+		d.y     = target.y - p.y;
+		d.theta = (float)Math.toDegrees(Math.atan2(d.y, d.x)) - p.theta;
+		if(d.theta < -180f)      d.theta += 360f;
+		else if(d.theta >= 180f) d.theta -= 360f;
+		float dist = (float)Math.sqrt(d.x*d.x + d.y*d.y);
 
-		/*(float)Math.toDegrees(Math.atan2(y, x))*/
-		
-		float r = angle.next(p.theta);
-		float l = -r;
+		float l = angle.next(p.theta);
+		float r = -l;
 
-		float d = distance.next(-dist);// * Math.cos(Math.toRadians(p.theta));
+		float d = distance.next(dist);// * Math.cos(Math.toRadians(p.theta));
 		r += d;
 		l += d;
-
-		LCD.drawString("Angle "+angle+"  ", 0, 1);
-		LCD.drawString("Dist "+distance+"  ", 0, 2);
 
 		if(distance.isWithin(distanceTolerance)) {
 			this.stop();
@@ -171,6 +173,8 @@ class Robot implements Runnable {
 		}
 		this.setLeftSpeed(l);
 		this.setRightSpeed(r);
+
+		LCD.drawString("t"+d+"  ", 0, 0);
 	}
 
 	/** set r/l speeds indepedently is good for pid-control */
