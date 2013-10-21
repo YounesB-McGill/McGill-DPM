@@ -68,30 +68,16 @@ public class Odometer implements TimerListener {
 	}
 
 	/** accessors */
-	public Position getPosition() {
+	public Position getPositionCopy() {
 		synchronized(this) {
 			pCopy.copy(p);
 		}
 		return pCopy;
 	}
 
-	public float getTheta() {
-		synchronized(this) {
-			return p.theta;
-		}
-	}
-	public float getX() {
-		synchronized(this) {
-			return p.x;
-		}
-	}
-	public float getY() {
-		synchronized(this) {
-			return p.y;
-		}
-	}
-
 	public String toString() {
-		return "O" + p;
+		synchronized(this) {
+			return "" + p;
+		}
 	}
 }

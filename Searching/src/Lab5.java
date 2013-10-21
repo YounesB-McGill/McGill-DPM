@@ -15,10 +15,10 @@ class Lab5 {
 		rt.start();
 
 		/* turning test (haha, get it) */
-		/*robot.turnTo(45f);
-		System.out.println(""+robot.getStatus());*/
+		robot.turnTo(-45f);
+		System.out.println(""+robot.getStatus());
 		/* wait for it to travel */
-		/*while(robot.getStatus() != Robot.Status.PLOTTING) {
+		while(robot.getStatus() != Robot.Status.PLOTTING) {
 			try {
 				Thread.sleep(COMMAND_DELAY);
 			} catch (InterruptedException e) {
@@ -27,9 +27,9 @@ class Lab5 {
 		}
 
 		System.out.println("Press");
-		Button.waitForAnyPress();*/
+		Button.waitForAnyPress();
 
-		robot.travelTo(10f,10f);
+		robot.travelTo(10f,0f);
 		System.out.println(""+robot.getStatus());
 		/* wait for it to travel */
 		while(robot.getStatus() != Robot.Status.PLOTTING) {

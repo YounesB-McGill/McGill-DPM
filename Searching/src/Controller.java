@@ -1,11 +1,11 @@
 /* Lab 5, Group 51 -- Alex Bhandari-Young and Neil Edelman */
 
-/* Controller: implements PID control */
+/* Controller: implements PID control with 0 as the setpoint */
 
 public class Controller/*<N extends Number> was so cool but aritmetic operations can't be applied to Number */ {
 	/* fixme: all int! */
 	/*N*/float kp, ki, kd; /* proportional, intergal, derivative */
-	/*N*/float sp, pv, e;  /* setpoint, current value, error */
+	/*N*/float /*sp,*/ pv, e;  /* setpoint, current value, error */
 
 	public Controller(final /*N*/float p, final /*N*/float i, final /*N*/float d) {
 		kp = p;
@@ -14,9 +14,10 @@ public class Controller/*<N extends Number> was so cool but aritmetic operations
 	}
 
 	/** returns the next step fixme id */
-	public /*N*/float next(final /*N*/float presentValue) {
-		pv = presentValue;
-		e = sp - pv;
+	public /*N*/float next(final /*N*/float error/*presentValue*/) {
+		/*pv = presentValue;
+		e = sp - pv;*/
+		e = error;
 		return kp * e /* + ki * (int e) + kd * (d/dt e) */;
 	}
 
@@ -24,12 +25,12 @@ public class Controller/*<N extends Number> was so cool but aritmetic operations
 		return (e > -tolerance) && (e < tolerance);
 	}
 
-	public void setSetpoint(final /*N*/float setpoint) {
-		sp = setpoint;
-	}
+	//public void setSetpoint(final /*N*/float setpoint) {
+	//	sp = setpoint;
+	//}
 
 	public String toString() {
-		return "C("+e+")";
+		return "("+(int)e/*pv+":"+(int)sp*/+")";
 		//return "Controller"+this.hashCode()+" with pid "+kp+", "+ki+", "+kd+" at setpoint "+sp+" is at "+pv+"";
 	}
 }

@@ -23,17 +23,16 @@ class Robot implements Runnable {
 	static final int SONAR_DELAY    = 50;  /* ms */
 	static final NXTRegulatedMotor leftMotor = Motor.A, rightMotor = Motor.B;
 
-	final float/*int*/ angleTolerance = Position.fromDegrees(0.5f);
-	final float distanceTolerance  = 0.5f;
 	Controller/*<Integer>*/  angle = new Controller/*<Integer>*/(6f, 1f, 1f);
-	Controller/*<Float>*/ distance = new Controller/*<Float>*/(10f, 1f, 1f);
+	Controller/*<Float>*/ distance = new Controller/*<Float>*/(15f, 1f, 1f);
+	final float     angleTolerance = Position.fromDegrees(0.5f);
+	final float  distanceTolerance = 0.5f;
 
-	Status status = Status.PLOTTING;
-
+	Status       status = Status.PLOTTING;
 	UltrasonicSensor us = new UltrasonicSensor(SensorPort.S1);
 	LightSensor      ls = new LightSensor(SensorPort.S4);
 	Odometer   odometer = new Odometer(leftMotor, rightMotor);
-	float xTarget, yTarget;
+	Position     target = new Position();
 
 	/** the constructor */
 	public Robot() {
@@ -54,11 +53,11 @@ class Robot implements Runnable {
 					return;
 				case ROTATING:
 					this.rotate();
-					LCD.drawString(""+odometer+"  ", 0, 0);
+					LCD.drawString("R:R "+odometer+";", 0, 0);
 					break;
 				case TRAVELLING:
 					this.travel();
-					LCD.drawString(""+odometer+"  ", 0, 0);
+					LCD.drawString("R:T "+odometer+";", 0, 0);
 					break;
 			}
 			try {
@@ -75,31 +74,98 @@ class Robot implements Runnable {
 		status = Status.SUCCESS;
 	}
 
-	public void travelTo(final float x, final float y) {
-		System.out.println("Goto("+(int)x+","+(int)y+")");
-		xTarget = x;
-		yTarget = y;
-		/* the distance at the setpoint is 0 */
-		distance.setSetpoint(0);
-		status = Status.TRAVELLING;
-	}
-
 	/** this sets the target to a [0,360) degree */
 	public void turnTo(final float theta/*degrees*/) {
 		/*this.turnTo(Position.fromDegrees(degrees));*/
 		System.out.println("Turn("+(int)theta+")");
-		angle.setSetpoint(theta);
+		target.theta = theta;
+		/*angle.setSetpoint(theta);*/
 		status = Status.ROTATING;
 	}
 	/** this sets the target to a {0,32} fixed point angle; flag rotating */
 	/*public void turnTo(final int theta)*/
 
+	public void travelTo(final float x, final float y) {
+		System.out.println("Goto("+(int)x+","+(int)y+")");
+		target.x = x;
+		target.y = y;
+		//status = Status.TRAVELLING;
+
+		float dx, dy, dt=0, t, dist;
+		float r, l, speed;
+		Position p;
+		for( ; ; ) {
+			p    = odometer.getPositionCopy();
+			dx   = target.x - p.x;
+			dy   = target.y - p.y;
+			dist = (float)Math.sqrt(dx*dx + dy*dy);
+			if(dist < 0.5f) break;
+			t    = (float)Math.toDegrees(Math.atan2(dy, dx));
+			dt   = t - p.theta;
+			if(dt >= 180f)      dt -= 360f;
+			else if(dt < -180f) dt += 360f;
+			//angle.next(dt);
+			l = -dt * 4f;
+			r =  dt * 4f;
+			speed = dist * 4f /* * (float)Math.cos(Math.toRadians(dt))*/;
+			if(speed > 200) break; /* fuck you!! */
+			speed = 100;
+			l += speed;
+			r += speed;
+			/*if(angle.isWithin(distanceTolerance)) break;*/
+			this.setLeftSpeed(l);
+			this.setRightSpeed(r);
+			try { Thread.sleep(100); } catch (InterruptedException e) { } /* bad */
+			//break;
+		}
+		this.stop();
+		status = Status.PLOTTING;
+		
+		System.out.println("tt "+dist+":"+dt);
+
+		/*for( ; ; ) {
+			float right = angle.next(p.theta);
+			LCD.drawString("angle"+angle+";", 0, 1);
+			if(angle.isWithin(angleTolerance)) break;
+		}*/
+
+		/*float tCurrent, tTarget, dx, dy, dt, dist;
+		float l, r, speed;
+		Position current;
+		for( ; ; ) {
+			current = odometer.getPositionCopy();
+			dx = xTarget - current.x;
+			dy = yTarget - current.y;
+			dist = (float)Math.sqrt(dx*dx + dy*dy);
+			if(dist < 0.5f) break;
+			tTarget = (float)Math.toDegrees(Math.atan2(dy, dx));
+			dt = tTarget - current.theta;
+			if(dt < -180f)     dt += 360f;
+			else if(dt > 180f) dt -= 360f;
+			LCD.drawString("T("+(int)xTarget+","+(int)yTarget+":"+(int)tTarget+")\nC"+current+"\ndd"+(int)dist+":dt"+(int)dt+";", 0,0);
+			l = -dt * 5f;
+			r =  dt * 5f;
+			speed = dist * 5f * (float)Math.cos(Math.toRadians(dt));
+			l += speed;
+			r += speed;
+			this.setLeftSpeed(l);
+			this.setRightSpeed(r);
+			try { Thread.sleep(100); } catch (InterruptedException e) { }
+		}
+		this.stop();
+		
+		status = Status.PLOTTING;*/
+	}
+
 	/** this implements a rotation by the angle controller */
 	void rotate() {
-		Position p = odometer.getPosition();
-		float right = angle.next(p.theta);
+		Position  p = odometer.getPositionCopy();
+		float    dt = target.theta - p.theta;
+		if(dt < -180f)     dt += 360f;
+		else if(dt > 180f) dt -= 360f;
+		float right = angle.next(dt);
 
-		LCD.drawString("Angle "+angle+"  ", 0, 1);
+		LCD.drawString("r:a "+(int)dt+" "+angle+"", 0, 1);
 		if(angle.isWithin(angleTolerance)) {
 			this.stop();
 			status = Status.PLOTTING;
@@ -111,13 +177,13 @@ class Robot implements Runnable {
 
 	/** travels to a certain position */
 	void travel() {
-		Position p = odometer.getPosition();
-		float x = xTarget - p.x;
-		float y = yTarget - p.y;
+		Position p = odometer.getPositionCopy();
+		float x = target.x - p.x;
+		float y = target.y - p.y;
 		float dist = (float)Math.sqrt(x*x + y*y);
 
-		angle.setSetpoint((float)Math.toDegrees(Math.atan2(y, x)));
-
+		/*(float)Math.toDegrees(Math.atan2(y, x))*/
+		
 		float r = angle.next(p.theta);
 		float l = -r;
 
@@ -125,12 +191,9 @@ class Robot implements Runnable {
 		r += d;
 		l += d;
 
-		/* take out this
-		if(angle.isWithin(angleTolerance)) {
-			this.stop();
-			status = Status.PLOTTING;
-			return;
-		}*/
+		LCD.drawString("Angle "+angle+"  ", 0, 1);
+		LCD.drawString("Dist "+distance+"  ", 0, 2);
+
 		if(distance.isWithin(distanceTolerance)) {
 			this.stop();
 			status = Status.PLOTTING;
