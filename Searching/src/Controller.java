@@ -5,7 +5,7 @@
 public class Controller/*<N extends Number> was so cool but aritmetic operations can't be applied to Number */ {
 	/* fixme: all int! */
 	/*N*/float kp, ki, kd; /* proportional, intergal, derivative */
-	/*N*/float /*sp,*/ pv, e;  /* setpoint, current value, error */
+	/*N*/float /*sp, pv,*/ e;  /* setpoint, current value, error */
 
 	public Controller(final /*N*/float p, final /*N*/float i, final /*N*/float d) {
 		kp = p;
@@ -28,6 +28,10 @@ public class Controller/*<N extends Number> was so cool but aritmetic operations
 	//public void setSetpoint(final /*N*/float setpoint) {
 	//	sp = setpoint;
 	//}
+	
+	public void reset() {
+		e = 0f;
+	}
 
 	public String toString() {
 		return "("+(int)e/*pv+":"+(int)sp*/+")";
