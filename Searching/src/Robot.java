@@ -16,7 +16,7 @@ import lejos.nxt.Button;
 
 class Robot implements Runnable {
 
-	enum Status { PLOTTING, SUCCESS, ROTATING, TRAVELLING, EVADING, EXPLORING, PUSHING };
+	enum Status { PLOTTING, SUCCESS, LOCALISING, ROTATING, TRAVELLING, EVADING, EXPLORING, PUSHING };
 	
 	public final static String NAME = "Sex Robot";
 	static final int   NAV_DELAY    = 100; /* ms */
@@ -101,6 +101,17 @@ class Robot implements Runnable {
 		status = Status.SUCCESS;
 	}
 
+	/** this is used in localisation */
+	public void turnConstantlyTo(final int speed) {
+		status = Status.LOCALISING;
+		this.setLeftSpeed(-speed);
+		this.setRightSpeed(speed);
+	}
+	public void stopLocalising() {
+		this.stop();
+		status = Status.PLOTTING;
+	}
+
 	/** this sets the target to a [0,360) degree */
 	public void turnTo(final float theta/*degrees*/) {
 		angle.reset();
@@ -121,11 +132,11 @@ class Robot implements Runnable {
 
 		target.x = x;
 		target.y = y;
-		status = Status.TRAVELLING;
+		//status = Status.TRAVELLING;
 
 		/* fixme: ghetto */
 
-		/*Position p;
+		Position p;
 		float dx, dy, dt;
 		float right, dist, speed;
 
@@ -156,7 +167,7 @@ class Robot implements Runnable {
 			try { Thread.sleep(100); } catch (InterruptedException e) { }
 		}
 		this.stop();
-		status = Status.PLOTTING;*/
+		status = Status.PLOTTING;
 	}
 
 	/** this implements a rotation by the angle controller */
@@ -226,7 +237,7 @@ class Robot implements Runnable {
 			rightMotor.stop();
 		}
 	}
-	public/*private*/ void stop() {
+	private void stop() {
 		leftMotor.stop();
 		rightMotor.stop();
 	}
@@ -241,7 +252,7 @@ class Robot implements Runnable {
 			Thread.currentThread().interrupt();
 		}
 		return us.getDistance();
-	}	
+	}
 
 	public String toString() {
 		return NAME+/*this.hashCode()+*/" is "+status;
