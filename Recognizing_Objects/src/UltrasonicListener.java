@@ -54,12 +54,13 @@ public class UltrasonicListener implements TimerListener {
       Arrays.sort(dist);
       int medianIndex = dist.length/2; //array length assumed > 1
       int median = dist[medianIndex]; //eighth element is the median
-      for(int j=0;j<dist.length;j++) {
-         dist[j] = Math.abs(dist[j]-median); //compute deviations from median
-      }
-      Arrays.sort(dist);
-      int mad = (int)(b*dist[medianIndex]); //median of the deviations times normality constant
-      return mad; //filtered distance!!
+      return median;
+//      for(int j=0;j<dist.length;j++) {
+//         dist[j] = Math.abs(dist[j]-median); //compute deviations from median
+//      }
+//      Arrays.sort(dist);
+//      int mad = (int)(b*dist[medianIndex]); //median of the deviations times normality constant
+//      return mad; //filtered distance!!
 
    }
    //   int mean(int[] dist) {
