@@ -132,11 +132,11 @@ class Robot implements Runnable {
 
 		target.x = x;
 		target.y = y;
-		status = Status.TRAVELLING;
+		//status = Status.TRAVELLING;
 
 		/* fixme: ghetto */
 
-		/*Position p;
+		Position p;
 		float dx, dy, dt;
 		float right, dist, speed;
 
@@ -167,7 +167,7 @@ class Robot implements Runnable {
 			try { Thread.sleep(100); } catch (InterruptedException e) { }
 		}
 		this.stop();
-		status = Status.PLOTTING;*/
+		status = Status.PLOTTING;
 	}
 
 	/** this implements a rotation by the angle controller */
