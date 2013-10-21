@@ -226,7 +226,7 @@ class Robot implements Runnable {
 			rightMotor.stop();
 		}
 	}
-	private void stop() {
+	public/*private*/ void stop() {
 		leftMotor.stop();
 		rightMotor.stop();
 	}
