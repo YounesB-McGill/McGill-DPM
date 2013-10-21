@@ -91,70 +91,40 @@ class Robot implements Runnable {
 		target.y = y;
 		//status = Status.TRAVELLING;
 
-		float dx, dy, dt=0, t, dist;
-		float r, l, speed;
+		/* fixme: ghetto */
+
 		Position p;
+		float dx, dy, dt;
+		float right, dist, speed;
+
 		for( ; ; ) {
-			p    = odometer.getPositionCopy();
+			p = odometer.getPositionCopy();
+			dx                     = target.x - p.x;
+			dy                     = target.y - p.y;
+			target.theta           = (float)Math.toDegrees(Math.atan2(dy, dx));
+			dt                     = target.theta - p.theta;
+			if(dt < -180f)     dt += 360f;
+			else if(dt > 180f) dt -= 360f;
+			LCD.drawString(""+(int)dx+","+(int)dy+":"+(int)dt+";", 0,0);
+			right = angle.next(dt);
+			if(angle.isWithin(angleTolerance)) break;
+			this.setLeftSpeed(-right);
+			this.setRightSpeed(right);
+			try { Thread.sleep(100); } catch (InterruptedException e) { } /* bad */
+		}
+		for( ; ; ) {
+			p = odometer.getPositionCopy();
 			dx   = target.x - p.x;
 			dy   = target.y - p.y;
 			dist = (float)Math.sqrt(dx*dx + dy*dy);
-			if(dist < 0.5f) break;
-			t    = (float)Math.toDegrees(Math.atan2(dy, dx));
-			dt   = t - p.theta;
-			if(dt >= 180f)      dt -= 360f;
-			else if(dt < -180f) dt += 360f;
-			//angle.next(dt);
-			l = -dt * 4f;
-			r =  dt * 4f;
-			speed = dist * 4f /* * (float)Math.cos(Math.toRadians(dt))*/;
-			if(speed > 200) break; /* fuck you!! */
-			speed = 100;
-			l += speed;
-			r += speed;
-			/*if(angle.isWithin(distanceTolerance)) break;*/
-			this.setLeftSpeed(l);
-			this.setRightSpeed(r);
+			if(dist < 1.5f) break;
+			speed = dist * 25f;
+			this.setLeftSpeed(speed);
+			this.setRightSpeed(speed);
 			try { Thread.sleep(100); } catch (InterruptedException e) { } /* bad */
-			//break;
 		}
 		this.stop();
 		status = Status.PLOTTING;
-		
-		System.out.println("tt "+dist+":"+dt);
-
-		/*for( ; ; ) {
-			float right = angle.next(p.theta);
-			LCD.drawString("angle"+angle+";", 0, 1);
-			if(angle.isWithin(angleTolerance)) break;
-		}*/
-
-		/*float tCurrent, tTarget, dx, dy, dt, dist;
-		float l, r, speed;
-		Position current;
-		for( ; ; ) {
-			current = odometer.getPositionCopy();
-			dx = xTarget - current.x;
-			dy = yTarget - current.y;
-			dist = (float)Math.sqrt(dx*dx + dy*dy);
-			if(dist < 0.5f) break;
-			tTarget = (float)Math.toDegrees(Math.atan2(dy, dx));
-			dt = tTarget - current.theta;
-			if(dt < -180f)     dt += 360f;
-			else if(dt > 180f) dt -= 360f;
-			LCD.drawString("T("+(int)xTarget+","+(int)yTarget+":"+(int)tTarget+")\nC"+current+"\ndd"+(int)dist+":dt"+(int)dt+";", 0,0);
-			l = -dt * 5f;
-			r =  dt * 5f;
-			speed = dist * 5f * (float)Math.cos(Math.toRadians(dt));
-			l += speed;
-			r += speed;
-			this.setLeftSpeed(l);
-			this.setRightSpeed(r);
-			try { Thread.sleep(100); } catch (InterruptedException e) { }
-		}
-		this.stop();
-		
-		status = Status.PLOTTING;*/
 	}
 
 	/** this implements a rotation by the angle controller */

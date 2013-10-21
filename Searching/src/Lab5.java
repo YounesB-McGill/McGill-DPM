@@ -15,7 +15,7 @@ class Lab5 {
 		rt.start();
 
 		/* turning test (haha, get it) */
-		robot.turnTo(-45f);
+		robot.turnTo(45f);
 		System.out.println(""+robot.getStatus());
 		/* wait for it to travel */
 		while(robot.getStatus() != Robot.Status.PLOTTING) {
