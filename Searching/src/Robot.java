@@ -75,6 +75,7 @@ class Robot implements Runnable {
 			/* what is it doing? */
 			switch(status) {
 				case PLOTTING:
+					/* muhahahaha */
 					break;
 				case SUCCESS:
 					return;
