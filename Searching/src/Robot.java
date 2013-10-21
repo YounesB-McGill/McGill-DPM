@@ -15,8 +15,9 @@ import lejos.nxt.Button;
  planning to override the run() method and no other Thread methods." */
 
 class Robot implements Runnable {
-	static final int   NAV_DELAY = 100; /* ms */
-	static final int SONAR_DELAY = 50;  /* ms */
+	public final static String NAME = "Sex Robot";
+	static final int   NAV_DELAY    = 100; /* ms */
+	static final int SONAR_DELAY    = 50;  /* ms */
 	static final NXTRegulatedMotor leftMotor = Motor.A, rightMotor = Motor.B;
 
 	enum Status { PLOTTING, SUCCESS, ROTATING, TRAVELLING, EVADING, EXPLORING, PUSHING };
@@ -37,6 +38,7 @@ class Robot implements Runnable {
 	/** the constructor */
 	public Robot() {
 		status = Status.PLOTTING;
+		System.out.println(NAME);
 	}
 
 	public Status getStatus() {
@@ -53,28 +55,38 @@ class Robot implements Runnable {
 					return;
 				case ROTATING:
 					this.rotate();
-					LCD.drawString(""+odometer, 0, 0);
+					LCD.drawString(""+odometer+"  ", 0, 0);
 					break;
 				case TRAVELLING:
-					status = Status.PLOTTING;
+					this.travel();
+					LCD.drawString(""+odometer+"  ", 0, 0);
 					break;
 			}
-			try { Thread.sleep(NAV_DELAY); } catch (InterruptedException e) { }
+			try {
+				Thread.sleep(NAV_DELAY);
+			} catch (InterruptedException e) {
+				Thread.currentThread().interrupt();
+				return;
+			}
 		}
 	}
 
 	public void shutdown() {
+		odometer.shutdown();
 		status = Status.SUCCESS;
-		return;
 	}
 
 	public void travelTo(final float x, final float y) {
+		System.out.println("Goto("+(int)x+","+(int)y+")");
+		target.x = x;
+		target.y = y;
 		status = Status.TRAVELLING;
 	}
 
 	/** this sets the target to a [0,360) degree */
 	public void turnTo(final float theta/*degrees*/) {
 		/*this.turnTo(Position.fromDegrees(degrees));*/
+		System.out.println("Turn("+(int)theta+")");
 		target.theta = theta;
 		status = Status.ROTATING;
 	}
@@ -103,6 +115,13 @@ class Robot implements Runnable {
 			this.setLeftSpeed(l);
 			this.setRightSpeed(r);
 		} else {
+			this.stop();
+			status = Status.PLOTTING;
+		}
+	}
+	
+	void travel() {
+		if(true) {
 			this.stop();
 			status = Status.PLOTTING;
 		}
@@ -138,11 +157,15 @@ class Robot implements Runnable {
 	 getting sound distances at the same time at the same frequency */
 	private int pingSonar() {
 		us.ping();
-		try { Thread.sleep(SONAR_DELAY); } catch (InterruptedException e) { }
+		try {
+			Thread.sleep(SONAR_DELAY);
+		} catch (InterruptedException e) {
+			Thread.currentThread().interrupt();
+		}
 		return us.getDistance();
 	}	
 
 	public String toString() {
-		return "Robot"+this.hashCode();
+		return NAME+/*this.hashCode()+*/" is "+status;
 	}
 }

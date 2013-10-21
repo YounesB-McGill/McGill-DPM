@@ -28,6 +28,10 @@ public class Odometer implements TimerListener {
 		timer.start();
 	}
 
+	public void shutdown() {
+		timer.stop();
+	}
+
 	/** TimerListener function */
 	public void timedOut() {
 		/* get tach values */

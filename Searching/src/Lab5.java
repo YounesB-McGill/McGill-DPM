@@ -10,32 +10,41 @@ class Lab5 {
 
 	public static void main(String args[]) {
 		Robot robot = new Robot();
+		Thread rt = new Thread(robot, Robot.NAME);
 
-		new Thread(robot).start();
-		System.out.println(""+robot.getStatus());
-		Button.waitForAnyPress();
+		rt.start();
 
-		System.out.println("Goto (-3,-3)");
 		robot.travelTo(-3f,-3f);
 		System.out.println(""+robot.getStatus());
 		/* wait for it to travel */
 		while(robot.getStatus() != Robot.Status.PLOTTING) {
-			try { Thread.sleep(COMMAND_DELAY); } catch (InterruptedException e) { };
+			try {
+				Thread.sleep(COMMAND_DELAY);
+			} catch (InterruptedException e) {
+				Thread.currentThread().interrupt();
+			}
 		}
-		System.out.println(""+robot.getStatus());
+		System.out.println("Press");
 		Button.waitForAnyPress();
 
-		System.out.println("Turn to 45");
 		robot.turnTo(45f);
 		System.out.println(""+robot.getStatus());
 		/* wait for it to travel */
 		while(robot.getStatus() != Robot.Status.PLOTTING) {
-			try { Thread.sleep(COMMAND_DELAY); } catch (InterruptedException e) { };
+			try {
+				Thread.sleep(COMMAND_DELAY);
+			} catch (InterruptedException e) {
+				Thread.currentThread().interrupt();
+			}
 		}
-		System.out.println(""+robot.getStatus());
-		Button.waitForAnyPress();
-		
+
 		robot.shutdown();
+		try {
+			rt.join();
+		} catch (InterruptedException e) {
+			Thread.currentThread().interrupt();
+		}
+
 		System.out.println("Press");
 		Button.waitForAnyPress();
 	}
