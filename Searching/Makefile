@@ -1,6 +1,6 @@
 # MacOSX gcc 4.2.1
 
-FILES := Lab5 Robot Position Controller Odometer
+FILES := Lab5 Robot Position Controller Odometer Colour LCDInfo
 BDIR  := bin
 SDIR  := src
 OBJS  := $(patsubst %,$(BDIR)/%.class,$(FILES))
