@@ -115,16 +115,17 @@ class Robot implements Runnable {
 
 	public void travelTo(final float x, final float y) {
 		System.out.println("Goto("+(int)x+","+(int)y+")");
-		target.x = x;
-		target.y = y;
-		//status = Status.TRAVELLING;
 
 		distance.reset();
 		angle.reset();
 
+		target.x = x;
+		target.y = y;
+		status = Status.TRAVELLING;
+
 		/* fixme: ghetto */
 
-		Position p;
+		/*Position p;
 		float dx, dy, dt;
 		float right, dist, speed;
 
@@ -155,7 +156,7 @@ class Robot implements Runnable {
 			try { Thread.sleep(100); } catch (InterruptedException e) { }
 		}
 		this.stop();
-		status = Status.PLOTTING;
+		status = Status.PLOTTING;*/
 	}
 
 	/** this implements a rotation by the angle controller */
@@ -232,7 +233,7 @@ class Robot implements Runnable {
 	
 	/** fixme: get FILTED data; this is especially critical when two robots are
 	 getting sound distances at the same time at the same frequency */
-	private int pingSonar() {
+	public int pingSonar() {
 		us.ping();
 		try {
 			Thread.sleep(SONAR_DELAY);
