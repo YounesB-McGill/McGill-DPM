@@ -33,10 +33,23 @@ class Robot implements Runnable {
 	LightSensor      ls = new LightSensor(SensorPort.S4);
 	Odometer   odometer = new Odometer(leftMotor, rightMotor);
 	Position     target = new Position(), d = new Position();
+	int lastDistance;
 
 	/** the constructor */
 	public Robot() {
 		System.out.println(NAME);
+	}
+
+	public int getLastDistance() {
+		synchronized(this) {
+			return lastDistance;
+		}
+	}
+	
+	public Position getPosition() {
+		synchronized(this) {
+			return odometer.getPositionCopy();
+		}
 	}
 
 	public Status getStatus() {
@@ -49,9 +62,9 @@ class Robot implements Runnable {
 
 		for( ; ; ) {
 			/* do this */
-			distance = us.getDistance();
-			if(distance < 15) {
-				status = EVADING;
+			lastDistance = us.getDistance();
+			if(lastDistance < 15) {
+				status = Status.EVADING;
 				System.out.println("EVADING! TODO");
 			}
 			/* what is it doing? */
