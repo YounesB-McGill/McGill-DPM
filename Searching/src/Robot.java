@@ -23,7 +23,7 @@ class Robot implements Runnable {
 	static final int SONAR_DELAY    = 50;  /* ms */
 	static final NXTRegulatedMotor leftMotor = Motor.A, rightMotor = Motor.B;
 
-	final float/*int*/ angleTolerance = Position.fromDegrees(2f), angleP = 0.5f;
+	final float/*int*/ angleTolerance = Position.fromDegrees(2f), angleP = 5f;
 	/* this is what we're moving towards */
 	Controller<Integer>  angle = new Controller<Integer>(1, 1, 1, 1);
 	Controller<Float> distance = new Controller<Float>(1f, 1f, 1f, 0.5f);
@@ -99,7 +99,7 @@ class Robot implements Runnable {
 	/** this implements a rotation by parts */
 	void rotate() {
 		float/*int*/ t;
-		int r, l;
+		float r, l;
 
 		position = odometer.getPosition();
 		t = target.theta - position.theta;
@@ -110,8 +110,8 @@ class Robot implements Runnable {
 			status = Status.PLOTTING;
 			return;
 		}
-		l = (int)(-t * angleP);
-		r = (int)( t * angleP);
+		l = -t * angleP;
+		r =  t * angleP;
 		this.setLeftSpeed(l);
 		this.setRightSpeed(r);
 //		if((odometer.getTheta() < 90f) /*&& (!Button.ENTER.isDown())*/) {
@@ -133,7 +133,7 @@ class Robot implements Runnable {
 	}
 
 	/** set r/l speeds indepedently is good for pid-control */
-	private void setLeftSpeed(final int s) {
+	private void setLeftSpeed(final /*int*/float s) {
 		leftMotor.setSpeed(s);
 		if(s > 0) {
 			leftMotor.forward();
@@ -143,7 +143,7 @@ class Robot implements Runnable {
 			leftMotor.stop();
 		}
 	}
-	private void setRightSpeed(final int s) {
+	private void setRightSpeed(final /*int*/float s) {
 		rightMotor.setSpeed(s);
 		if(s > 0) {
 			rightMotor.forward();
