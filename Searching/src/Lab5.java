@@ -28,7 +28,7 @@ class Lab5 {
       //while turning get smallest ping value and corresponding theta
 		while(robot.getStatus() != Robot.Status.PLOTTING) {
          int tStart = (int)System.currentTimeMillis();
-         float ping = robot.ping();
+         float ping = robot.pingSonar();
          if(smallestPing > ping) {
             smallestPing = ping;
             targetTheta = robot.getPosition().theta;
@@ -45,13 +45,13 @@ class Lab5 {
       //if there is a block...
       if(targetTheta < SCAN_THRESHOLD) {
          robot.turnTo(targetTheta);
-         float targetX = robot.getPosition().x + smallestPing*Math.cos(targetTheta);
-         float targetY = robot.getPosition().y + smallestPing*Math.sin(targetTheta);
+         float targetX = robot.getPosition().x + smallestPing*(float)Math.cos(targetTheta);
+         float targetY = robot.getPosition().y + smallestPing*(float)Math.sin(targetTheta);
          robot.travelTo(targetX,targetY);
-         float distance = robot.ping();
+         float distance = robot.pingSonar();
          //move toward it
          while(distance > TRAVEL_THRESHOLD && robot.getStatus() != Robot.Status.PLOTTING) {
-            distance = robot.ping();
+            distance = robot.pingSonar();
          }
          robot.stop();
          //if styroform go to destination!
@@ -59,7 +59,7 @@ class Lab5 {
             //travel with avoidance
             robot.travelTo(DESTINATION_X,DESTINATION_Y);
             while(distance > TRAVEL_THRESHOLD && robot.getStatus() != Robot.Status.PLOTTING) {
-               distance = robot.ping();
+               distance = robot.pingSonar();
             }
          }
       }
