@@ -2,25 +2,61 @@
 
 import java.lang.Integer;
 
-/* Position */
+/* Position fixme */
 
-class Position {
-	public int /* float? */ x, y;
-	public int theta; /* signed 0:32 fixed point */
+class Position /*implements Comparable*/ {
+
+	public float x, y; /* lazy */
+	/*        ---|--
+	         /   |  \
+	INT_MAX v    |   |
+	---------^----------- 0
+	INT_MIN  |   |   |
+	          \  |  /
+	           --|--
+	 */
+	public float/*int*/ theta;  /* signed 0:32 fixed point */
 
 	public Position() {
 	}
 
-	public String toString() {
-		return "Position("+x+","+y+":"+theta+")";
+	public void copy(Position p) {
+		x = p.x;
+		y = p.y;
+		theta = p.theta;
 	}
 
-	public static int fromDegrees(float degree) {
-		if(0 < degree) {
+	public void addLocation(final float x, final float y) {
+		this.x += x;
+		this.y += y;
+	}
+
+	public void addTheta(final float t) {
+		theta += t;
+		/* fixme: so much fail */
+		if(0 < theta) {
+			while(t < 180f) theta += 360f;
+		} else {
+			while(180f <= t) theta -= 360f;
+		}
+	}
+
+	public String toString() {
+		return "("+(int)x+","+(int)y+":"+(int)theta+")";
+	}
+
+	public static float/*int*/ fromDegrees(float degree) {
+		if(degree < 0f) {
 			while(degree < 180f) degree += 360f;
 		} else {
-			while(180f <= degree) degree -= 360f;
+			while(degree >= 180f) degree -= 360f;
 		}
-		return (int)(degree * (-(float)Integer.MIN_VALUE / 180f));
+		return degree;
+		//(int)(degree * (-(float)Integer.MIN_VALUE / 180f));
 	}
+
+	/*public int compareTo(final Position c) {
+		float dx = x - c.x, dy = y - c.y;
+		return (int)(dx*dx + dy*dy);
+	}*/
 }

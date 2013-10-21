@@ -1,6 +1,6 @@
 # MacOSX gcc 4.2.1
 
-FILES := Lab5 Robot Position Controller Odometer
+FILES := Lab5
 BDIR  := bin
 SDIR  := src
 OBJS  := $(patsubst %,$(BDIR)/%.class,$(FILES))
@@ -8,7 +8,7 @@ SRCS  := $(patsubst %,$(SDIR)/%.java,$(FILES))
 BACK  := backup
 
 CC   := nxjc
-CF   := -g:none -O -verbose -d $(BDIR) $(SDIR)/*.java -Xlint:unchecked
+CF   := -g:none -O -verbose -d $(BDIR) $(SDIR)/*.java
 
 default: $(OBJS)
 
