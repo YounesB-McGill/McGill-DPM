@@ -24,17 +24,16 @@ class Robot implements Runnable {
 	static final NXTRegulatedMotor leftMotor = Motor.A, rightMotor = Motor.B;
 
 	final float/*int*/ angleTolerance = Position.fromDegrees(0.5f);
-	/* this is what we're moving towards */
-	Controller/*<Integer>*/  angle = new Controller/*<Integer>*/(1, 1, 1);
-	Controller/*<Float>*/ distance = new Controller/*<Float>*/(1f, 1f, 1f);
+	final float distanceTolerance  = 0.5f;
+	Controller/*<Integer>*/  angle = new Controller/*<Integer>*/(6f, 1f, 1f);
+	Controller/*<Float>*/ distance = new Controller/*<Float>*/(10f, 1f, 1f);
 
 	Status status = Status.PLOTTING;
 
 	UltrasonicSensor us = new UltrasonicSensor(SensorPort.S1);
 	LightSensor      ls = new LightSensor(SensorPort.S4);
 	Odometer   odometer = new Odometer(leftMotor, rightMotor);
-	Position   position;
-	Position     target = new Position();
+	float xTarget, yTarget;
 
 	/** the constructor */
 	public Robot() {
@@ -78,8 +77,10 @@ class Robot implements Runnable {
 
 	public void travelTo(final float x, final float y) {
 		System.out.println("Goto("+(int)x+","+(int)y+")");
-		target.x = x;
-		target.y = y;
+		xTarget = x;
+		yTarget = y;
+		/* the distance at the setpoint is 0 */
+		distance.setSetpoint(0);
 		status = Status.TRAVELLING;
 	}
 
@@ -91,20 +92,15 @@ class Robot implements Runnable {
 		status = Status.ROTATING;
 	}
 	/** this sets the target to a {0,32} fixed point angle; flag rotating */
-	/*public void turnTo(final int theta) {
-		target.theta = theta;
-		status = Status.ROTATING;
-	}*/
+	/*public void turnTo(final int theta)*/
 
-	/** this implements a rotation by parts */
+	/** this implements a rotation by the angle controller */
 	void rotate() {
 		Position p = odometer.getPosition();
-		float right;
+		float right = angle.next(p.theta);
 
-		right = angle.next(p.theta);
-		LCD.drawString(""+angle+"  ", 0, 1);
+		LCD.drawString("Angle "+angle+"  ", 0, 1);
 		if(angle.isWithin(angleTolerance)) {
-			/*System.out.println(""+(int)(-angleTolerance)+"<"+e+"<"+(int)angleTolerance);*/
 			this.stop();
 			status = Status.PLOTTING;
 			return;
@@ -112,12 +108,36 @@ class Robot implements Runnable {
 		this.setLeftSpeed(-right);
 		this.setRightSpeed(right);
 	}
-	
+
+	/** travels to a certain position */
 	void travel() {
-		if(true) {
+		Position p = odometer.getPosition();
+		float x = xTarget - p.x;
+		float y = yTarget - p.y;
+		float dist = (float)Math.sqrt(x*x + y*y);
+
+		angle.setSetpoint((float)Math.toDegrees(Math.atan2(y, x)));
+
+		float r = angle.next(p.theta);
+		float l = -r;
+
+		float d = distance.next(-dist);// * Math.cos(Math.toRadians(p.theta));
+		r += d;
+		l += d;
+
+		/* take out this
+		if(angle.isWithin(angleTolerance)) {
 			this.stop();
 			status = Status.PLOTTING;
+			return;
+		}*/
+		if(distance.isWithin(distanceTolerance)) {
+			this.stop();
+			status = Status.PLOTTING;
+			return;
 		}
+		this.setLeftSpeed(l);
+		this.setRightSpeed(r);
 	}
 
 	/** set r/l speeds indepedently is good for pid-control */

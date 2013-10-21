@@ -14,20 +14,22 @@ class Lab5 {
 
 		rt.start();
 
-		robot.travelTo(-3f,-3f);
-		System.out.println(""+robot.getStatus());
+		/* turning test (haha, get it) */
+		/*robot.turnTo(45f);
+		System.out.println(""+robot.getStatus());*/
 		/* wait for it to travel */
-		while(robot.getStatus() != Robot.Status.PLOTTING) {
+		/*while(robot.getStatus() != Robot.Status.PLOTTING) {
 			try {
 				Thread.sleep(COMMAND_DELAY);
 			} catch (InterruptedException e) {
 				Thread.currentThread().interrupt();
 			}
 		}
-		System.out.println("Press");
-		Button.waitForAnyPress();
 
-		robot.turnTo(45f);
+		System.out.println("Press");
+		Button.waitForAnyPress();*/
+
+		robot.travelTo(10f,10f);
 		System.out.println(""+robot.getStatus());
 		/* wait for it to travel */
 		while(robot.getStatus() != Robot.Status.PLOTTING) {

@@ -4,8 +4,8 @@
 
 public class Controller/*<N extends Number> was so cool but aritmetic operations can't be applied to Number */ {
 	/* fixme: all int! */
-	/*N*/float kp, ki, kd;
-	/*N*/float sp, pv, e;
+	/*N*/float kp, ki, kd; /* proportional, intergal, derivative */
+	/*N*/float sp, pv, e;  /* setpoint, current value, error */
 
 	public Controller(final /*N*/float p, final /*N*/float i, final /*N*/float d) {
 		kp = p;
@@ -13,7 +13,7 @@ public class Controller/*<N extends Number> was so cool but aritmetic operations
 		kd = d;
 	}
 
-	/** returns the next step */
+	/** returns the next step fixme id */
 	public /*N*/float next(final /*N*/float presentValue) {
 		pv = presentValue;
 		e = sp - pv;

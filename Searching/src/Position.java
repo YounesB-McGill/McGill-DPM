@@ -4,7 +4,7 @@ import java.lang.Integer;
 
 /* Position fixme */
 
-class Position {
+class Position /*implements Comparable*/ {
 
 	public float x, y; /* lazy */
 	/*        ---|--
@@ -54,4 +54,9 @@ class Position {
 		return degree;
 		//(int)(degree * (-(float)Integer.MIN_VALUE / 180f));
 	}
+
+	/*public int compareTo(final Position c) {
+		float dx = x - c.x, dy = y - c.y;
+		return (int)(dx*dx + dy*dy);
+	}*/
 }
