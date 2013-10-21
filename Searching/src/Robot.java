@@ -75,6 +75,10 @@ class Robot implements Runnable {
 			/* what is it doing? */
 			switch(status) {
 				case PLOTTING:
+					/* muhahahaha */
+					break;
+				case LOCALISING:
+					localise();
 					break;
 				case SUCCESS:
 					return;
@@ -107,7 +111,9 @@ class Robot implements Runnable {
 		this.setLeftSpeed(-speed);
 		this.setRightSpeed(speed);
 	}
-	public void stopLocalising() {
+	void localise() {
+		Position p = odometer.getPositionCopy();
+		if(p.theta < 90f) return;
 		this.stop();
 		status = Status.PLOTTING;
 	}
