@@ -15,29 +15,29 @@ import lejos.nxt.Button;
  planning to override the run() method and no other Thread methods." */
 
 class Robot implements Runnable {
+
+	enum Status { PLOTTING, SUCCESS, ROTATING, TRAVELLING, EVADING, EXPLORING, PUSHING };
+	
 	public final static String NAME = "Sex Robot";
 	static final int   NAV_DELAY    = 100; /* ms */
 	static final int SONAR_DELAY    = 50;  /* ms */
 	static final NXTRegulatedMotor leftMotor = Motor.A, rightMotor = Motor.B;
 
-	enum Status { PLOTTING, SUCCESS, ROTATING, TRAVELLING, EVADING, EXPLORING, PUSHING };
-
-	Status status;
-
-	UltrasonicSensor us = new UltrasonicSensor(SensorPort.S1);
-	LightSensor      ls = new LightSensor(SensorPort.S4);
-	Odometer   odometer = new Odometer(leftMotor, rightMotor);
-	Position   position = new Position();
-	Position     target = new Position();
-	/* this is the actal values */
-	final float/*int*/ angleTolerance = Position.fromDegrees(2f), angleP = 5;
+	final float/*int*/ angleTolerance = Position.fromDegrees(2f), angleP = 0.5f;
 	/* this is what we're moving towards */
 	Controller<Integer>  angle = new Controller<Integer>(1, 1, 1, 1);
 	Controller<Float> distance = new Controller<Float>(1f, 1f, 1f, 0.5f);
 
+	Status status = Status.PLOTTING;
+
+	UltrasonicSensor us = new UltrasonicSensor(SensorPort.S1);
+	LightSensor      ls = new LightSensor(SensorPort.S4);
+	Odometer   odometer = new Odometer(leftMotor, rightMotor);
+	Position   position;
+	Position     target = new Position();
+
 	/** the constructor */
 	public Robot() {
-		status = Status.PLOTTING;
 		System.out.println(NAME);
 	}
 
@@ -101,23 +101,28 @@ class Robot implements Runnable {
 		float/*int*/ t;
 		int r, l;
 
-		/*t = target.theta - position.theta;
-		if(t > -angleTolerance && t < angleTolerance) {
+		position = odometer.getPosition();
+		t = target.theta - position.theta;
+		LCD.drawString("> "+t+"  ", 0, 1);
+		if((t > -angleTolerance) && (t < angleTolerance)) {
+			System.out.println(""+(-angleTolerance)+"<"+t+"<"+angleTolerance);
 			this.stop();
 			status = Status.PLOTTING;
 			return;
 		}
-		l = (int)( t * angleP);
-		r = (int)(-t * angleP);*/
-		if((odometer.getTheta() < 90f) /*&& (!Button.ENTER.isDown())*/) {
-			l = -100;
+		l = (int)(-t * angleP);
+		r = (int)( t * angleP);
+		this.setLeftSpeed(l);
+		this.setRightSpeed(r);
+//		if((odometer.getTheta() < 90f) /*&& (!Button.ENTER.isDown())*/) {
+/*			l = -100;
 			r = 100;
 			this.setLeftSpeed(l);
 			this.setRightSpeed(r);
 		} else {
 			this.stop();
 			status = Status.PLOTTING;
-		}
+		}*/
 	}
 	
 	void travel() {

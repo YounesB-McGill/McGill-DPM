@@ -19,7 +19,8 @@ public class Odometer implements TimerListener {
 	Timer timer = new Timer(ODOMETER_DELAY, this);
 
 	int displacement, heading;
-	Position p = new Position();
+	Position p     = new Position();
+	Position pCopy = new Position();
 
 	/** constructor */
 	public Odometer(final NXTRegulatedMotor leftMotor, final NXTRegulatedMotor rightMotor) {
@@ -67,6 +68,13 @@ public class Odometer implements TimerListener {
 	}
 
 	/** accessors */
+	public Position getPosition() {
+		synchronized(this) {
+			pCopy.copy(p);
+		}
+		return pCopy;
+	}
+
 	public float getTheta() {
 		synchronized(this) {
 			return p.theta;

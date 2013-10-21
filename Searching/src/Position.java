@@ -20,6 +20,12 @@ class Position {
 	public Position() {
 	}
 
+	public void copy(Position p) {
+		x = p.x;
+		y = p.y;
+		theta = p.theta;
+	}
+
 	public void addLocation(final float x, final float y) {
 		this.x += x;
 		this.y += y;
@@ -40,10 +46,10 @@ class Position {
 	}
 
 	public static float/*int*/ fromDegrees(float degree) {
-		if(0 < degree) {
+		if(degree < 0f) {
 			while(degree < 180f) degree += 360f;
 		} else {
-			while(180f <= degree) degree -= 360f;
+			while(degree >= 180f) degree -= 360f;
 		}
 		return degree;
 		//(int)(degree * (-(float)Integer.MIN_VALUE / 180f));
