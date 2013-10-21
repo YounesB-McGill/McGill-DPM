@@ -45,7 +45,16 @@ class Robot implements Runnable {
 
 	/** this acts as the control */
 	public void run() {
+		int distance;
+
 		for( ; ; ) {
+			/* do this */
+			distance = us.getDistance();
+			if(distance < 15) {
+				status = EVADING;
+				System.out.println("EVADING! TODO");
+			}
+			/* what is it doing? */
 			switch(status) {
 				case PLOTTING:
 					break;
