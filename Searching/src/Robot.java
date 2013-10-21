@@ -33,6 +33,7 @@ class Robot implements Runnable {
 	LightSensor      ls = new LightSensor(SensorPort.S4);
 	Odometer   odometer = new Odometer(leftMotor, rightMotor);
 	Position     target = new Position(), d = new Position();
+	Colour       colour = new Colour();
 	int lastDistance;
 
 	/** the constructor */
@@ -54,6 +55,10 @@ class Robot implements Runnable {
 
 	public Status getStatus() {
 		return status;
+	}
+
+	public Colour.ColourValue getColour() {
+		return colour.getColourValue();
 	}
 
 	/** this acts as the control */
