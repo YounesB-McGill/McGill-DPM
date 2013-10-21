@@ -2,29 +2,34 @@
 
 /* Controller: implements PID control */
 
-public class Controller<N extends Number> {
-	N p, i, d, tolerance;
-	N setpoint;
-	N x;
+public class Controller/*<N extends Number> was so cool but aritmetic operations can't be applied to Number */ {
+	/* fixme: all int! */
+	/*N*/float kp, ki, kd;
+	/*N*/float sp, pv, e;
 
-	public Controller(final N p, final N i, final N d, final N tolerance) {
-		this.p = p;
-		this.i = i;
-		this.d = d;
-		this.tolerance = tolerance;
-		/* uuumm don't know how to do this . . . (tolerance.intValue() <= 0) ? (???) : tolerance; */
+	public Controller(final /*N*/float p, final /*N*/float i, final /*N*/float d) {
+		kp = p;
+		ki = i;
+		kd = d;
 	}
 
-	/** next step; returns true if within tolerance value of setpoint */
-	public boolean next() {
-		return false;
+	/** returns the next step */
+	public /*N*/float next(final /*N*/float presentValue) {
+		pv = presentValue;
+		e = sp - pv;
+		return kp * e /* + ki * (int e) + kd * (d/dt e) */;
 	}
 
-	public void setSetpoint(final N setpoint) {
-		this.setpoint = setpoint;
+	public boolean isWithin(final /*N*/float tolerance) {
+		return (e > -tolerance) && (e < tolerance);
+	}
+
+	public void setSetpoint(final /*N*/float setpoint) {
+		sp = setpoint;
 	}
 
 	public String toString() {
-		return "Controller"+this.hashCode()+" with pid "+p+", "+i+", "+d+" at setpoint "+setpoint+" is at "+x+"";
+		return "C("+e+")";
+		//return "Controller"+this.hashCode()+" with pid "+kp+", "+ki+", "+kd+" at setpoint "+sp+" is at "+pv+"";
 	}
 }

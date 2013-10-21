@@ -23,10 +23,10 @@ class Robot implements Runnable {
 	static final int SONAR_DELAY    = 50;  /* ms */
 	static final NXTRegulatedMotor leftMotor = Motor.A, rightMotor = Motor.B;
 
-	final float/*int*/ angleTolerance = Position.fromDegrees(2f), angleP = 5f;
+	final float/*int*/ angleTolerance = Position.fromDegrees(0.5f);
 	/* this is what we're moving towards */
-	Controller<Integer>  angle = new Controller<Integer>(1, 1, 1, 1);
-	Controller<Float> distance = new Controller<Float>(1f, 1f, 1f, 0.5f);
+	Controller/*<Integer>*/  angle = new Controller/*<Integer>*/(1, 1, 1);
+	Controller/*<Float>*/ distance = new Controller/*<Float>*/(1f, 1f, 1f);
 
 	Status status = Status.PLOTTING;
 
@@ -87,7 +87,7 @@ class Robot implements Runnable {
 	public void turnTo(final float theta/*degrees*/) {
 		/*this.turnTo(Position.fromDegrees(degrees));*/
 		System.out.println("Turn("+(int)theta+")");
-		target.theta = theta;
+		angle.setSetpoint(theta);
 		status = Status.ROTATING;
 	}
 	/** this sets the target to a {0,32} fixed point angle; flag rotating */
@@ -98,31 +98,19 @@ class Robot implements Runnable {
 
 	/** this implements a rotation by parts */
 	void rotate() {
-		float/*int*/ t;
-		float r, l;
+		Position p = odometer.getPosition();
+		float right;
 
-		position = odometer.getPosition();
-		t = target.theta - position.theta;
-		LCD.drawString("> "+t+"  ", 0, 1);
-		if((t > -angleTolerance) && (t < angleTolerance)) {
-			System.out.println(""+(-angleTolerance)+"<"+t+"<"+angleTolerance);
+		right = angle.next(p.theta);
+		LCD.drawString(""+angle+"  ", 0, 1);
+		if(angle.isWithin(angleTolerance)) {
+			/*System.out.println(""+(int)(-angleTolerance)+"<"+e+"<"+(int)angleTolerance);*/
 			this.stop();
 			status = Status.PLOTTING;
 			return;
 		}
-		l = -t * angleP;
-		r =  t * angleP;
-		this.setLeftSpeed(l);
-		this.setRightSpeed(r);
-//		if((odometer.getTheta() < 90f) /*&& (!Button.ENTER.isDown())*/) {
-/*			l = -100;
-			r = 100;
-			this.setLeftSpeed(l);
-			this.setRightSpeed(r);
-		} else {
-			this.stop();
-			status = Status.PLOTTING;
-		}*/
+		this.setLeftSpeed(-right);
+		this.setRightSpeed(right);
 	}
 	
 	void travel() {
