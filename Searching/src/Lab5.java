@@ -55,7 +55,7 @@ class Lab5 {
          }
          robot.stop();
          //if styroform go to destination!
-         if(robot.getColour() == Robot.Colour.Value.STYROFOAM) {
+         if(robot.getColour() == Colour.Value.STYROFOAM) {
             //travel with avoidance
             robot.travelTo(DESTINATION_X,DESTINATION_Y);
             while(distance > TRAVEL_THRESHOLD && robot.getStatus() != Robot.Status.PLOTTING) {
