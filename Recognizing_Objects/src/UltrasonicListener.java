@@ -65,7 +65,7 @@ public class UltrasonicListener implements TimerListener {
    }
 
    public void scan() {
-      this.smallestPing = -254;
+      this.smallestPing = 254;
       this.targetTheta = 45;
       this.scanning = true;
    }
