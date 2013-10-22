@@ -41,6 +41,7 @@ public class Lab5 {
       //Odometer can be used to move robot here or Dectection
       odometer.turnTo(90);
       odometer.travelTo(45f,10f);
-      Sound.beep();      
+      Sound.beep();
+		/*System.out.println("Done!");*/
    }   
 }
