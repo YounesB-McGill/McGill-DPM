@@ -65,6 +65,29 @@ public class Navigation {
 		}
 		robot.stop();
 	}
+
+   public void turnConstantlyTo(final float angle) {
+		float tTarget, tCurrent, t, l, r;
+
+		tTarget = angle % 360f;
+		if(tTarget > 180f) tTarget -= 360f;
+		for( ; ; ) {
+			tCurrent = odo.getTheta();
+			if(tCurrent > 180f) tCurrent -= 360f;
+			t = tTarget - tCurrent;
+			if(t < -180f)     t += 360f;
+			else if(t > 180f) t -= 360f;
+			if(t < angleTolerance && t > -angleTolerance) break;
+			LCD.drawString("t "+t, 0,2);
+			/* reversed */
+			l =  t/Math.abs(t) * 100; //turns at a constant speed
+			r = -t/Math.abs(t) * 100;
+			robot.setLeftSpeed(l);
+			robot.setRightSpeed(r);
+		}
+		robot.stop();
+      
+   }
 	
 	public void turnTo(final float angle) {
 		float tTarget, tCurrent, t, l, r;
