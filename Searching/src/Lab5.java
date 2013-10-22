@@ -18,11 +18,26 @@ class Lab5 {
 		Thread rt = new Thread(robot, Robot.NAME);
       LCDInfo lcd = new LCDInfo(robot);
 
-		rt.start();
+		/*Button.setKeyClickLength(int len);
+		Button.setKeyClickTone(int key, int freq);
+		Button.setKeyClickVolume(int vol);*/
 
+		Button.setKeyClickLength(500);
+		Button.setKeyClickTone(Button.ID_ENTER, 500000);
+		Button.setKeyClickVolume(10);
+
+		rt.start();
+		for(int i = 0; i < 10; i++) {
+			robot.driveLeg(0.48f);
+			robot.driveLeg(0.48f);
+			robot.driveLeg(0.48f);
+			robot.driveLeg(0.48f);
+		}
+//		while((Button.waitForAnyPress() & Button.ID_ENTER) != 0);
+/*
 		//find blocks from corner
       robot.turnConstantlyTo(90f,100);
-		/* while turning */
+		// while turning
       float targetTheta = -1;
       float smallestPing = 254;
       //while turning get smallest ping value and corresponding theta
@@ -48,7 +63,7 @@ class Lab5 {
             //travel with avoidance
             robot.travelTo(DESTINATION_X,DESTINATION_Y);
          }
-      }
+      }*/
 
 		while(robot.getStatus() != Robot.Status.PLOTTING) {
 			try {

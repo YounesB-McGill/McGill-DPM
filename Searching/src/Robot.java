@@ -39,6 +39,8 @@ class Robot implements Runnable {
 	/** the constructor */
 	public Robot() {
 //		System.out.println(NAME);
+		/*leftMotor.setAccelertion(3000);
+		rightotor.setAccelertion(3000);*/
 	}
 
 	public int getLastDistance() {
@@ -155,31 +157,32 @@ class Robot implements Runnable {
 
 		for( ; ; ) {
 			p = odometer.getPositionCopy();
-			dx                     = target.x - p.x;
-			dy                     = target.y - p.y;
-			target.theta           = (float)Math.toDegrees(Math.atan2(dy, dx));
-			dt                     = target.theta - p.theta;
-			if(dt < -180f)     dt += 360f;
-			else if(dt > 180f) dt -= 360f;
+			dx                      = target.x - p.x;
+			dy                      = target.y - p.y;
+			target.theta            = (float)Math.toDegrees(Math.atan2(dy, dx));
+			dt                      = target.theta - p.theta;
+			if(dt < -180f)      dt += 360f;
+			else if(dt >= 180f) dt -= 360f;
 //			LCD.drawString(""+(int)dx+","+(int)dy+":"+(int)dt+";", 0,0);
 			right = angle.next(dt);
 			if(angle.isWithin(angleTolerance)) break;
 			this.setLeftSpeed(-right);
 			this.setRightSpeed(right);
-			try { Thread.sleep(100); } catch (InterruptedException e) { }
+			try { Thread.sleep(50); } catch (InterruptedException e) { }
 		}
-      float 
+		float targetDist = (float)Math.sqrt(dx*dx + dy*dy) * 0.2f;
 		for( ; ; ) {
 			p = odometer.getPositionCopy();
 			dx   = target.x - p.x;
 			dy   = target.y - p.y;
 			dist = (float)Math.sqrt(dx*dx + dy*dy);
+			if(dist < targetDist) break;
 			if(dist < 1.5f) break;
 			//speed = dist * 5f;
-			speed = distance.next(dist);
+			speed = distance.next(dist - targetDist);
          this.setLeftSpeed(speed);
 			this.setRightSpeed(speed);
-			try { Thread.sleep(100); } catch (InterruptedException e) { }
+			try { Thread.sleep(50); } catch (InterruptedException e) { }
 		}
 		this.stop();
 		status = Status.PLOTTING;
@@ -213,7 +216,7 @@ class Robot implements Runnable {
 		else if(d.theta >= 180f) d.theta -= 360f;
 		float dist = (float)Math.sqrt(d.x*d.x + d.y*d.y);
 
-		float l = angle.next(p.theta);
+		float l = angle.next(d.theta);
 		float r = -l;
 
 		float d = distance.next(dist);// * Math.cos(Math.toRadians(p.theta));
@@ -255,8 +258,8 @@ class Robot implements Runnable {
 	public void stop() {
 		leftMotor.stop();
 		rightMotor.stop();
-	}
-	
+	}	
+
 	/** fixme: get FILTED data; this is especially critical when two robots are
 	 getting sound distances at the same time at the same frequency */
 	public int pingSonar() {
@@ -271,5 +274,23 @@ class Robot implements Runnable {
 
 	public String toString() {
 		return NAME+/*this.hashCode()+*/" is "+status;
+	}
+
+	/** this is for calibrating; 3 squares 91.44 -> 30.48 cm / tile */
+	public void driveLeg(final float cm) {
+		private final int FORWARD_SPEED = 250;
+		private final int ROTATE_SPEED = 150;
+
+		/* forward */
+		leftMotor.setSpeed(FORWARD_SPEED);
+		rightMotor.setSpeed(FORWARD_SPEED);
+		leftMotor.rotate((int)((180.0 * cm) / (Math.PI * Odometer.RADIUS)), true);
+		rightMotor.rotate((int)((180.0 * cm) / (Math.PI * Odometer.RADIUS)), false);
+
+		/* turn 90 */
+		leftMotor.setSpeed(ROTATE_SPEED);
+		rightMotor.setSpeed(ROTATE_SPEED);
+		leftMotor.rotate((int)-((180.0 * Math.PI * Odometer.WIDTH * 90.0 / 360.0) / (Math.PI * Odometer.RADIUS)), true);
+		rightMotor.rotate((int)((180.0 * Math.PI * Odometer.WIDTH * 90.0 / 360.0) / (Math.PI * Odometer.RADIUS)), false);
 	}
 }
