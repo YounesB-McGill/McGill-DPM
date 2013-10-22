@@ -104,9 +104,16 @@ public class Navigation {
 		robot.stop();
 	}
 	
+	/* biggest hack */
 	public void backup() {
-		
-	}	
+		for( ; ; ) {
+			robot.setLeftSpeed(-250f);
+			robot.setRightSpeed(-250f);
+			/* dangerous */
+			try { Thread.sleep(2000); } catch (InterruptedException e) { }
+			robot.stop();
+		}
+	}
 
    public void turnConstantlyTo(final float angle) {
 		float tTarget, tCurrent, t, l, r;
@@ -152,6 +159,4 @@ public class Navigation {
 		}
 		robot.stop();
 	}
-
-   public 
 }
