@@ -8,18 +8,17 @@ import lejos.nxt.ColorSensor;
 import lejos.nxt.SensorPort;
 import lejos.nxt.Motor;
 import lejos.util.Timer;
-
+import lejos.nxt.Sound;
 public class Lab5 {
 
 
 
 	public static void main(String args[]) {
-      
+
       UltrasonicSensor uSensor = new UltrasonicSensor(SensorPort.S4);
-      ColorSensor cSensor = new ColorSensor(SensorPort.S3);
+      Colour colour = new Colour();
       TwoWheeledRobot robot = new TwoWheeledRobot(Motor.A,Motor.B);
       Odometer odometer = new Odometer(robot,true);
-      Detection detection = new Detection(odometer,uSensor,cSensor);
       UltrasonicListener ultrasonicListener = new UltrasonicListener(uSensor);
       Timer ultrasonicTimer = new Timer(10/*round-up to int 9.375*/,ultrasonicListener); //timeout value in ms
       //usListener times out every 9ms, assuming 75ms for 8 pings
@@ -40,7 +39,8 @@ public class Lab5 {
    
       //Detection methods called for lab stuff
       //Odometer can be used to move robot here or Dectection
-      
-      
+      odometer.turnTo(90);
+      odometer.travelTo(45f,10f);
+      Sound.beep();      
    }   
 }

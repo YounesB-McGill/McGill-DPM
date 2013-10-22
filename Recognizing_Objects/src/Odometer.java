@@ -197,12 +197,12 @@ public class Odometer implements TimerListener {
 
    public float cmGetX() {
       synchronized(lock) {
-         return this.x/10;
+         return this.x;
       }
    }
    public float cmGetY() {
       synchronized(lock) {
-         return this.y/10;
+         return this.y;
       }
    }
 //This class is very confusing because I thought we were using it and it was working okay when passing cm values even though
