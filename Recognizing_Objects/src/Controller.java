@@ -31,10 +31,10 @@ public class Controller/*<N extends Number> was so cool but aritmetic operations
 		isLimit = true;
 	}
 
-	/** returns the next step fixme id; fixme:  */
+	/** returns the next step; fixme: add time (more complicated!)? */
 	public /*N*/float next(final /*N*/float error/*presentValue*/) {
 
-		/* this is a remenant from where the setpoint could not equal zero
+		/* this is a remenant from where the setpoint could NOT equal zero
 		 pv = presentValue;
 		 e = sp - pv;*/
 		/* this is much easier */
@@ -53,9 +53,12 @@ public class Controller/*<N extends Number> was so cool but aritmetic operations
 		}
 		final float d = kd * derivative;
 
+		float pid = p + i + d;
+
+		/* limit output */
 		if(isLimit) {
-			if(r > max)      r = max;
-			else if(r < min) r = min;
+			if(pid > max)      pid = max;
+			else if(pid < min) pid = min;
 		}
 
 		/* update to values for the next time */
@@ -64,23 +67,28 @@ public class Controller/*<N extends Number> was so cool but aritmetic operations
 		isLast    = true;
 		
 		/* kp * e + ki * (int e) + kd * (d/dt e) */
-		return p + i + d;
+		return pid;
 	}
 
+	/** this method is a convineience; it's always checking if it's w/i epsilon */
 	public boolean isWithin(final /*N*/float tolerance) {
 		return (e > -tolerance) && (e < tolerance);
 	}
 
-	//public void setSetpoint(final /*N*/float setpoint) {
-	//	sp = setpoint;
-	//}
+	/** this fn is not needed now; the setpoint is always zero */
+	/*public void setSetpoint(final N setpoint) {
+		sp = setpoint;
+	}*/
 	
+	/** reset the intergral and the derivative; this allows the controller to
+	 be used more then once */
 	public void reset() {
-		integral = 0;
 		isLast = false;
+		integral = 0;
 		e = 0f;
 	}
 
+	/** print the last error */
 	public String toString() {
 		return "("+(int)e/*pv+":"+(int)sp*/+")";
 		//return "Controller"+this.hashCode()+" with pid "+kp+", "+ki+", "+kd+" at setpoint "+sp+" is at "+pv+"";
