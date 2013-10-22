@@ -32,11 +32,6 @@ public class Odometer implements TimerListener {
 	Position p     = new Position();
 	Position pCopy = new Position();
 
-	/** tester */
-	public testWheelRadius() {
-		
-	}
-
 	/** constructor */
 	public Odometer(final NXTRegulatedMotor leftMotor, final NXTRegulatedMotor rightMotor) {
 		this.leftMotor  = leftMotor;

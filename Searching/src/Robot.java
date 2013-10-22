@@ -278,8 +278,8 @@ class Robot implements Runnable {
 
 	/** this is for calibrating; 3 squares 91.44 -> 30.48 cm / tile */
 	public void driveLeg(final float cm) {
-		private final int FORWARD_SPEED = 250;
-		private final int ROTATE_SPEED = 150;
+		final int FORWARD_SPEED = 250;
+		final int ROTATE_SPEED = 150;
 
 		/* forward */
 		leftMotor.setSpeed(FORWARD_SPEED);

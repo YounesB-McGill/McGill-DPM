@@ -10,31 +10,27 @@ class Lab5 {
 	private static final int COMMAND_DELAY = 200;
    private static final float SCAN_THRESHOLD = 200;
    private static final float TRAVEL_THRESHOLD = 30;
-   private static final float DESTINATION_X = 30;
-   private static final float DESTINATION_Y = 90;
+   private static final float DESTINATION_X = 75;
+   private static final float DESTINATION_Y = 195;
 
 	public static void main(String args[]) {
 		Robot robot = new Robot();
 		Thread rt = new Thread(robot, Robot.NAME);
       LCDInfo lcd = new LCDInfo(robot);
 
-		/*Button.setKeyClickLength(int len);
-		Button.setKeyClickTone(int key, int freq);
-		Button.setKeyClickVolume(int vol);*/
-
 		Button.setKeyClickLength(500);
 		Button.setKeyClickTone(Button.ID_ENTER, 500000);
 		Button.setKeyClickVolume(10);
 
 		rt.start();
-		for(int i = 0; i < 10; i++) {
+		/*for(int i = 0; i < 10; i++) {
 			robot.driveLeg(0.48f);
 			robot.driveLeg(0.48f);
 			robot.driveLeg(0.48f);
 			robot.driveLeg(0.48f);
-		}
-//		while((Button.waitForAnyPress() & Button.ID_ENTER) != 0);
-/*
+		}*/
+		//while((Button.waitForAnyPress() & Button.ID_ENTER) != 0);
+
 		//find blocks from corner
       robot.turnConstantlyTo(90f,100);
 		// while turning
@@ -63,7 +59,7 @@ class Lab5 {
             //travel with avoidance
             robot.travelTo(DESTINATION_X,DESTINATION_Y);
          }
-      }*/
+      }
 
 		while(robot.getStatus() != Robot.Status.PLOTTING) {
 			try {
