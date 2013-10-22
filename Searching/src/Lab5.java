@@ -7,8 +7,8 @@ import lejos.nxt.Button;
 
 /* this is a driver that instantaties a Robot and makes it do stuff */
 class Lab5 {
-	private static final int COMMAND_DELAY = 200;
-   private static final float SCAN_THRESHOLD = 200;
+	private static final int COMMAND_DELAY     = 200;
+   private static final float SCAN_THRESHOLD   = 100;
    private static final float TRAVEL_THRESHOLD = 30;
    private static final float DESTINATION_X = 75;
    private static final float DESTINATION_Y = 195;

@@ -32,7 +32,7 @@ public class LCDInfo implements TimerListener {
 		LCD.drawString("Y value: ", 0, 1);
 		LCD.drawString("Theta value: ", 0, 2);
 		LCD.drawString("Distance: ", 0, 3);
-		LCD.drawString("Colour: "+robot.getColour(), 0, 4);
+		/*LCD.drawString("Colour: "+robot.getColour(), 0, 4);*/
 		LCD.drawString("Status: "+robot.getStatus(), 0, 5);
       LCD.drawString("T x,y: ", 0, 6);
       LCD.drawString(drawText, 0, 7);

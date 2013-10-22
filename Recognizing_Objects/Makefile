@@ -1,6 +1,6 @@
 # MacOSX gcc 4.2.1
 
-FILES := Lab5 LCDInfo Colour LightLocalizer Navigation Odometer TwoWheeledRobot USLocalizer UltrasonicListener Detection
+FILES := Lab5 LCDInfo Colour LightLocalizer Navigation Odometer TwoWheeledRobot USLocalizer UltrasonicListener Detection Controller
 BDIR  := bin
 SDIR  := src
 OBJS  := $(patsubst %,$(BDIR)/%.class,$(FILES))

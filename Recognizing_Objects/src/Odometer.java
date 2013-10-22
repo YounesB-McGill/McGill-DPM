@@ -5,7 +5,7 @@
 The following comments are impotant:
 
 Odometer uses degrees: 0<=theta<360
-Operates in millimeters
+Operates in millimeters (no)
 Methods cmSet[theta,X,Y](int) used to circumvent this issue
 --------------------------------------------------------------
 */
@@ -16,9 +16,22 @@ import lejos.util.Timer;
 import lejos.util.TimerListener;
 
 public class Odometer implements TimerListener {
-	/* we don't need doubles, float is overkill, should be using fixed point;
-	 doubles don't exist on nxj anyway */
+	/* experiment: rotated by 10 000 went 4.75, 10000/360/4.75 */
+	/*static final float MUL_WIDTH    = 0.171f;*/
+	/* FIXME: have the time be a fn of the speed */
 	public static final int DEFAULT_PERIOD = 25;
+	/* experiment going left with 15.8 width; using +/-
+	 ((180.0 * Math.PI * 15.8 * 90.0 / 360.0) / (Math.PI * Odometer.RADIUS)
+	 ((180.0 * 15.8 * 90.0 / 360.0) / (Odometer.RADIUS)
+	 RADIUS error times
+	 2.8:   -60   4x
+	 2.75:  -60  10x
+	 2.7:   -30  10x
+	 2.65:   15  10x
+	 2.67:   -3  10x
+	 2.665:   0  10x -> 2.665(3) */
+	/*static final float RADIUS       = 2.665f;
+	static final float WIDTH        = 15.8f;*/ /* 15.9 16.0 15.24 */
 	private TwoWheeledRobot robot;
 	private Timer odometerTimer;
 	private Navigation nav;
@@ -139,10 +152,8 @@ public class Odometer implements TimerListener {
 			this.y = y;
 		}
 	}
-	/** fixme: this is lazy; really, you would use signed fixed
-	 point 0:32 for the entire circle, braching on [-Pi, Pi]; this is way more
-	 precise, does not go out of bounds, and has the branch cut behind the
-	 robot; floating point is good for dynamic range, not this */
+	/** fixme: use signed fixed point 0:32 for the entire circle, braching on
+	 [-Pi, Pi) */
 	public void correctTheta(final float theta) {
 		synchronized (lock) {
 			this.theta += theta;
@@ -153,7 +164,7 @@ public class Odometer implements TimerListener {
 	}
 	
 	// static 'helper' methods
-	/* they are only called one time? thus they are useless? */
+	/* aaauuuugh */
 	public static float fixDegAngle(float angle) {
 		if (angle < 0.0)
 			angle = 360.0f + (angle % 360.0f);
