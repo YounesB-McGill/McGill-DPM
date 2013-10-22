@@ -10,6 +10,7 @@ public class LCDInfo implements TimerListener{
 	private Timer lcdTimer;
    private LightLocalizer light;
    private UltrasonicListener uListener;
+   private String drawText = "Nothing";
 	
 	// arrays for displaying data
 	private float [] pos;
@@ -33,9 +34,14 @@ public class LCDInfo implements TimerListener{
 		LCD.drawString("Y value: ", 0, 1);
 		LCD.drawString("Theta value: ", 0, 2);
 		LCD.drawString("Distance: ", 0, 3);
+      LCD.drawString(drawText, 0, 7);
 		LCD.drawInt((int)(odo.cmGetX()), 13, 0);
 		LCD.drawInt((int)(odo.cmGetY()), 13, 1);
 		LCD.drawInt((int)(odo.getTheta()), 13, 2);
       LCD.drawInt(uListener.getDistance(), 13, 3);
 	}
+   public void setText(String text) {
+      this.drawText = text; 
+   }
+
 }

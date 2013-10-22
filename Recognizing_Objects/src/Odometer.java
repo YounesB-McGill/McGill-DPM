@@ -173,6 +173,9 @@ public class Odometer implements TimerListener {
 	public void turnTo(final float a) {
 		nav.turnTo(a);
 	}
+   public void turnConstantlyTo(final float a) {
+      nav.turnConstantlyTo(a);
+   }
 
 //USE THESE!
 //I think I implemented them correctly, but if I made an error and it doesn't work feel free to fix it ;)
