@@ -1,5 +1,8 @@
 /* Lab 4, Group 51 -- Alex Bhandari-Young and Neil Edelman */
-
+/*
+This method is from lab4:Localization.
+It localizes using the ultrasonic sensor.
+*/
 import lejos.nxt.UltrasonicSensor;
 import lejos.nxt.LCD;
 import lejos.nxt.Sound;
