@@ -29,11 +29,11 @@ public class Lab5 {
       //Get distance calls or returns will need to be timed. Might make getDistance blocking.
       LCDInfo lcd = new LCDInfo(odometer,ultrasonicListener);
 
-      Sound.setVolume(50);
-      USLocalizer usl = new USLocalizer(odometer, new UltrasonicSensor(SensorPort.S4), USLocalizer.LocalizationType./*RISING_EDGE*/FALLING_EDGE);
-      usl.doLocalization();
-      odometer.travelTo(-3f,-3f);
-      odometer.turnTo(45f);
+//      Sound.setVolume(50);
+//      USLocalizer usl = new USLocalizer(odometer, new UltrasonicSensor(SensorPort.S4), USLocalizer.LocalizationType./*RISING_EDGE*/FALLING_EDGE);
+//      usl.doLocalization();
+//      odometer.travelTo(-3f,-3f);
+//      odometer.turnTo(45f);
 //      LightLocalizer lsl = new LightLocalizer(odometer, new LightSensor(SensorPort.S1));
 //      lsl.doLocalization();
       Sound.setVolume(100);
@@ -53,6 +53,13 @@ public class Lab5 {
       float adjust_y = 0;
       boolean first = true;
       while(searching) {
+         
+         //update
+         if(first) {
+            adjust_x += 30f;
+         }
+         adjust_y += 30f;
+
 	   	//find blocks from corner
          odometer.turnTo(90f);
          ultrasonicListener.scan();
@@ -81,12 +88,9 @@ public class Lab5 {
                odometer.travelTo(adjust_x,adjust_y); //move to next scan point
             }
          }
-         Sound.buzz();
-         if(first) {
-            first = false;
-            adjust_x += 30f;
-         }
-         adjust_y += 30f;
+         else
+            Sound.buzz();
+         first = false;
       }
    }   
 }
