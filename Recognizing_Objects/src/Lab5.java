@@ -1,10 +1,9 @@
-//Lab 5 -alex
-//see diectory src in this folder (Recognizing_Objects/src/src) it has all the old code, I liked having it separate, but you could move it up into src
-//if you need to, to get it to compile. Cool.
+//Lab 5 -- Neil and Alex
 import lejos.nxt.Button;
 //import Ulitrasonic and Color sensor
 import lejos.nxt.UltrasonicSensor;
 import lejos.nxt.ColorSensor;
+import lejos.nxt.LightSensor;
 import lejos.nxt.SensorPort;
 import lejos.nxt.Motor;
 import lejos.util.Timer;
@@ -17,7 +16,6 @@ public class Lab5 {
 
 	public static void main(String args[]) {
 
-      Sound.setVolume(100);
       UltrasonicSensor uSensor = new UltrasonicSensor(SensorPort.S4);
       Colour colour = new Colour();
       TwoWheeledRobot robot = new TwoWheeledRobot(Motor.A,Motor.B);
@@ -30,13 +28,14 @@ public class Lab5 {
       //Get distance calls or returns will need to be timed. Might make getDistance blocking.
       LCDInfo ldc = new LCDInfo(odometer,ultrasonicListener);
 
-      USLocalizer usl = new USLocalizer(odometer, new UltrasonicSensor(SensorPort.S4), USLocalizer.LocalizationType./*RISING_EDGE*/FALLING_EDGE);
-      usl.doLocalization();
-      odometer.travelTo(-3f,-3f);
-      odometer.turnTo(45f);
-      LightLocalizer lsl = new LightLocalizer(odometer, new LightSensor(SensorPort.S
-      lsl.doLocalization();
-
+//      Sound.setVolume(50);
+//      USLocalizer usl = new USLocalizer(odometer, new UltrasonicSensor(SensorPort.S4), USLocalizer.LocalizationType./*RISING_EDGE*/FALLING_EDGE);
+//      usl.doLocalization();
+//      odometer.travelTo(-3f,-3f);
+//      odometer.turnTo(45f);
+//      LightLocalizer lsl = new LightLocalizer(odometer, new LightSensor(SensorPort.S1));
+//      lsl.doLocalization();
+      Sound.setVolume(100);
 
       //start timer
       ultrasonicTimer.start();
