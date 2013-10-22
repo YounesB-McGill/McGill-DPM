@@ -26,6 +26,7 @@ public class Controller/*<N extends Number> was so cool but aritmetic operations
 		kd = 0;
 		this.min = min;
 		this.max = max;
+		isLimit = true;
 	}
 
 	/** returns the next step fixme id */
@@ -33,10 +34,11 @@ public class Controller/*<N extends Number> was so cool but aritmetic operations
 		/*pv = presentValue;
 		e = sp - pv;*/
 		e = error;
-      float r = kp * e;
-      /* hack, make variable */
-      if(r > 200f) r = 200f;
-      else if(r < -200f) r = -200f;
+		float r = kp * e;
+		if(isLimit) {
+			if(r > max)      r = max;
+			else if(r < min) r = min;
+		}
 		return r /*kp * e*/ /* + ki * (int e) + kd * (d/dt e) */;
 	}
 
