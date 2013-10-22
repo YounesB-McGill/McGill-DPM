@@ -4,6 +4,7 @@
 import lejos.nxt.Button;
 //import Ulitrasonic and Color sensor
 import lejos.nxt.UltrasonicSensor;
+import lejos.nxt.LightSensor;
 import lejos.nxt.ColorSensor;
 import lejos.nxt.SensorPort;
 import lejos.nxt.Motor;
@@ -26,7 +27,14 @@ public class Lab5 {
       //meaning every 75ms then ~66ms repeating after 140ms for the first value.
       //Get distance calls or returns will need to be timed. Might make getDistance blocking.
       LCDInfo ldc = new LCDInfo(odometer,ultrasonicListener);
-      
+
+		USLocalizer usl = new USLocalizer(odometer, new UltrasonicSensor(SensorPort.S4), USLocalizer.LocalizationType./*RISING_EDGE*/FALLING_EDGE);
+		usl.doLocalization();		
+		odometer.travelTo(-3f,-3f);
+		odometer.turnTo(45f);
+		LightLocalizer lsl = new LightLocalizer(odometer, new LightSensor(SensorPort.S1));
+		lsl.doLocalization();
+		
       //start timer
       ultrasonicTimer.start();
       //spawn thread for exit
