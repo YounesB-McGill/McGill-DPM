@@ -66,6 +66,48 @@ public class Navigation {
 		robot.stop();
 	}
 	
+	/** untested */
+	public void backTo(final float xTarget, final float yTarget) {
+		float xCurrent, yCurrent, tCurrent, tTarget, x, y, t, dist2, dist;
+		float l, r, speed;
+		for( ; ; ) {
+			xCurrent = odo.getX();
+			yCurrent = odo.getY();
+			x = xTarget - xCurrent;
+			y = yTarget - yCurrent;
+			dist2 = x*x + y*y;
+			if(dist2 < dist2Tolerance) break;
+			tCurrent = odo.getTheta();
+			tCurrent = -tCurrent + 90f;
+			if(tCurrent < 180f) tCurrent += 360f;
+			/* pointing backwards! */
+			tTarget = (float)Math.toDegrees(Math.atan2(y, x)) + 180f;
+			if(tTarget >= 180f) tTarget -= 360f;
+			t = tTarget - tCurrent;
+			if(t < -180f)     t += 360f;
+			else if(t > 180f) t -= 360f;
+			/* the theta */
+			l = -t * pTheta;
+			r =  t * pTheta;
+			/* the dist */
+			dist = (float)Math.sqrt(dist2);
+			LCD.drawString("d "+dist, 0,5);
+			speed = dist * pDist * (float)Math.cos(Math.toRadians(t));
+			l -= speed;
+			r -= speed;
+			/* go */
+			robot.setLeftSpeed(l);
+			robot.setRightSpeed(r);
+			/* wait */
+			try { Thread.sleep(100); } catch (InterruptedException e) { }
+		}
+		robot.stop();
+	}
+	
+	public void backup() {
+		
+	}
+	
 	public void turnTo(final float angle) {
 		float tTarget, tCurrent, t, l, r;
 
