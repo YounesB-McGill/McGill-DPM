@@ -18,7 +18,11 @@ public class Controller/*<N extends Number> was so cool but aritmetic operations
 		/*pv = presentValue;
 		e = sp - pv;*/
 		e = error;
-		return kp * e /* + ki * (int e) + kd * (d/dt e) */;
+      float r = kp * e;
+      /* hack */
+      if(r > 200f) r = 200f;
+      else if(r < -200f) r = -200f;
+		return r /*kp * e*/ /* + ki * (int e) + kd * (d/dt e) */;
 	}
 
 	public boolean isWithin(final /*N*/float tolerance) {

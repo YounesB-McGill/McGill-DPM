@@ -8,6 +8,7 @@ public class LCDInfo implements TimerListener {
 	public static final int LCD_REFRESH = 500;
 	private Timer lcdTimer;
 	private Robot robot;
+   private String drawText = "Nothing";
 
 	// arrays for displaying data
 	private float [] pos;
@@ -33,9 +34,17 @@ public class LCDInfo implements TimerListener {
 		LCD.drawString("Distance: ", 0, 3);
 		LCD.drawString("Colour: "+robot.getColour(), 0, 4);
 		LCD.drawString("Status: "+robot.getStatus(), 0, 5);
+      LCD.drawString("T x,y: ", 0, 6);
+      LCD.drawString(drawText, 0, 7);
 		LCD.drawInt((int)p.x, 13, 0);
 		LCD.drawInt((int)p.y, 13, 1);
 		LCD.drawInt((int)p.theta, 13, 2);
-		LCD.drawInt(robot.getLastDistance(), 13, 3);
+		LCD.drawInt(robot.getLastDistance(), 12, 3);
+      LCD.drawInt((int)robot.getTarget().x, 8, 6);
+      LCD.drawInt((int)robot.getTarget().y, 14, 6);
 	}
+
+   public void setText(String text) {
+      this.drawText = text; 
+   }
 }

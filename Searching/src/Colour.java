@@ -62,14 +62,14 @@ public class Colour {
 		LCD.drawString("B "+c.getBlue()+"/"+colour.b, 0,3);*/
 		if(s > w) {
 			percent = (int)(s / (s + w) * 100f);
-			System.out.println("I'm " + percent + "% sure it's a wooden block");
+//			System.out.println("I'm " + percent + "% sure it's a wooden block");
 			return Value.WOOD;
 		} else if(w > s) {
 			percent = (int)(w / (s + w) * 100f);
-			System.out.println("I'm " + percent + "% sure it's a styrofoam block");
+//			System.out.println("I'm " + percent + "% sure it's a styrofoam block");
 			return Value.STYROFOAM;
 		} else {
-			System.out.println("I'm conflicted");
+//			System.out.println("I'm conflicted");
 			return Value.UNKNOWN;
 		}
 	}

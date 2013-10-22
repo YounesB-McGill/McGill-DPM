@@ -7,7 +7,7 @@ import lejos.nxt.Button;
 
 /* this is a driver that instantaties a Robot and makes it do stuff */
 class Lab5 {
-	static final int COMMAND_DELAY = 200;
+	private static final int COMMAND_DELAY = 200;
    private static final float SCAN_THRESHOLD = 200;
    private static final float TRAVEL_THRESHOLD = 30;
    private static final float DESTINATION_X = 30;
@@ -21,7 +21,7 @@ class Lab5 {
 		rt.start();
 
 		//find blocks from corner
-      robot.turnConstantlyTo(90f);
+      robot.turnConstantlyTo(90f,100);
 		/* while turning */
       float targetTheta = -1;
       float smallestPing = 254;
@@ -36,31 +36,17 @@ class Lab5 {
          //pause thread
          int tEnd = (int)System.currentTimeMillis();
          int deltaT = tEnd - tStart;
-			try {
-				Thread.sleep(COMMAND_DELAY - deltaT);
-			} catch (InterruptedException e) {
-				Thread.currentThread().interrupt();
-			}
 		}
+      lcd.setText("TT: " + targetTheta);
       //if there is a block...
-      if(targetTheta < SCAN_THRESHOLD) {
-         robot.turnTo(targetTheta);
-         float targetX = robot.getPosition().x + smallestPing*(float)Math.cos(targetTheta);
-         float targetY = robot.getPosition().y + smallestPing*(float)Math.sin(targetTheta);
+      if(smallestPing < SCAN_THRESHOLD) {
+         float targetX = robot.getPosition().x + (smallestPing-5)*(float)Math.cos(Math.toRadians(targetTheta+3));
+         float targetY = robot.getPosition().y + (smallestPing-5)*(float)Math.sin(Math.toRadians(targetTheta+3)); //small adjustments...
          robot.travelTo(targetX,targetY);
-         float distance = robot.pingSonar();
-         //move toward it
-         while(distance > TRAVEL_THRESHOLD && robot.getStatus() != Robot.Status.PLOTTING) {
-            distance = robot.pingSonar();
-         }
-         robot.stop();
          //if styroform go to destination!
          if(robot.getColour() == Colour.Value.STYROFOAM) {
             //travel with avoidance
             robot.travelTo(DESTINATION_X,DESTINATION_Y);
-            while(distance > TRAVEL_THRESHOLD && robot.getStatus() != Robot.Status.PLOTTING) {
-               distance = robot.pingSonar();
-            }
          }
       }
 
@@ -82,4 +68,6 @@ class Lab5 {
 		System.out.println("Press");
 		Button.waitForAnyPress();
 	}
+
+
 }
