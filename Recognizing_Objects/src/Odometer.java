@@ -16,22 +16,8 @@ import lejos.util.Timer;
 import lejos.util.TimerListener;
 
 public class Odometer implements TimerListener {
-	/* experiment: rotated by 10 000 went 4.75, 10000/360/4.75 */
-	/*static final float MUL_WIDTH    = 0.171f;*/
 	/* FIXME: have the time be a fn of the speed */
 	public static final int DEFAULT_PERIOD = 25;
-	/* experiment going left with 15.8 width; using +/-
-	 ((180.0 * Math.PI * 15.8 * 90.0 / 360.0) / (Math.PI * Odometer.RADIUS)
-	 ((180.0 * 15.8 * 90.0 / 360.0) / (Odometer.RADIUS)
-	 RADIUS error times
-	 2.8:   -60   4x
-	 2.75:  -60  10x
-	 2.7:   -30  10x
-	 2.65:   15  10x
-	 2.67:   -3  10x
-	 2.665:   0  10x -> 2.665(3) */
-	/*static final float RADIUS       = 2.665f;
-	static final float WIDTH        = 15.8f;*/ /* 15.9 16.0 15.24 */
 	private TwoWheeledRobot robot;
 	private Timer odometerTimer;
 	private Navigation nav;
