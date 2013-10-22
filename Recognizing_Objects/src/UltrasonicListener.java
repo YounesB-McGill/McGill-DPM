@@ -1,3 +1,12 @@
+/*
+This class pings the ultrasonic sensor after 10ms and accumulates values. getDistance simply gets the last pinged distance.
+The getFilteredDistance() method implements the median standard deviation method to return a median filtered distance.
+The set of the data sets used can be adjusted.
+Additionally, the get smallestping method allows the listener to accumulate a data set of pings while a blocking navigation
+or odometer method is running. Get smallest ping is used in this lab to scan from scan points and find the blocks using the
+ultrasonic sensor. The method sets the smallestping variables to the closest distance recored and corresponding theta from
+the odometer to targetTheta.
+*/
 import lejos.nxt.UltrasonicSensor;
 import lejos.util.TimerListener;
 import java.util.Arrays;

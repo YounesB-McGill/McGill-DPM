@@ -39,8 +39,6 @@ public class Navigation {
 			dist2 = x*x + y*y;
 			if(dist2 < dist2Tolerance) break;
 			tCurrent = odo.getTheta();
-			/* this is why you programme in standard coordinates; this took so
-			 long to debug :[ */
 			tCurrent = -tCurrent + 90f;
 			if(tCurrent < 180f) tCurrent += 360f;
 			tTarget = (float)Math.toDegrees(Math.atan2(y, x));
@@ -104,12 +102,10 @@ public class Navigation {
 		robot.stop();
 	}
 	
-	/* biggest hack */
 	public void backup() {
 		for( ; ; ) {
 			robot.setLeftSpeed(-250f);
 			robot.setRightSpeed(-250f);
-			/* dangerous */
 			try { Thread.sleep(2000); } catch (InterruptedException e) { }
 			robot.stop();
 		}

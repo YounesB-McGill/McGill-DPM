@@ -24,28 +24,19 @@ public class Odometer implements TimerListener {
 	// position data
 	private Object lock;
 	private float x, y, theta;
-	private double [] oldDH, dDH; /* I don't know what these do; writing code
-								   that fixes an array of special values is
-								   what object-orientism is specifically
-								   designed to avoid */
+	private double [] oldDH, dDH; 	
 	
-	public Odometer(TwoWheeledRobot robot, int period, boolean start) {
+   public Odometer(TwoWheeledRobot robot, int period, boolean start) {
 		// initialise variables
 		this.robot = robot;
-		/* why is Nav under Odo? */
 		this.nav = new Navigation(this);
 		odometerTimer = new Timer(period, this);
 		x = 0f;
 		y = 0f;
 		theta = 0f;
 		oldDH = new double[2];
-		dDH = new double[2]; /* this should be a new class, class Orientation
-							  for example, even with two elements; you may
-							  change them later and then you'd have to change
-							  all this impossible to read code; also, very
-							  useful to subtract them etc */
-		lock = new Object(); /* why not just use "this", instead of creating
-							  unnecessary objects? */
+		dDH = new double[2];
+      lock = new Object(); 
 		
 		// start the odometer immediately, if necessary
 		if (start)
@@ -91,7 +82,6 @@ public class Odometer implements TimerListener {
 		}
 	}
 	
-	/* stupid getPosition, why? */
 	public float getX() {
 		synchronized(lock) {
 			return x;
@@ -108,7 +98,6 @@ public class Odometer implements TimerListener {
 		}
 	}	
 	
-	/* soooo . . . synecdoche? */
 	public TwoWheeledRobot getTwoWheeledRobot() {
 		return robot;
 	}
@@ -118,9 +107,6 @@ public class Odometer implements TimerListener {
 	}
 	
 	// mutators
-	/* update is crazy, this is how to write a setter --Neil
-	but this is crazy, so we comment it out
-	it's used in something, so uncomment it */
 	public void setPosition(float[] position) {
 		synchronized (lock) {
 			this.x = position[0];
@@ -205,9 +191,4 @@ public class Odometer implements TimerListener {
          return this.y;
       }
    }
-//This class is very confusing because I thought we were using it and it was working okay when passing cm values even though
-//it takes millimeters. Hopefully these method fix the problems of interfacing with it, anything we rewrite is just more
-//stuff to debug and more stuff that could possibly cause a problem. Try using this, if it work then fantastic. If it doesn't
-//do what you think is right. If you can figure out what is going wrong, and we don't have to rewrite the whole thing, I think
-//that would be for the better! Good luck, see you on Monday. -Alex
 }
