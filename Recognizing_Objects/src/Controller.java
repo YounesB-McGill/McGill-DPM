@@ -1,6 +1,10 @@
 /* Lab 5, Group 51 -- Alex Bhandari-Young and Neil Edelman */
 
-/* THIS IS NOT USED IN YOUR CODE but could be -Neil */
+/* This class is the product of redesigning the lab code to be more intuitive. It was not used in the code that we ran in the demo
+and is not instantiated in Lab5 or any of the other lab files, and not required for the code to compile. It is awesome, but we were
+not able to get it working in time to use in this lab. We intend to use it in the final project.
+
+THIS IS NOT USED IN THE LAB but could be -Neil */
 
 /* Controller: implements PID control with 0 as the setpoint */
 
