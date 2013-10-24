@@ -3,7 +3,9 @@
 /* This method is O(2^{n-1}), but n is 2, so it's okay. We normalise our
  colours to make it lighting-independent. Compare with experimetal value for
  the different substances, and pick the closest (Cartesan distance to
- normalised colour values.) */
+ normalised colour values.) I better model would be to multiply the components
+ by the eigenvalues of their sensitivety like CIE colour model, but we don't
+ know this. */
 
 /* import javax.vecmath.Vector3f; <- does not have this, write our own :[ */
 /* import java.lang.Comparable; */
