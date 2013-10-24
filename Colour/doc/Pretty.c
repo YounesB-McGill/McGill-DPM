@@ -7,38 +7,47 @@
 /* hack */
 #define N 7
 
+struct Vec3d {
+	double x, y, z;
+};
+
 /** private (entry point) */
 int main(int argc, char **argv) {
-	double x[N], y[N], z[N];
-	double sumx, sumy, sumz, ssq, d;
-	double meanx, meany, meanz, var, stdd;
+	struct Vec3d p[N];
+	struct Vec3d sum[N], ssq[N], mean[N];
+	double var[3], stdd[3];
 	int i;
 	char buffer[120], buffer2[120], *s, *t;
 	char *label = "none";
 
+	/* label */
 	if(2 <= argc) label = argv[1];
+
+	/* input */
 	for(i = 0; i < N; i++) {
-		scanf("%lf\t%lf\t%lf\n", &x[i], &y[i], &z[i]);
+		scanf("%lf\t%lf\t%lf\n", &p[i].x, &p[i].y, &p[i].z);
 	}
 
-	/*printf("Calculate the differences in Equation~\\ref{%s-d1}--\\ref{%s-d%i}.\n\n", label, label, N);*/
 	for(i = 0, sumx = sumy = sumz = 0; i < N; i++) {
-		d = 1.0 / sqrt(x[i]*x[i] + y[i]*y[i] + z[i]*z[i]);
-		x[i] *= d;
-		y[i] *= d;
-		z[i] *= d;
-		printf("%f\t%f\t%f\n", x[i], y[i], z[i]);
-		sumx += x[i];
-		sumy += y[i];
-		sumz += z[i];
-		/* compute std dev */
-		//sum += d[i];
-		//ssq += d[i] * d[i];
+		d = 1.0 / sqrt(p[i].x*p[i].x + p[i].y*p[i].y + p[i].z*p[i].z);
+		p[i].x *= d;
+		p[i].y *= d;
+		p[i].z *= d;
+		printf("%f\t%f\t%f\n", p[i].x, p[i].y, p[i].z);
+		sumx += p[i].x;
+		sumy += p[i].y;
+		sumz += p[i].z;
+		ssqx += dp[i].x * dp[i].x;
+		ssqy += dp[i].y * dp[i].y;
+		ssqz += dp[i].z * dp[i].z;
+	}
 
-		/*printf("\\begin{align}\n");
+	printf("Calculate the differences in Equation~\\ref{%s-d1}--\\ref{%s-d%i}.\n\n", label, label, N);
+	{
+		printf("\\begin{align}\n");
 		printf("d_{%i} &= ((%.0f) - (%.4f))_{360[-180,180]} \\nonumber\\\\\n", i+1, final[i], reported[i]);
 		printf(" &= %.4f \\label{%s-d%i}\n", d[i], label, i+1);
-		printf("\\end{align}\n");*/
+		printf("\\end{align}\n");
 	}
 	printf("\n");
 	meanx = sumx / N;
