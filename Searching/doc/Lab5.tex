@@ -1,0 +1,435 @@
+\documentclass[twocolumn]{article}
+
+% imports
+%\usepackage{times}      % font
+\usepackage{graphicx}   % include graphics
+\usepackage{fullpage}   % book margins -> std margins
+\usepackage{amsmath}    % {align}
+\usepackage{wrapfig}    % {wrapfigure}
+\usepackage{moreverb}   % \verbatimtabinput
+\usepackage[noend,noline]{algorithm2e} % \algorithm
+\usepackage{subfig}     % sub-figure
+\usepackage{textcomp}   % \textmu
+\usepackage{hyperref}   % pdf links
+\usepackage{url}        % url support
+
+% def name, id
+\def\name{Neil Edelman}
+\def\id{110121860}
+\def\bname{Alex Bhandari-Young}
+\def\bid{260520610}
+
+% ieee style
+\bibliographystyle{ieeetr}
+
+% set algoithm comments
+\SetKwComment{Comment}{$\bullet$}{}
+
+% define "\fig"
+\def\fig#1#2{\begin{figure}[!ht]\begin{center}
+\includegraphics[width=0.5\textwidth]{#1.jpg}
+\end{center}\caption{#2}\label{#1}\end{figure}}
+
+\def\wide#1#2{\begin{figure*}[hptb]\begin{center}
+\includegraphics[height=0.5\textwidth]{#1.jpg}
+\end{center}\vspace{-0pt}\caption{#2}\label{#1}\end{figure*}}
+
+% create new commands
+\def\^#1{\textsuperscript{#1}}
+\def\!{\overline}
+\def\degree{\ensuremath{^\circ}}
+
+% lists
+\renewcommand{\labelenumi}{\arabic{enumi}.}
+\renewcommand{\labelenumii}{\roman{enumii})}
+
+% for hyperref
+\hypersetup{
+  colorlinks = true,
+  urlcolor = blue,
+  linkcolor = blue,
+  pdfauthor = {\name},
+  pdftitle = {\name -- \id},
+  pdfsubject = {A1},
+  pdfpagemode = UseNone
+}
+
+% info
+\author{\bname~--~\bid, \name~--~\id}
+\title{Lab 5 -- Searching for Objects (Group~51)}
+\date{2013-10-20}
+
+\begin{document}
+
+\maketitle
+
+\abstract{Object detection is implemented using colour. Then, the robot localises in a set environment, searches for the foam object in a sea of wooden blocks, captures, and brings it to a set location in under five minutes.}
+
+%Data Collection (2 sentences + data)
+%Observations and Conclusion
+%Error Analysis (When possible, specify sub, super, or linear error growth)
+%Further Improvements
+
+\section{Data}
+
+\begin{table*}[htb]
+\begin{center}\begin{tabular}{r@{}l r@{}l r@{}l r@{}l}
+&$\theta_{\text{start}}$ (\degree)& &$\theta_{\text{final}}$ (\degree)& &$\theta_{\text{reported}}$ (\degree)& &$\theta_{\text{error}}$ (cm) \\
+\hline
+45&& 359&& 1&.8366& -2&.8366 \\
+0&& 359&& 0&.9664& -1&.9664 \\
+315&& 0&& 1&.6627& -1&.6627 \\
+270&& 0&& 1&.8364& -1&.8364 \\
+225&& 359&& 1&.4885& -2&.4885 \\
+180&& 359&& 1&.9662& -2&.9662 \\
+135&& 0&& 1&.8364& -1&.8364 \\
+90&& 359&& 1&.0112& -2&.0112 \\
+345&& 0&& 1&.0104& -1&.0104 \\
+15&& 359&& 2&.1846& -3&.1846 \\
+\end{tabular}\end{center}
+\caption{Facing out using {\tt LocalizationType.FALLING\_EDGE}.
+$\theta_{\text{start}}$ is the starting orientation of the robot.
+The error mean is $-2.1799$, variance is %$0.4555$
+$0.46$, and the corrected sample standard deviation is %$0.6749$
+$0.67$.}
+\label{open}
+\end{table*}
+
+\begin{table*}[htb]
+\begin{center}\begin{tabular}{r@{}l r@{}l r@{}l r@{}l}
+&$\theta_{\text{start}}$ (\degree)& &$\theta_{\text{final}}$ (\degree)& &$\theta_{\text{reported}}$ (\degree)& &$\theta_{\text{error}}$ (cm) \\
+\hline
+45&& 358&& 358&.2120& -0&.2120 \\
+0&& 1&& 358&.5603& 2&.4397 \\
+315&& 0&& 358&.4330& 1&.5670 \\
+270&& 0&& 358&.9086& 1&.0914 \\
+225&& 0&& 358&.5604& 1&.4396 \\
+180&& 358&& 358&.4733& -0&.4733 \\
+135&& 359&& 358&.3862& 0&.6138 \\
+90&& 358&& 359&.2564& -1&.2564 \\
+345&& 0&& 358&.4733& 1&.5267 \\
+15&& 0&& 358&.2121& 1&.7879 \\
+\end{tabular}\end{center}
+\caption{Facing the wall using {\tt LocalizationType.RISING\_EDGE}.
+$\theta_{\text{start}}$ is the starting orientation of the robot.
+The error mean is $0.8524$, variance is %$1.3507$
+$1.4$, and the corrected sample standard deviation is %$1.1622$
+$1.2$.}
+\label{wall}
+\end{table*}
+
+\section{Observations and Conclusions}
+
+\subsection{Discussion}
+
+We see from the data in Table~\ref{open} and Table~\ref{wall} that it doesn't matter what position it starts in, it will localise successfully.
+
+The discrepancies always on one side are caused by the polling. The polling rate is 100\,ms and the turn rate is 10\degree s$^{-1}$, leading to maximum error in Equation~\ref{degerr}. Each method approached the stopping point from a different direction, but the mean error for both is zero within experimental error.
+
+\begin{align}
+\frac{10\text{\degree s}^{-1}}{100\text{\,ms}} &= 1\degree\label{degerr}
+\end{align}
+
+Experimentally, other robots using the same frequency and pinging off our robot sometimes confused it; the sound waves caused it to read a wall or gap when none was there.
+
+The data for rising edge theoretically takes up to three times longer to collect; from the corner, the wall is taking up three quarters of the solid angle while the arena only takes one quarter. However, this does not happen in practice because the robot takes up a non-negligible space when compared to 40\,cm, which is the wall detection threshold. If we increased it, then objects in the playing field would be more likely to register as walls (we could better this by making a more complex algorithm.)
+
+We could store the data from the rising edge and later calculate the wall distances without going back and measuring them again. This would suggest using rising edge localisation.
+
+However, {\tt getFilteredData} was not filtered. However, it was better than Lab 3\cite{alexneil3} because it waited for pinging. This disproportionally affects rising edge. Instead of writing complex code for filtering, the more reliable falling edge was used. The reason is the error is disproportionally false negatives; facing the open space was preferable. We then do a ping of each wall to compete our ultrasonic localisation. We found that the readings of the sensor are inaccurate at short distances so these are approximate.
+
+The threshold calculation only falls on discrete intervals controlled by {\tt getFilteredData} (50\,ms.) divided by the speed of rotation (50\degree s$^{-1}$.) An improvement would be to wait until the sensor fell above or below the threshold, then take the previous value and compute a linear intercept to get a more accurate value.
+
+It then moves to $(-3, -3)$ and turns to 45\degree~to begin it's light sensor localisation as in the lab specifications\cite{lab4}. When entering the light sensor localisation, the orientation must be in the first quadrant.
+
+%{\tt LCDInfo}: instead of having a pointer to double, initialized at object creation with a constant, why not have meaningful member variables?
+
+%{\tt Navigation}: this should not be a different class then {\tt Odometer}, and possibly {\tt TwoWheeledRobot}. {\tt setForwardSpeed} and {\tt setRotationalSpeed} imedeate.
+
+There were a number of problems with the provided code that cost us a large amout of time. The class structure, for instance, was rather poor.
+% (having both navigation and odometer containing instances of eachother). 
+There was additional code provided by one of the TA's that was well written, but we did not realise this until after the code was started.
+%In the future, it would make sense to provide students with only the well written code.
+%This caused the majority of our problems.
+
+%We attached our defective servomotor to the top of our robot; we then attached menacing parts to it, and set it spinning at top speed. This was scrapped because it was unwieldy in the testing of other parts and a drain on the battery.
+
+\subsection{Questions}
+
+\begin{enumerate}
+
+\item
+If it means rising edge or falling edge, see the discussion above.
+
+%Question 1:
+The light sensor localization is by far a more accurate method than ultrasonic localization. This makes sense because of the simplicity of the method. There is little room for error with light sensor localization if it is performed correctly (explained in the answer to question two below). On the other hand the ultrasonic sensor is very susceptible to noise and the position at which the robot is placed can affect its ability to localize.
+
+For example, we noticed when the robot was placed very close to the wall near the corner the ultrasonic sensor would read values that were higher than they were actually were. This could be caused by a number of factors such as reflection of sound waves off the wall perpendicular to the wall the robot is facing (and other types of error caused by reflection), detection of other ultrasonic waves in the environment that might be concentrated in the corners of the field when they reflect off the two perpendicular walls, or simply a fault in the ultrasonic sensor's design. To address this non-ideal behaviour, we experimented with the static attribute variable for the distance of the sensor from the centre of robot. Humidity and air pressure are also a factor because it affects the speed sound waves travel through the air. This might not introduce a significant error on most days, but could explain variation in the effectiveness of ultrasonic localization over different days.%, and is something to consider.
+
+A calibration of the sensor before the program runs by measuring a known distance could also be a solution. Similarly, the light sensor readings are affected by the level of ambient lighting in the room, and this can similarly be corrected by doing a calibration before the robot runs or by measuring change in values. In this lab, the lighting seemed to be constant, and we did not have a problem with this.
+
+\item
+The light sensor is not as susceptible to noise, thus it provides greater accuracy in localisation of the robot.
+
+%Question 2:
+The contrast between the black lines and tan/yellow board allows the light sensor to detect a sudden change from light to dark as the robot rotates over the line. The lines are thick enough to easily detect, but narrow enough that when the robot reads dark it can estimate its position with relation to the lines along the given axis to within a few millimeters. The fact that the lines are straight, perpendicular, and equally spaced makes it very easy for the robot to determine its position within a square with accuracy. However, this knowledge is useless if the robot does not know which square it is in, and that is the purpose of the ultrasonic localization. Using only the light sensor it is impossible for the robot to determine which square it is in because it does not know where the edges of the field are. However, once the ultrasonic sensor get the robot within a known square, the light sensor can determine the robot’s position to within half a centimeter. Accuracy could probably be improved to a millimeter by introducing optimizations such as detecting rising and falling edges and using the average to get the center of the line. The ultrasonic sensor is less effective and only used for approximating the robots position because of noise, which drastically reduces its effectiveness. Additionally, the differing sound wave absorption properties of different materials, such as the wooden walls, and the variation in absorption properties within a single material introduce more error.
+
+\item
+
+Turn all around and record the ultrasonic sensor readings.
+The minima of the result will be the closest things to it;
+in this case, we expect to have two minima within 30\,cm corresponding
+to the two walls. However, the ultrasonic sensor is very
+imprecise and is only good up to a few cm. We may get several minima close to the real minima.
+We could apply an averaging filter to reduce the noise, but this blocks out small objects which we would otherwise detect.
+
+%Question 3:
+% I have no idea what you're talking about
+%If the robot is placed anywhere in the field and needs to localize using only the ultrasonic sensor it first needs to locate a wall. The idea would be to get the robot to drive to a corner because then it has an x and y value corresponding to the distance from each wall. Since lines are spaced at about 30cm, if the robot gets itself to a corner where its minimum distances from each wall are 15cm, then it will be in the center of that tile. To do this it should spin 360 degrees and find the smallest value. If the robot is placed in the center the field it is possible that it will be too far from all the walls and read 255. Of course noise will also need to be filtered out. If the robot rotates full circle and does not detect a line it should drive straight until it does and then proceed. When it reads a wall after moving, or spins full circle and establishes a minimum value, it should move either toward or away from the object to establish a distance reading of 15. Because of inaccuracies in the ultrasonic sensor, it might be at an angle to the wall so it should establish the minimum and readjust its distance to 15. This will improve accuracy. Then it should check 90 degrees to its left and right and drive to within 15 of that wall. Again if no wall is found then just default to left or right. Now the robot knows it is in a corner, and can localize using the method from this lab. However, if no additional information is known, i.e. x, y, and theta are all unknown when the robot is placed, it is impossible to determine which corner the robot is in. Thus the approximate heading of the robot needs to be known or some other piece of information needs to be given.
+%The problem of detecting a minimum with the ultrasonic sensor is complicated by noise. If you have a smooth curve then finding a local minimum is simply a matter of finding the turning point by looking for a decrease and then and increase in the distance values. To find an absolute minimum, you would rotate full circle and use the smallest value. However, interference can introduce values ranging from 0 to 254, in addition to the 255 value which does not indicate a distance. For the purpose of finding a minimum these dips in the value should not be considered. To do this a filter is applied which smooths the curve by taking averages and completely omitting a sudden drop followed by a return to normal values. While this improves accuracy greatly it is hard to create a sensor that can consider obstacles that would create a sudden drop or spike in distance values and also filter extraneous values cause by noise. A good solution to this is pausing or slowing down to increase the accuracy of the sensor. This allows you to get more readings and thus improves the filter.
+
+\end{enumerate}
+
+\section{Error Calculations}
+
+The following are falling edge calculations.
+
+Calculate the differences in Equation~\ref{open-d1}--\ref{open-d10}.
+
+\begin{align}
+d_{1} &= ((359) - (1.8366))_{360[-180,180]} \nonumber\\
+ &= -2.8366 \label{open-d1}
+\end{align}
+\begin{align}
+d_{2} &= ((359) - (0.9664))_{360[-180,180]} \nonumber\\
+ &= -1.9664 \label{open-d2}
+\end{align}
+\begin{align}
+d_{3} &= ((0) - (1.6627))_{360[-180,180]} \nonumber\\
+ &= -1.6627 \label{open-d3}
+\end{align}
+\begin{align}
+d_{4} &= ((0) - (1.8364))_{360[-180,180]} \nonumber\\
+ &= -1.8364 \label{open-d4}
+\end{align}
+\begin{align}
+d_{5} &= ((359) - (1.4885))_{360[-180,180]} \nonumber\\
+ &= -2.4885 \label{open-d5}
+\end{align}
+\begin{align}
+d_{6} &= ((359) - (1.9662))_{360[-180,180]} \nonumber\\
+ &= -2.9662 \label{open-d6}
+\end{align}
+\begin{align}
+d_{7} &= ((0) - (1.8364))_{360[-180,180]} \nonumber\\
+ &= -1.8364 \label{open-d7}
+\end{align}
+\begin{align}
+d_{8} &= ((359) - (1.0112))_{360[-180,180]} \nonumber\\
+ &= -2.0112 \label{open-d8}
+\end{align}
+\begin{align}
+d_{9} &= ((0) - (1.0104))_{360[-180,180]} \nonumber\\
+ &= -1.0104 \label{open-d9}
+\end{align}
+\begin{align}
+d_{10} &= ((359) - (2.1846))_{360[-180,180]} \nonumber\\
+ &= -3.1846 \label{open-d10}
+\end{align}
+
+Calculate the sum of the differences (Equation~\ref{open-d1}--\ref{open-d10}) in Equation~\ref{open-sum}.
+
+\begin{align}
+\text{sum} &= \sum_{i=1}^{10} d_{i} \nonumber\\
+ &= (-2.8366) + \nonumber\\
+ &\quad\quad (-1.9664) + \nonumber\\
+ &\quad\quad (-1.6627) + \nonumber\\
+ &\quad\quad (-1.8364) + \nonumber\\
+ &\quad\quad (-2.4885) + \nonumber\\
+ &\quad\quad (-2.9662) + \nonumber\\
+ &\quad\quad (-1.8364) + \nonumber\\
+ &\quad\quad (-2.0112) + \nonumber\\
+ &\quad\quad (-1.0104) + \nonumber\\
+ &\quad\quad (-3.1846) \nonumber\\
+ &= -21.7994 \label{open-sum}
+\end{align}
+
+Calculate the sum of the differences (Equation~\ref{open-d1}--\ref{open-d10}) squared in Equation~\ref{open-sum2}.
+
+\begin{align}
+\text{ssq} &= \sum_{i=1}^{10} d_{i}^{\phantom{i}2} \nonumber\\
+ &= (-2.84)^2 + \nonumber\\
+ &\quad\quad (-1.97)^2 + \nonumber\\
+ &\quad\quad (-1.66)^2 + \nonumber\\
+ &\quad\quad (-1.84)^2 + \nonumber\\
+ &\quad\quad (-2.49)^2 + \nonumber\\
+ &\quad\quad (-2.97)^2 + \nonumber\\
+ &\quad\quad (-1.84)^2 + \nonumber\\
+ &\quad\quad (-2.01)^2 + \nonumber\\
+ &\quad\quad (-1.01)^2 + \nonumber\\
+ &\quad\quad (-3.18)^2 \nonumber\\
+ &= 51.62 \label{open-sum2}
+\end{align}
+
+Calculate the mean from Equation~\ref{open-sum} in Equation~\ref{open-mean}.
+
+\begin{align}
+\text{mean} &= \frac{\text{sum}}{N} \nonumber\\
+ &= \frac{-21.7994}{10} \nonumber\\
+ &= -2.179940 \label{open-mean}
+\end{align}
+
+Calculate the variance from Equation~\ref{open-sum} and \ref{open-sum2} in Equation~\ref{open-var}.
+
+\begin{align}
+\sigma^{2} &= \frac{\text{ssq} - \frac{\text{sum}^{2}}{N}}{N-1} \nonumber\\
+ &= \frac{51.6208 - \frac{-21.7994^2}{10}}{10-1} \nonumber\\
+ &= 0.455492 \label{open-var}
+\end{align}
+
+Calculate the corrected sample standard deviation from the variance (Equation~\ref{open-var}) in Equation~\ref{open-stdd}.
+
+\begin{align}
+\sigma &= \sqrt{\sigma^{2}} \nonumber\\
+ &= \sqrt{0.455492} \nonumber\\
+ &= 0.674902 \label{open-stdd}
+\end{align}
+
+This is facing the wall with rising edge.
+
+Calculate the differences in Equation~\ref{wall-d1}--\ref{wall-d10}.
+
+\begin{align}
+d_{1} &= ((358) - (358.2120))_{360[-180,180]} \nonumber\\
+ &= -0.2120 \label{wall-d1}
+\end{align}
+\begin{align}
+d_{2} &= ((1) - (358.5603))_{360[-180,180]} \nonumber\\
+ &= 2.4397 \label{wall-d2}
+\end{align}
+\begin{align}
+d_{3} &= ((0) - (358.4330))_{360[-180,180]} \nonumber\\
+ &= 1.5670 \label{wall-d3}
+\end{align}
+\begin{align}
+d_{4} &= ((0) - (358.9086))_{360[-180,180]} \nonumber\\
+ &= 1.0914 \label{wall-d4}
+\end{align}
+\begin{align}
+d_{5} &= ((0) - (358.5604))_{360[-180,180]} \nonumber\\
+ &= 1.4396 \label{wall-d5}
+\end{align}
+\begin{align}
+d_{6} &= ((358) - (358.4733))_{360[-180,180]} \nonumber\\
+ &= -0.4733 \label{wall-d6}
+\end{align}
+\begin{align}
+d_{7} &= ((359) - (358.3862))_{360[-180,180]} \nonumber\\
+ &= 0.6138 \label{wall-d7}
+\end{align}
+\begin{align}
+d_{8} &= ((358) - (359.2564))_{360[-180,180]} \nonumber\\
+ &= -1.2564 \label{wall-d8}
+\end{align}
+\begin{align}
+d_{9} &= ((0) - (358.4733))_{360[-180,180]} \nonumber\\
+ &= 1.5267 \label{wall-d9}
+\end{align}
+\begin{align}
+d_{10} &= ((0) - (358.2121))_{360[-180,180]} \nonumber\\
+ &= 1.7879 \label{wall-d10}
+\end{align}
+
+Calculate the sum of the differences (Equation~\ref{wall-d1}--\ref{wall-d10}) in Equation~\ref{wall-sum}.
+
+\begin{align}
+\text{sum} &= \sum_{i=1}^{10} d_{i} \nonumber\\
+ &= (-0.2120) + \nonumber\\
+ &\quad\quad (2.4397) + \nonumber\\
+ &\quad\quad (1.5670) + \nonumber\\
+ &\quad\quad (1.0914) + \nonumber\\
+ &\quad\quad (1.4396) + \nonumber\\
+ &\quad\quad (-0.4733) + \nonumber\\
+ &\quad\quad (0.6138) + \nonumber\\
+ &\quad\quad (-1.2564) + \nonumber\\
+ &\quad\quad (1.5267) + \nonumber\\
+ &\quad\quad (1.7879) \nonumber\\
+ &= 8.5244 \label{wall-sum}
+\end{align}
+
+Calculate the sum of the differences (Equation~\ref{wall-d1}--\ref{wall-d10}) squared in Equation~\ref{wall-sum2}.
+
+\begin{align}
+\text{ssq} &= \sum_{i=1}^{10} d_{i}^{\phantom{i}2} \nonumber\\
+ &= (-0.21)^2 + \nonumber\\
+ &\quad\quad (2.44)^2 + \nonumber\\
+ &\quad\quad (1.57)^2 + \nonumber\\
+ &\quad\quad (1.09)^2 + \nonumber\\
+ &\quad\quad (1.44)^2 + \nonumber\\
+ &\quad\quad (-0.47)^2 + \nonumber\\
+ &\quad\quad (0.61)^2 + \nonumber\\
+ &\quad\quad (-1.26)^2 + \nonumber\\
+ &\quad\quad (1.53)^2 + \nonumber\\
+ &\quad\quad (1.79)^2 \nonumber\\
+ &= 19.42 \label{wall-sum2}
+\end{align}
+
+Calculate the mean from Equation~\ref{wall-sum} in Equation~\ref{wall-mean}.
+
+\begin{align}
+\text{mean} &= \frac{\text{sum}}{N} \nonumber\\
+ &= \frac{8.5244}{10} \nonumber\\
+ &= 0.852440 \label{wall-mean}
+\end{align}
+
+Calculate the variance from Equation~\ref{wall-sum} and \ref{wall-sum2} in Equation~\ref{wall-var}.
+
+\begin{align}
+\sigma^{2} &= \frac{\text{ssq} - \frac{\text{sum}^{2}}{N}}{N-1} \nonumber\\
+ &= \frac{19.4229 - \frac{8.5244^2}{10}}{10-1} \nonumber\\
+ &= 1.350704 \label{wall-var}
+\end{align}
+
+Calculate the corrected sample standard deviation from the variance (Equation~\ref{wall-var}) in Equation~\ref{wall-stdd}.
+
+\begin{align}
+\sigma &= \sqrt{\sigma^{2}} \nonumber\\
+ &= \sqrt{1.350704} \nonumber\\
+ &= 1.162198 \label{wall-stdd}
+\end{align}
+
+%\begin{enumerate}
+
+%\item See above.
+
+%\item Right.
+
+%\end{enumerate}
+
+\section{Further Improvements}
+
+\begin{enumerate}
+
+\item
+The clipping filter is a very rudimentary method for removing extraneous values because it only accepts values from the sensor that are within a certain range, and all values outside this range are ignored. A more accurate method of removing small errors is to consider them with respect to the rest of the values returned by the sensor. A single extraneous value should be ignored, but multiple extraneous values mean that a wall the robot was sensing could have suddenly ended. To accomplish this, the robot should process multiple sensor values at a time or have a certain amount of memory to store sensor values. This could be done by median filtering or removing outliers.
+%If one of them is greater than the rest by a threshold then it should be omitted.
+% taking the average of the values and comparing each value to this average, if it differs by a more than the threshold, the value can be thrown out. The average of the remaining values is then returned as the sensor value to be used by the rest of the code in the robot.
+
+\item
+Radio waves as active radar is the {\it de facto} method of detection.
+However, radar is long-range, over-the-horizon, which we don't need.
+An optical laser would be more accurate and have a faster response time and would be probably ideal for this use.
+
+The ultrasonic sensor receives much of its error from interference and from its own sound waves bouncing off multiple objects or objects to the side of the sensor and then returning to it. A very simple fix that addresses all of these problems is to narrow the scope of the sensor so it only sends sound waves straight out in front of it instead of in all directions. This can be accomplished by wrapping some type of material around the sensor that focuses the waves out the front of the sensor. Cardboard or paper could be used for this. The problem with this is diffraction\cite{morse1948vibration} which causes it to be scattered.
+
+\item
+We could use an adaptive method that remembered the lines on the floor and constantly fit using an iterative method to what it knows the world looks like, ie three tiles square.
+
+Another possible form of ultrasonic localization is to use the method described in question three in the Observations and conclusions section by comparing minimum values. To do this the ultrasonic sensor would need to not report extraneous minimums. There could be filtered out using the method described above in Question 3 of this section. It would also work anywhere in the field, not just when the robot is placed in the corner tile.
+%, it is very detailed!
+
+\end{enumerate}
+
+\bibliography{lab5}
+
+\end{document}
