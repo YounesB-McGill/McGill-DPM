@@ -14,8 +14,8 @@ struct Vec3d {
 /** private (entry point) */
 int main(int argc, char **argv) {
 	struct Vec3d p[N];
-	struct Vec3d sum[N], ssq[N], mean[N];
-	double var[3], stdd[3];
+	struct Vec3d sum, ssq, mean;
+	struct Vec3d var, stdd;
 	int i;
 	char buffer[120], buffer2[120], *s, *t;
 	char *label = "none";
@@ -28,7 +28,7 @@ int main(int argc, char **argv) {
 		scanf("%lf\t%lf\t%lf\n", &p[i].x, &p[i].y, &p[i].z);
 	}
 
-	for(i = 0, sumx = sumy = sumz = 0; i < N; i++) {
+	for(i = 0, sum.x = sum.y = sum.z = 0; i < N; i++) {
 		d = 1.0 / sqrt(p[i].x*p[i].x + p[i].y*p[i].y + p[i].z*p[i].z);
 		p[i].x *= d;
 		p[i].y *= d;

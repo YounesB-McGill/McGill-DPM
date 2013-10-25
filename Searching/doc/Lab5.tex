@@ -72,17 +72,47 @@
 
 \section{Data and Analysis}
 
-\begin{enumerate}
-
 \subsection{Calibrating}
 
+The experimental calibration data are found in Table~\ref{styrofoam} and Table~\ref{wood}. The means were the values used in the software to distinguish wood from styrofoam.
 
+\begin{table}[htb]
+\centering
+\begin{tabular}{@{(}l@{, }l@{, }l@{)} l @{(}l@{, }l@{, }l@{)}}
+R & G & B & $\rightarrow$ & R & G & B \\
+\hline
+21 & 16 & 21 &  & 0.62 & 0.47 & 0.62 \\
+57 & 50 & 61 &  & 0.59 & 0.51 & 0.63 \\
+176 & 187 & 188 &  & 0.55 & 0.59 & 0.59 \\
+174 & 185 & 186 &  & 0.55 & 0.59 & 0.59 \\
+68 & 63 & 76 &  & 0.57 & 0.53 & 0.63 \\
+87 & 84 & 99 &  & 0.56 & 0.54 & 0.63 \\
+208 & 227 & 219 &  & 0.55 & 0.60 & 0.58 \\
+\end{tabular}
+\caption{Calibrating the colour of the styrofoam. The second column is the normalisiation of the raw data.
+The mean is $(0.57, 0.55, 0.61)$, variance is $(0.0007, 0.0022, 0.0005)$, and the corrected sample standard deviation is $(0.026, 0.047, 0.023)$.}
+\label{styrofoam}
+\end{table}
 
+\begin{table}[htb]
+\centering
+\begin{tabular}{@{(}l@{, }l@{, }l@{)} l @{(}l@{, }l@{, }l@{)}}
+R & G & B & $\rightarrow$ & R & G & B \\
+\hline
+118 & 66 & 64 &  & 0.79 & 0.44 & 0.43 \\
+119 & 67 & 65 &  & 0.79 & 0.44 & 0.43 \\
+106 & 53 & 50 &  & 0.82 & 0.41 & 0.39 \\
+152 & 103 & 98 &  & 0.73 & 0.49 & 0.47 \\
+97 & 48 & 49 &  & 0.82 & 0.40 & 0.41 \\
+143 & 80 & 68 &  & 0.81 & 0.45 & 0.38 \\
+125 & 65 & 59 &  & 0.82 & 0.43 & 0.39 \\
+\end{tabular}
+\caption{Calibrating the colour of the wood. The second column is the normalisiation of the raw data.
+The mean is $(0.80, 0.44, 0.41)$, variance is $(0.0010, 0.0009, 0.0010)$, and the corrected sample standard deviation is $(0.032, 0.030, 0.032)$.}
+\label{wood}
+\end{table}
 
-
-
-
-
+\begin{enumerate}
 
 \subsection{Object detection}
 
