@@ -363,7 +363,7 @@ Calculate the corrected sample standard deviation from the variance (Equation~\r
 
 \section{Observations and Conclusions}
 
-We did a literature search and discovered that some varient of Kalman filter is used almost exclusively for robot navigation; for example in \cite{davison2003real}. We did not use this because of time constraints, our robot following a heuristic path. We implemented a PID-control class. We have a light sensor and a colour sensor, so we could implement odometer correction; however, we wanted our robot to go at all angles anywhere in the field. Odometer correction was not tested with this relaxed constraint.
+We did a literature search and discovered that some variant of Kalman filter is used almost exclusively for robot navigation; for example in \cite{davison2003real}. We did not use this because of time constraints, our robot following a heuristic path. We implemented a PID-control class. We have a light sensor and a colour sensor, so we could implement odometer correction; however, we wanted our robot to go at all angles anywhere in the field. Odometer correction was not tested with this relaxed constraint.
 
 \begin{enumerate}
 
@@ -379,8 +379,6 @@ The normalisation projects the HSL values onto L = 0.5 so it isn't affected by n
 
 The comparison introduces an error since we are working in normalised spherical co-ordinates. It's monotonic, which is all we care about when comparing. The approximate error is maximally seen in Equation~\ref{eq:cool}.
 
-While there are not many situations where the code would break down within the limitations of Lab 5 (short of very drastic changes in lighting, which were not tested), in the final project the introduction of an unexpected object, namely the opposing teams robot, could effect the algorithm. This could be accounted for by testing the sensor on the expected colors of the NXT robot. This should not be a problem as the sensor looks for blue or wood colors, both of which are unlike the colors of the NXT. Unless the opposing team purposely uses blue or wood colors to confuse our robot our code should function properly. Additional thought could be put into dealing with a blue robot, but this seems very unlikely.
-
 \begin{align}
 \int_{x=0}^{\sqrt{2}} \left(
 	\sqrt{1-y^{2}} - (1 - y)
@@ -388,17 +386,19 @@ While there are not many situations where the code would break down within the l
 \label{eq:cool}
 \end{align}
 
+While there are not many situations where the code would break down within the limitations of Lab 5 (short of very drastic changes in lighting, which were not tested), in the final project the introduction of an unexpected object, namely the opposing teams robot, could effect the algorithm. This could be accounted for by testing the sensor on the expected colors of the NXT robot. This should not be a problem as the sensor looks for blue or wood colors, both of which are unlike the colors of the NXT. Unless the opposing team purposely uses blue or wood colors to confuse our robot our code should function properly. Additional thought could be put into dealing with a blue robot, but this seems very unlikely.
+
 We could try turning the flood light on while determining colour.
 
 \item ``What aspect of this lab did you find most difficult? What aspect of this lab did you find most surprising or unexpected?''
 
-We had the most trouble in trying to redesign our current code structure to make it easier to use. In transferring the code of lab 1--4\cite{alexneil1,alexneil2,alexneil3,alexneil4} to the new design a lot of stuff just didn't work. We decided to use a different coordinate system from that provided in the previous lab\cite{iso}. Because the odometer and navigation were designed to use this system, we had some difficulty and were not able to complete the redesign, and ended up reverting to the old design used in lab 4. This had already been tested, and was more robust, though we would like to used the redesigned code because it is more intuitive and thus easier to work with. The mechanical planning of the robot was fun.
+We had the most trouble in trying to redesign our current code structure to make it easier to use. In transferring the code of lab 1--4\cite{alexneil1,alexneil2,alexneil3,alexneil4} to the new design a lot of stuff just didn't work. We decided to use a different coordinate system from that provided in the previous lab\cite{iso}. Because the odometer and navigation were designed to use this system, we had some difficulty and were not able to complete the redesign, and ended up reverting to the old design used in lab 4. This had already been tested, and was more robust. We would like to used the redesigned code because it is more intuitive and thus easier to work with and much smaller code size. The mechanical planning of the robot was fun.
 
 \end{enumerate}
 
 \section{Further Improvements}
 
-The colour detection worked very well. Also the front bumper on the robot designed as a capture system for styrofoam blocks was simple and worked well. These systems could be refined, but we are confident the overall design is good enough to be used in the competition. As mentioned before, we would like a very robust and intutive robot class that consolidates all of the previous lab code. This will be extremely important when the code gets more complex for the final project. The current version of this code redesign was buggy. However, this is expected to happen when multiple sources are merged, and hopefully with a little more work we can get it reliable.
+The colour detection worked very well. Also the front bumper on the robot designed as a capture system for styrofoam blocks was simple and worked well. These systems could be refined, but we are confident the overall design is good enough to be used in the competition. As mentioned before, we would like a very robust and intuitive robot class that consolidates all of the previous lab code. This will be extremely important when the code gets more complex for the final project. The current version of this code redesign was buggy. However, this is expected to happen when multiple sources are merged. Hopefully with a little more work we can get it reliable.
 
 \bibliography{lab5}
 
