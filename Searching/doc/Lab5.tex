@@ -119,7 +119,7 @@ The mean is $(0.80, 0.44, 0.41)$, variance is $(0.0010, 0.0009, 0.0010)$, and th
 \item
 ``Perform at least 10 trials of object recognition using an object other than the Styrofoam block and note the number of false positives.\cite{lab5}''
 
-The other-object data is in Table~\ref{wood}. We tested the colour object recognition on wooden blocks (denoted "block" in the table) as well as on the floor and walls of the arena and empty space. The "recognizes" column refers to the assessment made by the algorithm, which reports whether the object in question is more likely wooden or styrofoam. The percentage calculated in the percent column refers to the certainty of the algorithm's assesment. It is apparent that the sensor is very effective, especially at close distances. The arena is made entirely of wood, and we can successfully recognize it as well as the blocks as wooden. There were no false positives when testing the wooden blocks as well as when testing the arena itself, as can be seen from the table. In open space the algorithm is designed to still detect wooden or styrofoam so there are two false positives. However, the sensor is only used when a block is within range as determined by the ultrasonic sensor so this should not be a problem. Additionally, values with low certainty (close to 50 percent) can be filtered out.
+The other-object data is in Table~\ref{qwood}. We tested the colour object recognition on wooden blocks (denoted "block" in the table) as well as on the floor and walls of the arena and empty space. The "recognizes" column refers to the assessment made by the algorithm, which reports whether the object in question is more likely wooden or styrofoam. The percentage calculated in the percent column refers to the certainty of the algorithm's assesment. It is apparent that the sensor is very effective, especially at close distances. The arena is made entirely of wood, and we can successfully recognize it as well as the blocks as wooden. There were no false positives when testing the wooden blocks as well as when testing the arena itself, as can be seen from the table. In open space the algorithm is designed to still detect wooden or styrofoam so there are two false positives. However, the sensor is only used when a block is within range as determined by the ultrasonic sensor so this should not be a problem. Additionally, values with low certainty (close to 50 percent) can be filtered out.
 
 \begin{table}[htb]\footnotesize
 \begin{center}\begin{tabular}{llll}
@@ -150,13 +150,13 @@ side&  5& wood& 99\% \\
 \end{tabular}\end{center}
 \caption{Space is empty space giving $(0,0,0)$ or very close;
 it has not been included. The differences can be explained by the orientation.}
-\label{wood}
+\label{qwood}
 \end{table}
 
 \item
 ``Repeat the above step, but using the Styrofoam block each time, noting the total number of false negatives. Ideally both errors should be as small as possible.\cite{lab5}''
 
-The styrofoam data is is Table~\ref{styrofoam}. We used an even greater range of distances when testing on the styrofoam blocks. From the data we can conclude that our algorithm is reliably able to differentiate the styrofoam from about 30\,cm. It starts to recoginze at distances less than 70cm. Again at close distances the sensor is extremely accurate. There are no false positives at distances less than 70cm. And within the required operating range of this sensor, which is around 30cm and below, the certainty is high. 
+The styrofoam data is is Table~\ref{qstyrofoam}. We used an even greater range of distances when testing on the styrofoam blocks. From the data we can conclude that our algorithm is reliably able to differentiate the styrofoam from about 30\,cm. It starts to recoginze at distances less than 70cm. Again at close distances the sensor is extremely accurate. There are no false positives at distances less than 70cm. And within the required operating range of this sensor, which is around 30cm and below, the certainty is high. 
 
 \begin{table*}[htb]\footnotesize
 \begin{center}\begin{tabular}{llll}
@@ -179,7 +179,7 @@ styrofoam& 10& styrofoam& 97\% \\
 styrofoam&  5& styrofoam& 98\% \\
 \end{tabular}\end{center}
 \caption{Distance that the colour sensor can differentiate a styrofoam block.}
-\label{styrofoam}
+\label{qstyrofoam}
 \end{table*}
 
 \subsection{Searching for Objects}
