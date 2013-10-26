@@ -49,11 +49,6 @@ public class Odometer implements TimerListener {
 		int  left = leftMotor.getTachoCount();
 		int right = rightMotor.getTachoCount();
 
-		/* reset tach */
-		/*leftMotor.resetTachoCount();
-		rightMotor.resetTachoCount(); <- results in 0, I think this would
-		 ignore overflows anyway */
-
 		int displacement = right + left - this.displacement;
 		int heading      = right - left - this.heading;
 
